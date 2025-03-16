@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { TextField, Button, Container, Box, Modal, Typography } from '@mui/material';
 import { styleModal } from '../../styles';
-import {  useDispatch } from 'react-redux';
-import {  AppDispatch } from '../global-states/store';
-import { addUser } from '../global-states/userSlice';
+// import {  useDispatch } from 'react-redux';
+// import {  AppDispatch } from '../global-states/store';
+// import { addUser } from '../global-states/userSlice';
 import axios from 'axios';
 
 
@@ -16,7 +16,7 @@ const SignIn = () => {
     const passwordRef = React.useRef<HTMLInputElement>(null);
 
     // const user = useSelector((state: RootState) => state.user);
-    const userDispatch = useDispatch<AppDispatch>();
+    // const userDispatch = useDispatch<AppDispatch>();
 
 
     const changeToSignUp = () => {
@@ -32,17 +32,18 @@ const SignIn = () => {
             name: status === 'login' ? '' : nameRef.current?.value,
             email: emailRef.current?.value,
             password: passwordRef.current?.value,
+            roleName: 'Editor'
         };
 
         try {
-            const res = await axios.post("http://localhost:5282/users", newUser);
+            const res = await axios.post("http://localhost:5282/auth/"+status, newUser);
 console.log(res)
             // // Dispatch the addUser action
             // const resultAction = await userDispatch(addUser(newUser));
 
             // if (addUser.fulfilled.match(resultAction)) {
             //     console.log('User added:', resultAction.payload);
-            //     setOpenModal(!openModal);
+            setOpenModal(!openModal);
             // } else {
             //     console.error('Failed to add user:', resultAction.error.message);
             // }

@@ -7,7 +7,7 @@ export default () => {
         <nav style={{
             position: "absolute",
             top: "25px",
-            left: "5%",
+            left: "1%",
             width: '30%',
             display: "flex",
             justifyContent: 'space-around',
@@ -15,16 +15,18 @@ export default () => {
             justifyItems: 'center',
             gap: '10px',
             fontSize: '20px',
-            padding: "8px",
+            padding: "4px 8px",
+            
         }}>
-
-
-            <Link style={{ color: '#8E6549' }} to='/home'>Home</Link>
+            <Link to='/'><img style={{width: 60}}src="img/frameItLogo.png" alt="logo" /></Link>
             <Link to='/Login'>
                 <Button variant="contained" color="primary" >
                     Login
                 </Button>
             </Link>
+            <Link to='/home' >Home</Link>
+            <Link to='/gallery' color="primary">Gallery</Link>
+
         </nav>
     </>);
 }
