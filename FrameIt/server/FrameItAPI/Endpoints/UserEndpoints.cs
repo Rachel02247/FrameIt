@@ -11,31 +11,31 @@ public static class UserEndpoints
         {
             var users = await userService.GetAllUsers();
             return Results.Ok(users);
-        });
+        }).RequireAuthorization("all");
 
         routes.MapGet("/users/{id}", async (IUserService userService, int id) =>
         {
             var user = await userService.GetUser(id);
             return user is not null ? Results.Ok(user) : Results.NotFound();
-        });
+        }).RequireAuthorization("all");
 
         routes.MapPost("/users", async (IUserService userService, User user) =>
         {
             var createdUser = await userService.CreateUser(user);
             return Results.Created($"/users/{createdUser.Id}", createdUser);
-        });
+        }).RequireAuthorization("EditorOrAdmin");
 
         routes.MapPut("/users/{id}", async (IUserService userService, int id, User user) =>
         {
             user.Id = id; // עדכון ה-ID של המשתמש
             var updatedUser = await userService.UpdateUser(user);
             return Results.Ok(updatedUser);
-        });
+        }).RequireAuthorization("EditorOrAdmin");
 
         routes.MapDelete("/users/{id}", async (IUserService userService, int id) =>
         {
             var result = await userService.DeleteUser(id);
             return result ? Results.NoContent() : Results.NotFound();
-        });
+        }).RequireAuthorization("EditorOrAdmin");
     }
 }

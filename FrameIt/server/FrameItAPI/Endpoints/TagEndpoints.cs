@@ -9,31 +9,31 @@ public static class TagEndpoints
         {
             var tags = await tagService.GetAllTags();
             return Results.Ok(tags);
-        });
+        }).RequireAuthorization();
 
         routes.MapGet("/tags/{id}", async (ITagService tagService, int id) =>
         {
             var tag = await tagService.GetTag(id);
             return tag is not null ? Results.Ok(tag) : Results.NotFound();
-        });
+        }).RequireAuthorization();
 
         routes.MapPost("/tags", async (ITagService tagService, Tag tag) =>
         {
             var createdTag = await tagService.CreateTag(tag);
             return Results.Created($"/tags/{createdTag.Id}", createdTag);
-        });
+        }).RequireAuthorization("admin", "editor");
 
         routes.MapPut("/tags/{id}", async (ITagService tagService, int id, Tag tag) =>
         {
             tag.Id = id; // עדכון ה-ID של התג
             var updatedTag = await tagService.UpdateTag(tag);
             return Results.Ok(updatedTag);
-        });
+        }).RequireAuthorization("admin", "editor");
 
         routes.MapDelete("/tags/{id}", async (ITagService tagService, int id) =>
         {
             var result = await tagService.DeleteTag(id);
             return result ? Results.NoContent() : Results.NotFound();
-        });
+        }).RequireAuthorization("admin", "editor");
     }
 }

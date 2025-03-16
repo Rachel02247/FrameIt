@@ -9,5 +9,7 @@ namespace FrameItAPI.Services.interfaces
         Task<User> CreateUser(User user);
         Task<User> UpdateUser(User user);
         Task<bool> DeleteUser(int Id);
+        Task<string> AuthenticateAsync(string username, string password);
+
     }
 }

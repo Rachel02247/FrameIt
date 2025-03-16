@@ -20,11 +20,20 @@ namespace FrameItAPI.Services.services
             return await _context.Users.ToListAsync();
         }
 
-        public async Task<User> CreateUser(User User)
+        public async Task<User> CreateUser(User user)
         {
-            _context.Users.Add(User);
-            await _context.SaveChangesAsync();
-            return User;
+            var userExists = await _context.Users
+                     .AnyAsync(u => u.Email == user.Email);
+            if (userExists)
+                throw new Exception()
+                {
+                    Data = { { "Email", "Email already exists" } }
+                };
+                user.PasswordHash = user.Password.GetHashCode().ToString();
+            
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+            return user;
         }
 
         public async Task<User> UpdateUser(User User)
@@ -42,6 +51,16 @@ namespace FrameItAPI.Services.services
             _context.Users.Remove(User);
             await _context.SaveChangesAsync();
             return true;
+        }
+        public async Task<string> AuthenticateAsync(string username, string password)
+        {
+            User user = await _context.Users.FindAsync(username);
+            if (user == null || !user.Password.Equals(password))
+            {
+                return null;
+            }
+           
+            return "succed";
         }
     }
 }
