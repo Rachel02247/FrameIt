@@ -13,5 +13,6 @@ namespace FrameItAPI.DataAccess
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
         }
+     
     }
 }
