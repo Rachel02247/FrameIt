@@ -9,7 +9,7 @@ public static class FolderEndpoints
         {
             var folders = await folderService.GetAllFolders();
             return Results.Ok(folders);
-        }).RequireAuthorization();
+        });//.RequireAuthorization();
 
         routes.MapGet("/folders/{id}", async (IFolderService folderService, int id) =>
         {
@@ -17,11 +17,37 @@ public static class FolderEndpoints
             return folder is not null ? Results.Ok(folder) : Results.NotFound();
         }).RequireAuthorization();
 
+        routes.MapGet("/folders/{id?}/contents", async (int? id, IFolderService folderService, IFileService fileService) =>
+        {
+            int folderId = id ?? 0;
+
+            var folder = folderId == 0 ? null : await folderService.GetFolder(folderId);
+            if (folderId != 0 && folder == null) 
+                return Results.NotFound("Folder not found");
+
+            var subFolders = await folderService.GetSubFoldersByFolderId(folderId); 
+            var files = await fileService.GetFilesByFolderId(folderId); 
+
+            return Results.Ok(new { folders = subFolders, files = files });
+        });
+
+        routes.MapGet("/folders/{id}/parent", async (int id, IFolderService folderService) =>
+        {
+            var parentFolder = await folderService.GetParentFolder(id);
+            return parentFolder != null ? Results.Ok(parentFolder) : Results.NotFound();
+        });
+
+        routes.MapGet("/folders/{id?}/breadcrumb", async (int id, IFolderService folderService) =>
+        {
+            var breadcrumb = await folderService.GetBreadcrumb(id);
+            return breadcrumb != null ? Results.Ok(breadcrumb) : Results.NotFound();
+        });
+
         routes.MapPost("/folders", async (IFolderService folderService, Folder folder) =>
         {
             var createdFolder = await folderService.CreateFolder(folder);
             return Results.Created($"/folders/{createdFolder.Id}", createdFolder);
-        }).RequireAuthorization("admin", "editor");
+        });//.RequireAuthorization("admin", "editor");
 
         routes.MapPut("/folders/{id}", async (IFolderService folderService, int id, Folder folder) =>
         {

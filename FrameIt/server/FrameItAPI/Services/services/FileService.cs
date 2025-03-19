@@ -14,18 +14,34 @@ namespace FrameItAPI.Services.services
             _context = context;
         }
 
+        public async Task<List<Entities.File>> GetFilesWithNullParent()
+        {
+            return await _context.Files
+                .Where(f => f.FolderId == null)
+                .ToListAsync();
+        }
+
+        public async Task<List<Entities.File>> GetFilesByFolderId(int folderId)
+        {
+            return await _context.Files
+                .Where(f => f.FolderId == folderId)
+                .ToListAsync();
+        }
+
         public async Task<FrameItAPI.Entities.File> GetFile(int id)
         {
-            return await _context.Files.FindAsync(id);
+            return await _context.Files.Where(f => f.Id == id && !f.IsDeleted).FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<FrameItAPI.Entities.File>> GetAllFiles()
         {
-            return await _context.Files.ToListAsync();
+            return await _context.Files.Where(f => !f.IsDeleted).ToListAsync();
         }
 
         public async Task<FrameItAPI.Entities.File> CreateFile(FrameItAPI.Entities.File file)
         {
+
+           
             _context.Files.Add(file);
             await _context.SaveChangesAsync(); 
             return file;
@@ -41,10 +57,24 @@ namespace FrameItAPI.Services.services
 
         public async Task<bool> DeleteFile(int id)
         {
-            FrameItAPI.Entities.File file = await GetFile(id);
+            var file = await GetFile(id);
+            if (file == null) 
+                return false;
+
+            file.IsDeleted = true;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> RestoreFile(int id)
+        {
+            var file = await _context.Files
+                .Where(f => f.Id == id && f.IsDeleted)
+                .FirstOrDefaultAsync();
             if (file == null) return false;
 
-            _context.Files.Remove(file);
+            file.IsDeleted = false; 
+            _context.Files.Update(file);
             await _context.SaveChangesAsync();
             return true;
         }

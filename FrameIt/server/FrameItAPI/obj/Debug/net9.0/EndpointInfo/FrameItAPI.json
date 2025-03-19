@@ -219,6 +219,75 @@
         }
       }
     },
+    "/folders/{id}/contents": {
+      "get": {
+        "tags": [
+          "FrameItAPI"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/folders/{id}/parent": {
+      "get": {
+        "tags": [
+          "FrameItAPI"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/folders/{id}/breadcrumb": {
+      "get": {
+        "tags": [
+          "FrameItAPI"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/tags": {
       "get": {
         "tags": [
@@ -616,23 +685,28 @@
             "type": "integer",
             "format": "int32"
           },
-          "userId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "folderId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "filename": {
+          "fileName": {
             "type": "string",
             "nullable": true
           },
-          "url": {
+          "fileType": {
             "type": "string",
             "nullable": true
           },
           "size": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "s3Key": {
+            "type": "string",
+            "nullable": true
+          },
+          "folderId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "ownerId": {
             "type": "integer",
             "format": "int32"
           },
@@ -643,6 +717,9 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "isDeleted": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -654,18 +731,18 @@
             "type": "integer",
             "format": "int32"
           },
-          "userId": {
-            "type": "integer",
-            "format": "int32"
+          "name": {
+            "type": "string",
+            "nullable": true
           },
-          "parentId": {
+          "parentFolderId": {
             "type": "integer",
             "format": "int32",
             "nullable": true
           },
-          "name": {
-            "type": "string",
-            "nullable": true
+          "ownerId": {
+            "type": "integer",
+            "format": "int32"
           },
           "createdAt": {
             "type": "string",
@@ -674,6 +751,9 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "isDeleted": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -681,7 +761,7 @@
       "LoginModel": {
         "type": "object",
         "properties": {
-          "userName": {
+          "userEmail": {
             "type": "string",
             "nullable": true
           },

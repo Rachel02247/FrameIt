@@ -9,7 +9,7 @@ public static class TagEndpoints
         {
             var tags = await tagService.GetAllTags();
             return Results.Ok(tags);
-        }).RequireAuthorization();
+        });//.RequireAuthorization();
 
         routes.MapGet("/tags/{id}", async (ITagService tagService, int id) =>
         {
@@ -21,7 +21,7 @@ public static class TagEndpoints
         {
             var createdTag = await tagService.CreateTag(tag);
             return Results.Created($"/tags/{createdTag.Id}", createdTag);
-        }).RequireAuthorization("admin", "editor");
+        });//.RequireAuthorization("admin", "editor");
 
         routes.MapPut("/tags/{id}", async (ITagService tagService, int id, Tag tag) =>
         {

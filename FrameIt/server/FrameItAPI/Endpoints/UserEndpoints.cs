@@ -11,7 +11,8 @@ public static class UserEndpoints
         {
             var users = await userService.GetAllUsers();
             return Results.Ok(users);
-        }).RequireAuthorization("all");
+        });
+            //.RequireAuthorization("all");
 
         routes.MapGet("/users/{id}", async (IUserService userService, int id) =>
         {
@@ -23,7 +24,8 @@ public static class UserEndpoints
         {
             var createdUser = await userService.CreateUser(user);
             return Results.Created($"/users/{createdUser.Id}", createdUser);
-        }).RequireAuthorization("EditorOrAdmin");
+        });
+            //.RequireAuthorization("EditorOrAdmin");
 
         routes.MapPut("/users/{id}", async (IUserService userService, int id, User user) =>
         {

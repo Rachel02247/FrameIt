@@ -24,15 +24,13 @@ namespace FrameItAPI.Services.services
         {
             var userExists = await _context.Users
                      .AnyAsync(u => u.Email == user.Email);
-            if (userExists)
-                throw new Exception()
-                {
-                    Data = { { "Email", "Email already exists" } }
-                };
+            if (!userExists)
+            {
                 user.PasswordHash = user.Password.GetHashCode().ToString();
-            
+
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
+            }
             return user;
         }
 
@@ -52,9 +50,9 @@ namespace FrameItAPI.Services.services
             await _context.SaveChangesAsync();
             return true;
         }
-        public async Task<string> AuthenticateAsync(string username, string password)
+        public async Task<string> AuthenticateAsync(string email, string password)
         {
-            User user = await _context.Users.FindAsync(username);
+            User user = await _context.Users.FindAsync(email) ?? null;
             if (user == null || !user.Password.Equals(password))
             {
                 return null;

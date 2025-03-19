@@ -8,7 +8,7 @@ public static class FileEndpoints
         {
             var files = await fileService.GetAllFiles();
             return Results.Ok(files);
-        }).RequireAuthorization();
+        });//.RequireAuthorization();
 
         routes.MapGet("/files/{id}", async (IFileService fileService, int id) =>
         {
@@ -18,13 +18,16 @@ public static class FileEndpoints
 
         routes.MapPost("/files", async (IFileService fileService, FrameItAPI.Entities.File file) =>
         {
+            if (file.Size > 5 * 1024 * 1024)
+                return Results.BadRequest("The file size exceeds the maximum limit of 5MB.");
+
             var createdFile = await fileService.CreateFile(file);
             return Results.Created($"/files/{createdFile.Id}", createdFile);
-        }).RequireAuthorization("admin", "editor");
+        });//.RequireAuthorization("admin", "editor");
 
         routes.MapPut("/files/{id}", async (IFileService fileService, int id, FrameItAPI.Entities.File file) =>
         {
-            file.Id = id; 
+            file.Id = id;
             var updatedFile = await fileService.UpdateFile(file);
             return Results.Ok(updatedFile);
         }).RequireAuthorization("admin", "editor");

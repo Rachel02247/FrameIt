@@ -11,20 +11,20 @@ namespace FrameItAPI.Endpoints
         {
             app.MapPost("/auth/login", async (LoginModel model, AuthService authService, IUserService userService) =>
             {
-                var roleName = await userService.AuthenticateAsync(model.UserName, model.Password);
+                var roleName = await userService.AuthenticateAsync(model.UserEmail, model.Password);
                 if (roleName == "admin")
                 {
-                    var token = authService.GenerateJwtToken(model.UserName, new[] { "Admin" });
+                    var token = authService.GenerateJwtToken(model.UserEmail, new[] { "Admin" });
                     return Results.Ok(new { Token = token });
                 }
                 else if (roleName == "editor")
                 {
-                    var token = authService.GenerateJwtToken(model.UserName, new[] { "Editor" });
+                    var token = authService.GenerateJwtToken(model.UserEmail, new[] { "Editor" });
                     return Results.Ok(new { Token = token });
                 }
                 else if (roleName == "viewer")
                 {
-                    var token = authService.GenerateJwtToken(model.UserName, new[] { "Viewer" });
+                    var token = authService.GenerateJwtToken(model.UserEmail, new[] { "Viewer" });
                     return Results.Ok(new { Token = token });
                 }
 
@@ -58,7 +58,7 @@ namespace FrameItAPI.Endpoints
 
     public class LoginModel
     {
-        public string UserName { get; set; }
+        public string UserEmail { get; set; }
         public string Password { get; set; }
     }
 

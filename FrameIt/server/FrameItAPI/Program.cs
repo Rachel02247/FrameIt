@@ -77,13 +77,24 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+
+//=========== add cors ===========
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder => builder.AllowAnyOrigin() 
+                        .AllowAnyMethod() 
+                        .AllowAnyHeader()); 
+});
+
 // הוספת הרשאות מבוססות-תפקידים
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
     options.AddPolicy("EditorOrAdmin", policy => policy.RequireRole("Editor", "Admin"));
     options.AddPolicy("ViewerOnly", policy => policy.RequireRole("Viewer"));
-    options.AddPolicy("all", policy => policy.RequireRole("admon", "editor", "Viewer"));
+    options.AddPolicy("all", policy => policy.RequireRole("Admin", "Editor", "Viewer"));
 });
 
 var app = builder.Build();
@@ -96,6 +107,9 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = string.Empty;
 
 });
+
+// ========== Enable CORS ================
+app.UseCors("AllowAll");
 
 // =========== Authentication and Authorization Middleware ============
 app.UseRouting();

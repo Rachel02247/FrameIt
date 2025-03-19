@@ -1,13 +1,30 @@
-import { Outlet } from "react-router-dom"
-import NavBar from "./component/NavBar"
-import Menu from "./component/menu"
+import { Outlet, useLocation } from "react-router-dom"
 
-export default () => {
+import NavBar from "./component/NavBar";
+import AccountMenu from "./component/account/accountMenu";
+import Sidebar from "./component/sideBar";
+import HomePage from "./component/homePage/homePage";
+
+const AppLayout = () => {
+
+    const location = useLocation()
+    const isHomePage = location.pathname === '/';
+
 
     return (<>
-        <Menu />
         <NavBar />
+
+        {isHomePage ?
+            <>
+                <HomePage />
+            </>
+            :
+
+            <Sidebar />
+
+        }
         <Outlet />
-     
     </>)
 }
+
+export default AppLayout;

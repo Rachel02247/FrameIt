@@ -2,13 +2,15 @@
 {
     public class File
     {
-        public int Id { get; set; } 
-        public int UserId { get; set; }
-        public int FolderId { get; set; }
-        public string Filename { get; set; } 
-        public string Url { get; set; } 
-        public int Size { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        public int Id { get; set; }
+        public string FileName { get; set; }
+        public string FileType { get; set; }
+        public long Size { get; set; }
+        public string S3Key { get; set; }
+        public int? FolderId { get; set; }
+        public int OwnerId { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

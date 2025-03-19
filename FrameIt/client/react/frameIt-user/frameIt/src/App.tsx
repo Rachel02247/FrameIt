@@ -7,22 +7,14 @@ import store from './component/global-states/store'
 import ThemeProvider from '@mui/material/styles/ThemeProvider'
 import createTheme from '@mui/material/styles/createTheme'
 
-const theme = createTheme({
+export const theme = createTheme({
   palette: {
     primary: {
-      main: '#1D1D1B', // צבע ראשי
+      main: '#e60060', 
     },
     secondary: {
-      main: '#35a8e0', // צבע משני
+      main: '#f088b6', 
     },
-    warning: {
-      main: '#f29100', // צבע משני
-    },
-    success: {
-      main: '#93c01f', // צבע משני
-    },
-   
-    
   },
 });
 function App() {

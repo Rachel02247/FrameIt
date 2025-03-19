@@ -1,3 +1,4 @@
+
 export const styleModal = {
     position: 'absolute',
     top: '50%',
@@ -9,5 +10,19 @@ export const styleModal = {
     pt: 2,
     px: 4,
     pb: 3,
+    color: 'secondary'
+
+};
+export const StyleModalLogin = {
+    position: 'absolute',
+    top: 2,
+    right: 2,
+    width: 100,
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    pt: 2,
+    px: 4,
+    pb: 3,
+    color: 'secondary'
 
 };
