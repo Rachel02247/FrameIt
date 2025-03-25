@@ -1,5 +1,5 @@
 // FolderItem.tsx
-import React from 'react';
+import React, {  } from 'react';
 import { Box, Typography, IconButton } from '@mui/material';
 import FolderIcon from '@mui/icons-material/Folder';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -13,6 +13,12 @@ interface FolderItemProps {
 }
 
 const FolderItem: React.FC<FolderItemProps> = ({ folder, onClick, onDelete }) => {
+
+  // const [query, setQuery] = useState('');
+  // useEffect(()=>{
+  //   setQuery(highlightMatch(folder.name))
+  // }, [query]);
+
   return (
     <Box
       onClick={onClick}
@@ -22,19 +28,19 @@ const FolderItem: React.FC<FolderItemProps> = ({ folder, onClick, onDelete }) =>
         borderRadius: 2,
         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
         padding: 2,
-        width: '100%', // רוחב מלא
-        aspectRatio: '1', // יחס גובה-רוחב אחיד (ריבוע)
-        maxWidth: 250, // הגבלת רוחב מקסימלי כדי שהן לא יתפשטו רחב מדי
-        height: 'auto', // גובה גמיש לפי התוכן, אבל יש שימור של היחס
+        width: 170, // רוחב מלא
+        // aspectRatio: '1', // יחס גובה-רוחב אחיד (ריבוע)
+        height: 170, // גובה גמיש לפי התוכן, אבל יש שימור של היחס
+        
         '&:hover': { boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' },
       }}
     >
-      <FolderIcon sx={{ fontSize: 60, color: '#f1c40f', marginBottom: 1 }} />
+      <FolderIcon sx={{ fontSize: 60, color: '#f1c40f',}} />
       <Typography variant="subtitle1" align="center">
         {folder.name}
       </Typography>
-      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, marginTop: 1 }}>
-        <IconButton sx={{ color: '#1976d2' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, marginTop: 1}}>
+        <IconButton sx={{ color: '#1976d2' }} >
           <DownloadIcon />
         </IconButton>
         <IconButton sx={{ color: '#1976d2' }}>

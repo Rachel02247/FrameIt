@@ -1,5 +1,6 @@
 ﻿using FrameItAPI.Entities;
 using FrameItAPI.Services.interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 public static class FolderEndpoints
 {
@@ -43,11 +44,12 @@ public static class FolderEndpoints
             return breadcrumb != null ? Results.Ok(breadcrumb) : Results.NotFound();
         });
 
-        routes.MapPost("/folders", async (IFolderService folderService, Folder folder) =>
+        routes.MapPost("/folders", async (IFolderService folderService, [FromBody] Folder folder) =>
         {
             var createdFolder = await folderService.CreateFolder(folder);
             return Results.Created($"/folders/{createdFolder.Id}", createdFolder);
-        });//.RequireAuthorization("admin", "editor");
+        });
+        //.RequireAuthorization("admin", "editor");
 
         routes.MapPut("/folders/{id}", async (IFolderService folderService, int id, Folder folder) =>
         {

@@ -175,13 +175,7 @@
     "HttpMethod": "POST",
     "IsController": false,
     "Order": 0,
-    "Parameters": [
-      {
-        "Name": "file",
-        "Type": "FrameItAPI.Entities.File",
-        "IsRequired": true
-      }
-    ],
+    "Parameters": [],
     "ReturnTypes": [
       {
         "Type": "System.Void",
@@ -250,6 +244,50 @@
       {
         "Name": "id",
         "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "FileEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapFileEndpoints\u003Eb__0_5",
+    "RelativePath": "files/{id}/download",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "FileEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapFileEndpoints\u003Eb__0_6",
+    "RelativePath": "files/generate-url",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "s3Key",
+        "Type": "System.String",
         "IsRequired": true
       }
     ],

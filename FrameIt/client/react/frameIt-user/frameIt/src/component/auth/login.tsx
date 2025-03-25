@@ -2,12 +2,12 @@
 import React, { useState } from 'react';
 import { TextField, Button, Container, Box, Modal, Typography } from '@mui/material';
 import { styleModal } from '../../styles';
-import axios from 'axios';
 import { User } from '../../types';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../global-states/store';
 import { addUser } from '../global-states/userSlice';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default () => {
     const [openModal, setOpenModal] = useState(true);
@@ -43,13 +43,14 @@ export default () => {
         console.log('User signed in');
     
         const newUser: User = {
-            userName: status === 'login' ? '' : userData.name,
+            name: status === 'login' ? '' : userData.name,
             password: userData.password,
             email: userData.email,
             roleName: 'Editor'
         };
     
         try {
+            
             const res = await axios.post(`http://localhost:5282/auth/${status}`, newUser);
             console.log(res);
     

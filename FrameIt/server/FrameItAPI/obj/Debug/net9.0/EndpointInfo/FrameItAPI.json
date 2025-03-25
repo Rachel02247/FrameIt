@@ -20,16 +20,6 @@
         "tags": [
           "FrameItAPI"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/File"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "OK"
@@ -102,6 +92,51 @@
             "schema": {
               "type": "integer",
               "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/files/{id}/download": {
+      "get": {
+        "tags": [
+          "FrameItAPI"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/files/generate-url": {
+      "get": {
+        "tags": [
+          "FrameItAPI"
+        ],
+        "parameters": [
+          {
+            "name": "s3Key",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -701,6 +736,10 @@
             "type": "string",
             "nullable": true
           },
+          "s3Url": {
+            "type": "string",
+            "nullable": true
+          },
           "folderId": {
             "type": "integer",
             "format": "int32",
@@ -775,7 +814,7 @@
       "RegisterModel": {
         "type": "object",
         "properties": {
-          "userName": {
+          "name": {
             "type": "string",
             "nullable": true
           },

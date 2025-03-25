@@ -8,11 +8,11 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
+import Login from '@mui/icons-material/Login';
 import { Link } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../global-states/store';
 
 export default () => {
@@ -40,7 +40,7 @@ export default () => {
             aria-expanded={open ? 'true' : undefined}
           >
             <Avatar sx={{ width: 32, height: 32 }}>
-              {user?.userName?.charAt(0).toUpperCase() ?? null}
+              {user?.name?.charAt(0).toUpperCase() ?? null}
             </Avatar>
           </IconButton>
         </Tooltip>
@@ -84,9 +84,9 @@ export default () => {
       >
         <MenuItem onClick={handleClose}>
           <Avatar />
-          <Link to="/settings">Profile</Link> 
+          <Link to="/settings">Profile</Link>
         </MenuItem>
-      
+
         <Divider />
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
@@ -96,9 +96,12 @@ export default () => {
         </MenuItem>
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
-            <Logout fontSize="small" />
+            {user ?
+              <Logout fontSize="small" /> :
+              <Login fontSize="small" />
+            }
           </ListItemIcon>
-          <Link to="/login">Login</Link>
+          <Link to="/login">{user ? 'logout' : 'login'}</Link>
         </MenuItem>
       </Menu>
     </React.Fragment>

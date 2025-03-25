@@ -1,4 +1,7 @@
-﻿using FrameItAPI.Services.interfaces;
+﻿using Amazon.S3.Model;
+using Amazon.S3;
+using FrameItAPI.Services.interfaces;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 public static class FileEndpoints
 {
@@ -16,14 +19,45 @@ public static class FileEndpoints
             return file is not null ? Results.Ok(file) : Results.NotFound();
         }).RequireAuthorization();
 
-        routes.MapPost("/files", async (IFileService fileService, FrameItAPI.Entities.File file) =>
-        {
-            if (file.Size > 5 * 1024 * 1024)
-                return Results.BadRequest("The file size exceeds the maximum limit of 5MB.");
 
-            var createdFile = await fileService.CreateFile(file);
-            return Results.Created($"/files/{createdFile.Id}", createdFile);
-        });//.RequireAuthorization("admin", "editor");
+        routes.MapPost("/files", async (IFileService fileService, HttpContext httpContext) =>
+        {
+            try
+            {
+                var form = await httpContext.Request.ReadFormAsync();
+                var file = form.Files.GetFile("file"); // קבלת הקובץ מהבקשה
+
+                if (file == null)
+                    return Results.BadRequest("No file uploaded.");
+
+                if (file.Length > 5 * 1024 * 1024)
+                    return Results.BadRequest("The file size exceeds the maximum limit of 5MB.");
+
+                // יצירת אובייקט FrameItAPI.Entities.File מהנתונים שהתקבלו
+                var newFile = new FrameItAPI.Entities.File
+                {
+                    FileName = file.FileName,
+                    FileType = file.ContentType,
+                    FolderId = int.TryParse(form["FolderId"], out var folderId) ? folderId : (int?)null,
+                    IsDeleted = false,
+                    Size = file.Length,
+                    S3Key = $"{form["FolderId"]}/{file.FileName}", // יצירת נתיב לקובץ
+                    OwnerId = int.Parse(form["OwnerId"])
+                };
+
+                using var fileStream = file.OpenReadStream();
+                var createdFile = await fileService.CreateFile(newFile, fileStream);
+
+                return Results.Created($"/files/{createdFile.Id}", createdFile);
+            }
+            catch (Exception ex)
+            {
+                // החזרת תשובה עם פרטי השגיאה
+                return Results.BadRequest(ex.Message);
+            }
+        });
+
+
 
         routes.MapPut("/files/{id}", async (IFileService fileService, int id, FrameItAPI.Entities.File file) =>
         {
@@ -37,5 +71,31 @@ public static class FileEndpoints
             var result = await fileService.DeleteFile(id);
             return result ? Results.NoContent() : Results.NotFound();
         }).RequireAuthorization("admin", "editor");
+
+
+        routes.MapGet("/files/{id}/download", async (int id, IFileService fileService) =>
+        {
+            try
+            {
+                var fileStream = await fileService.DownloadFile(id);
+                if (fileStream == null)
+                {
+                    return Results.NotFound("File not found");
+                }
+
+                // החזרת הקובץ ללקוח (עם סוג MIME שמזוהה לפי הסיומת)
+                return Results.File(fileStream, "application/octet-stream", "downloadedFile");
+            }
+            catch (Exception ex)
+            {
+                return Results.NotFound(ex.Message);
+            }
+        });
+
+        routes.MapGet("/files/generate-url", async (string s3Key, IFileService fileService) =>
+        {
+            return await Task.FromResult(fileService.GetPresignedUrl(s3Key));
+        });
+
     }
 }

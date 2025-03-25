@@ -41,7 +41,7 @@ namespace FrameItAPI.Endpoints
                 // הוספת המשתמש ישירות
                 var existingUser = await userService.CreateUser(new User
                 {
-                    Name = model.UserName,
+                    Name = model.Name,
                     Password = model.Password, // יש לוודא שהסיסמה נשמרת בצורה מאובטחת
                     Email = model.Email,
                     Role = model.RoleName
@@ -50,7 +50,7 @@ namespace FrameItAPI.Endpoints
                 if (existingUser == null)
                     return Results.BadRequest();
 
-                var token = authService.GenerateJwtToken(model.UserName, new[] { model.RoleName });
+                var token = authService.GenerateJwtToken(model.Name, new[] { model.RoleName });
                 return Results.Ok(new { Token = token });
             });
         }
@@ -64,7 +64,7 @@ namespace FrameItAPI.Endpoints
 
     public class RegisterModel
     {
-        public string UserName { get; set; }
+        public string Name { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
         public string RoleName { get; set; }

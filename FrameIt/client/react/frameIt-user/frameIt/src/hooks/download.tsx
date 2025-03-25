@@ -1,56 +1,42 @@
-import AWS, { S3 } from 'aws-sdk';
-import fs from 'fs';
-import path from 'path';
-import JSZip from 'jszip';
+import axios from 'axios';
 
-const s3 = new AWS.S3();
+const downloadFile = async (fileId: string, fileName: string) => {
+  try {
+    console.log(fileName);
+    const response = await axios.get(`http://localhost:5282/files/${fileId?? '0'}/download`, {
+      responseType: 'blob',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      },
+      
+    });
 
-const downloadFileFromS3 = async (bucketName, fileKey) => {
-    const params = {
-        Bucket: bucketName,
-        Key: fileKey,
-    };
+    // טיפול בשם הקובץ מה-Headers
+    // const contentDisposition = response.headers['content-disposition'];
+    // let filename = 'downloaded-file';
 
-    try {
-        const data = await s3.getObject(params).promise();
-        // שמירת הקובץ במחשב
-        fs.writeFileSync(path.join(__dirname, fileKey), data.Body);
-        console.log(`File downloaded successfully: ${fileKey}`);
-    } catch (error) {
-        console.error('Error downloading file:', error);
-    }
+    // if (contentDisposition) {
+    //   const filenameRegex = /filename\*=UTF-8''(.+)|filename=(["']?)(.+?)\2/;
+    //   const match = contentDisposition.match(filenameRegex);
+    //   if (match) {
+    //     filename = decodeURIComponent(match[1] || match[3]);
+    //   }
+    
+
+    // יצירת URL להורדת הקובץ
+    const url = window.URL.createObjectURL(response.data);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+
+    // ניקוי המשאבים
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error('Error downloading file:', error);
+  }
 };
 
-const downloadFolderFromS3 = async (bucketName: string, folderKey: string) => {
-    const params = {
-        Bucket: bucketName,
-        Prefix: folderKey,
-    };
-
-    try {
-        const data = await new Promise((resolve, reject) => {
-            s3.listObjectsV2(params, (err, data: S3.ListObjectsV2Output) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(data);
-                }
-            });
-        });
-        const zip = new JSZip();
-        if(data){
-        for (const item of data.Contents) {
-            const fileData = await s3.getObject({ Bucket: bucketName, Key: item.Key }).promise();
-            zip.file(item.Key.replace(folderKey, ''), fileData.Body);
-        }
-    }
-
-        const content = await zip.generateAsync({ type: 'nodebuffer' });
-        fs.writeFileSync(path.join(__dirname, `${folderKey}.zip`), content);
-        console.log(`Folder downloaded and zipped successfully: ${folderKey}`);
-    } catch (error) {
-        console.error('Error downloading folder:', error);
-    }
-};
-
-export { downloadFileFromS3, downloadFolderFromS3 };
+export { downloadFile };

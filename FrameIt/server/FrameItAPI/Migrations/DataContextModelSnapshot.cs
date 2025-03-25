@@ -77,6 +77,10 @@ namespace FrameItAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("S3Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long>("Size")
                         .HasColumnType("bigint");
 
