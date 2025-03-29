@@ -556,7 +556,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/User"
+                "$ref": "#/components/schemas/RegisterModel"
               }
             }
           },
@@ -800,7 +800,7 @@
       "LoginModel": {
         "type": "object",
         "properties": {
-          "userEmail": {
+          "email": {
             "type": "string",
             "nullable": true
           },
@@ -814,7 +814,7 @@
       "RegisterModel": {
         "type": "object",
         "properties": {
-          "name": {
+          "userName": {
             "type": "string",
             "nullable": true
           },

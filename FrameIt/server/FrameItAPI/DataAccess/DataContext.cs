@@ -10,6 +10,8 @@ namespace FrameItAPI.DataAccess
         public DbSet<Folder> Folders { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Collage> Collages { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<Role> Roles { get; set; }
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
         }

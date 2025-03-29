@@ -53,6 +53,7 @@ builder.Services.AddScoped<IFolderService, FolderService>();
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<ICollageService, CollageService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 builder.Services.AddScoped<AuthService>();
 
 
@@ -116,9 +117,9 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
-        builder => builder.AllowAnyOrigin() 
-                        .AllowAnyMethod() 
-                        .AllowAnyHeader()); 
+        builder => builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
 });
 
 // ========== add cors based roles =============

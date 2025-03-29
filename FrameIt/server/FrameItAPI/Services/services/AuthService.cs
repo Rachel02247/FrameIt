@@ -5,6 +5,7 @@ using System.Text;
 
 public class AuthService
 {
+
     private readonly IConfiguration _configuration;
 
     public AuthService(IConfiguration configuration)
@@ -12,14 +13,14 @@ public class AuthService
         _configuration = configuration;
     }
 
-    public string GenerateJwtToken(string username, string[] roles)
+    public string GenerateJwtToken(string email, string[] roles)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, username)
+            new Claim(ClaimTypes.Email, email)
         };
 
         // הוספת תפקידים כ-Claims

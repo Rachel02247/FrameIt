@@ -2,16 +2,21 @@
 using Microsoft.EntityFrameworkCore;
 using FrameItAPI.Services.interfaces;
 using FrameItAPI.DataAccess;
+using FrameItAPI.Endpoints;
+using Org.BouncyCastle.Crypto.Generators;
 
 namespace FrameItAPI.Services.services
 {
     public class UserService : IUserService
     {
         private readonly DataContext _context;
+        private readonly IUserRoleService _userRoleService;
 
-        public UserService(DataContext context)
+
+        public UserService(DataContext context, IUserRoleService userRoleService)
         {
-            _context = context;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _userRoleService = userRoleService ?? throw new ArgumentNullException(nameof(userRoleService));
         }
         public async Task<User> GetUser(int id) => await _context.Users.FindAsync(id);
 
@@ -20,19 +25,39 @@ namespace FrameItAPI.Services.services
             return await _context.Users.ToListAsync();
         }
 
-        public async Task<User> CreateUser(User user)
+        public async Task<User> CreateUser(RegisterModel model)
         {
-            var userExists = await _context.Users
-                     .AnyAsync(u => u.Email == user.Email);
-            if (!userExists)
+            // ודא שהסיסמה נשמרת בצורה מאובטחת
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.Password);
+            // יצירת המשתמש החדש
+            var user = new User
             {
-                user.PasswordHash = user.Password.GetHashCode().ToString();
+                Name = model.UserName,
+                Password = hashedPassword,
+                Email = model.Email,
+                Role = model.RoleName ?? "Editor"
+            };
 
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+
+            // מציאת התפקיד הרצוי
+            var role = await _context.Roles.FirstOrDefaultAsync(r => r.RoleName == user.Role);
+            Console.WriteLine($"find role:  {user.Role}");
+
+            if (role == null)
+            {
+                Console.WriteLine("not found");
+                return null; // אם התפקיד לא נמצא, מחזיר null
             }
-            return user;
+            // אם התפקיד קיים, יוצרים את הקשר בטבלת UserRoles
+
+            await _userRoleService.AddUserRole(user.Id, role.Id);
+            await _context.SaveChangesAsync();  // שמירה של הקשר בטבלה UserRoles
+            return user; // מחזיר את המשתמש החדש שנוצר
         }
+
 
         public async Task<User> UpdateUser(User User)
         {
@@ -50,15 +75,27 @@ namespace FrameItAPI.Services.services
             await _context.SaveChangesAsync();
             return true;
         }
+
         public async Task<string> AuthenticateAsync(string email, string password)
         {
-            User user = await _context.Users.FindAsync(email) ?? null;
-            if (user == null || !user.Password.Equals(password))
+            Console.WriteLine("find user");
+            User user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
             {
+                Console.WriteLine("not found or wrong password");
                 return null;
             }
-           
-            return "succed";
+            Console.WriteLine("user!!!: " + user.Id);
+            var roles = await _context.UserRoles
+                .Where(ur => ur.UserId == user.Id)
+                .Include(ur => ur.Role)
+                .Select(ur => ur.Role.RoleName)
+                .ToArrayAsync();
+
+            Console.WriteLine($"user roles: {string.Join(", ", roles)}");
+
+            return roles.Length > 0 ? string.Join(",", roles) : user.Role;
         }
     }
 }
+

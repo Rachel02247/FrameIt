@@ -609,7 +609,7 @@
     "Parameters": [
       {
         "Name": "user",
-        "Type": "FrameItAPI.Entities.User",
+        "Type": "FrameItAPI.Endpoints.RegisterModel",
         "IsRequired": true
       }
     ],

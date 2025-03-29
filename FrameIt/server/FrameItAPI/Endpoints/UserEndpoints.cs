@@ -1,4 +1,5 @@
-﻿using FrameItAPI.Entities;
+﻿using FrameItAPI.Endpoints;
+using FrameItAPI.Entities;
 using FrameItAPI.Services.interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -20,7 +21,7 @@ public static class UserEndpoints
             return user is not null ? Results.Ok(user) : Results.NotFound();
         }).RequireAuthorization("all");
 
-        routes.MapPost("/users", async (IUserService userService, User user) =>
+        routes.MapPost("/users", async (IUserService userService, RegisterModel user) =>
         {
             var createdUser = await userService.CreateUser(user);
             return Results.Created($"/users/{createdUser.Id}", createdUser);
