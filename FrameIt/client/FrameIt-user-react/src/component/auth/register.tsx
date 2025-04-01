@@ -13,8 +13,8 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-import { AppDispatch, RootState } from '../global-states/store';
-import { register } from '../global-states/userSlice';
+import { AppDispatch, RootState } from '../../global-states/store';
+import { register } from '../../global-states/userSlice';
 
 
 // Custom styled components
@@ -62,6 +62,9 @@ const Register = () => {
 
         try {
             const resultAction = await dispatch(register(newUser));
+            sessionStorage.setItem('token', resultAction.payload.token);
+            sessionStorage.setItem('name', resultAction.payload.user.name);
+
             if (register.fulfilled.match(resultAction)) {
                 navigate("/myWorkspace");
             }
@@ -98,7 +101,7 @@ const Register = () => {
                            
                             )}
                             <Button type="submit" fullWidth variant="outlined" disabled={loading} sx={{ py: 1.5, '&:hover': { bgcolor: '#d60b54', color: 'white' } }}>
-                                {loading ? <CircularProgress size={24} color="inherit" /> : 'register'}
+                                {loading ? <img src="img/spinner.gif" alt="spinnre" width={24} /> : 'Register'}
                             </Button>
                         </form>
                     </Paper>

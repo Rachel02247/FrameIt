@@ -19,6 +19,10 @@ namespace FrameItAPI.Services.services
             _userRoleService = userRoleService ?? throw new ArgumentNullException(nameof(userRoleService));
         }
         public async Task<User> GetUser(int id) => await _context.Users.FindAsync(id);
+        public async Task<User> GetUserByEmail(string email)
+        {
+            return await _context.Users.SingleOrDefaultAsync(u => u.Email == email);
+        }
 
         public async Task<IEnumerable<User>> GetAllUsers()
         {

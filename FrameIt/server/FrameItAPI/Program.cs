@@ -12,6 +12,7 @@ using Amazon.Extensions.NETCore.Setup;
 using Amazon.S3;
 using DotNetEnv;
 using Amazon;
+using System.Text.Json.Serialization;
 
 
 
@@ -131,6 +132,13 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("ViewerOnly", policy => policy.RequireRole("Viewer"));
     options.AddPolicy("all", policy => policy.RequireRole("Admin", "Editor", "Viewer"));
 });
+
+// ============ JSON srializer =============
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+});
+
 
 var app = builder.Build();
 

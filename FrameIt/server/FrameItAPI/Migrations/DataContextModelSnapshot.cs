@@ -84,6 +84,9 @@ namespace FrameItAPI.Migrations
                     b.Property<long>("Size")
                         .HasColumnType("bigint");
 
+                    b.Property<int?>("TagId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -152,6 +155,9 @@ namespace FrameItAPI.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

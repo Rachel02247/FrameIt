@@ -18,16 +18,22 @@ public static class FolderEndpoints
             return folder is not null ? Results.Ok(folder) : Results.NotFound();
         }).RequireAuthorization();
 
-        routes.MapGet("/folders/{id?}/contents", async (int? id, IFolderService folderService, IFileService fileService) =>
+        routes.MapGet("/folders/myFiles/{userId}", async (IFolderService folderService, int userId) =>
         {
-            int folderId = id ?? 0;
+            var folders = await folderService.GetFoldersByUserId(userId);
+            return Results.Ok(folders);
+        });//.RequireAuthorization();
 
-            var folder = folderId == 0 ? null : await folderService.GetFolder(folderId);
-            if (folderId != 0 && folder == null) 
+        routes.MapGet("/folders/{folderId?}/contents/{userId}", async (int? folderId, int userId, IFolderService folderService, IFileService fileService) =>
+        {
+            int cur_folderId = folderId ?? 0;
+
+            var folder = cur_folderId == 0 ? null : await folderService.GetFolder(cur_folderId);
+            if (cur_folderId != 0 && folder == null)
                 return Results.NotFound("Folder not found");
 
-            var subFolders = await folderService.GetSubFoldersByFolderId(folderId); 
-            var files = await fileService.GetFilesByFolderId(folderId); 
+            var subFolders = await folderService.GetSubFoldersByFolderId(cur_folderId, userId);
+            var files = await fileService.GetFilesByFolderId(cur_folderId, userId);
 
             return Results.Ok(new { folders = subFolders, files = files });
         });

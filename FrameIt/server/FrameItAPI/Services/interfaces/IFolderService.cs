@@ -13,9 +13,10 @@ namespace FrameItAPI.Services.interfaces
         Task<List<Folder>> GetRootFolders();
         Task<List<Folder>> GetSiblings(int parentId);
         Task<List<Folder>> GetFoldersWithNullParent();
-        Task<List<Folder>> GetSubFoldersByFolderId(int folderId);
+        Task<List<Folder>> GetSubFoldersByFolderId(int folderId, int userId);
         Task<Folder> GetParentFolder(int fileId);
         Task<List<Folder>> GetBreadcrumb(int folderId);
+        Task<List<Folder>> GetFoldersByUserId(int userId);
 
 
     }

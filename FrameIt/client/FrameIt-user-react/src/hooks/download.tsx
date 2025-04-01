@@ -3,10 +3,10 @@ import axios from 'axios';
 const downloadFile = async (fileId: string, fileName: string) => {
   try {
     console.log(fileName);
-    const response = await axios.get(`http://localhost:5282/files/${fileId?? '0'}/download`, {
+    const response = await axios.get(`http://localhost:5282/files/${fileId?? '0'}/downloadToComputer`, {
       responseType: 'blob',
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
       },
       
     });

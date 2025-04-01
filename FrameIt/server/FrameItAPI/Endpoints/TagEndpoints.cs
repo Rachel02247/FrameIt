@@ -9,13 +9,26 @@ public static class TagEndpoints
         {
             var tags = await tagService.GetAllTags();
             return Results.Ok(tags);
+        });
+        
+        routes.MapGet("/tags/myCollections/{userId}", async (ITagService tagService, int userId) =>
+        {
+            var tags = await tagService.GetTagsByUserId(userId);
+            return Results.Ok(tags);
         });//.RequireAuthorization();
 
         routes.MapGet("/tags/{id}", async (ITagService tagService, int id) =>
         {
             var tag = await tagService.GetTag(id);
             return tag is not null ? Results.Ok(tag) : Results.NotFound();
-        }).RequireAuthorization();
+        });
+
+        routes.MapGet("/tags/{tagId}/collection", async (IFileService fileService, int tagId) =>
+        {
+
+            var files = await fileService.GetFilesByTag(tagId);
+            return Results.Ok(files ?? []);
+        });//.RequireAuthorization();
 
         routes.MapPost("/tags", async (ITagService tagService, Tag tag) =>
         {

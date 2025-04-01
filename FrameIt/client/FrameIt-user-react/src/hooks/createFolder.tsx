@@ -3,9 +3,9 @@ import { TextField, Button, Dialog, DialogActions, DialogContent, DialogTitle } 
 import axios from 'axios';
 import AddIcon from '@mui/icons-material/Add';
 import { useSelector } from 'react-redux';
-import { RootState } from '../component/global-states/store';
+import { RootState } from '../global-states/store';
 
-const CreateFolder= (folderId: string = '0') => {
+const CreateFolder = ({ folderId = '0', fetchData }: { folderId: string; fetchData: (_folderId: string) => void }) => {
   const [folderName, setFolderName] = useState<string>('');
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const user = useSelector((state: RootState) => state.user.user); // או לפי האיד של המשתמש הנוכחי אם יש לך
@@ -27,14 +27,14 @@ const CreateFolder= (folderId: string = '0') => {
 
     try {
       console.log(folderId);
-      const newFolder = { 
+      const newFolder = {
         name: folderName,
         parentFolderId: folderId.folderId,
-        ownerId: user?.id?? 0 ,
+        ownerId: user?.id ?? 0,
         isDeleted: false
-       };
-       console.log(newFolder)
-       const response = await axios.post(
+      };
+      console.log(newFolder)
+      const response = await axios.post(
         'http://localhost:5282/folders',
         newFolder,
         {
@@ -43,12 +43,14 @@ const CreateFolder= (folderId: string = '0') => {
           },
         }
       );
-             console.log(response.data);
-
+      console.log(response.data);
       handleClose();
-
-      // Notify the server about the new folder
-      // await axios.post('http://localhost:5282/folders/update', { folder: response.data });
+     
+     try{ fetchData(folderId);
+     }
+     catch(err){
+      console.log("failes fething data" + err);
+     }
     } catch (error) {
       alert('Error creating folder');
       console.error(error);
@@ -101,82 +103,3 @@ const CreateFolder= (folderId: string = '0') => {
 
 export default CreateFolder;
 
-// import React, { useState } from 'react';
-// import { TextField, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip } from '@mui/material';
-// import axios from 'axios';
-// import AddIcon from '@mui/icons-material/Add';
-
-// const CreateFolder: React.FC = () => {
-//   const [folderName, setFolderName] = useState<string>('');
-//   const [openDialog, setOpenDialog] = useState<boolean>(false);
-
-//   const handleClick = () => {
-//     setOpenDialog(true);
-//   };
-
-//   const handleClose = () => {
-//     setOpenDialog(false);
-//     setFolderName('');
-//   };
-
-//   const handleCreateFolder = async () => {
-//     if (folderName.trim() === '') {
-//       alert('Please enter a folder name');
-//       return;
-//     }
-
-//     try {
-//       const response = await axios.post('http://localhost:5282/folders', { name: folderName });
-//       alert('Folder created successfully!');
-//       handleClose();
-
-//       // Notify the server about the new folder
-//       await axios.post('http://localhost:5282/folders/update', { folder: response.data });
-//     } catch (error) {
-//       alert('Error creating folder');
-//       console.error(error);
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <Tooltip title="New Folder" arrow
-//         sx={{
-//           position: 'absolute',
-//           right: 20,
-//           top: 20
-//         }}>
-//         <IconButton color="primary" onClick={handleClick}>
-//           <AddIcon />
-//         </IconButton>
-//       </Tooltip>
-
-//       <Dialog open={openDialog} onClose={handleClose}>
-//         <DialogTitle>Create New Folder</DialogTitle>
-//         <DialogContent>
-//           <TextField
-//             autoFocus
-//             margin="dense"
-//             id="folderName"
-//             label="Folder Name"
-//             type="text"
-//             fullWidth
-//             value={folderName}
-//             onChange={(e) => setFolderName(e.target.value)}
-//             variant="outlined"
-//           />
-//         </DialogContent>
-//         <DialogActions>
-//           <Button onClick={handleClose} color="secondary">
-//             Cancel
-//           </Button>
-//           <Button onClick={handleCreateFolder} color="primary">
-//             Create
-//           </Button>
-//         </DialogActions>
-//       </Dialog>
-//     </div>
-//   );
-// };
-
-// export default CreateFolder;

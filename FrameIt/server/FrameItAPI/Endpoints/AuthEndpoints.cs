@@ -7,15 +7,17 @@ namespace FrameItAPI.Endpoints
 {
         public static class AuthEndpoints
         {
-            public static void MapAuthEndpoints(WebApplication app)
+            public static void MapAuthEndpoints(this IEndpointRouteBuilder routes)
             {
 
-            app.MapPost("/auth/login", async (LoginModel model, AuthService authService, IUserService userService) =>
+            routes.MapPost("/auth/login", async (LoginModel model, AuthService authService, IUserService userService) =>
             {
                 Console.WriteLine($"username: {model.Email}, Password: {model.Password}");
 
                 var roleName = await userService.AuthenticateAsync(model.Email, model.Password);
                 Console.WriteLine("Roles: " + string.Join(", ", roleName));
+
+                var user = await userService.GetUserByEmail(model.Email);
 
                 if (string.IsNullOrEmpty(roleName))
                 {
@@ -28,23 +30,33 @@ namespace FrameItAPI.Endpoints
                 if (roles.Contains("Admin"))
                 {
                     var token = authService.GenerateJwtToken(model.Email, roles);
-                    return Results.Ok(new { Token = token });
+                    return Results.Ok(new { Token = token, User = user });
                 }
                 else if (roles.Contains("Editor"))
                 {
                     var token = authService.GenerateJwtToken(model.Email, roles);
-                    return Results.Ok(new { Token = token });
+                    return Results.Ok(new
+                    {
+                        Token = token,
+                        User = new
+                        {
+                            Name = user.Name,
+                            Email = user.Email,
+                            Id = user.Id,
+                            RoleName = user.Role
+                        }
+                    });
                 }
                 else if (roles.Contains("Viewer"))
                 {
                     var token = authService.GenerateJwtToken(model.Email, roles);
-                    return Results.Ok(new { Token = token });
+                    return Results.Ok(new { Token = token, User = user });
                 }
-                return Results.Unauthorized();
+                return Results.Ok(new { Message = "Unauthorized access", User = user });
             });
 
 
-            app.MapPost("/auth/register", async (RegisterModel model, AuthService authService, IUserService userService) =>
+            routes.MapPost("/auth/register", async (RegisterModel model, AuthService authService, IUserService userService) =>
                 {
                     if (model == null)
                     {

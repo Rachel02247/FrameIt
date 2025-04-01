@@ -3,7 +3,7 @@ import { RouterProvider } from 'react-router-dom'
 import './App.css'
 import { router } from './router'
 import { Provider } from 'react-redux'
-import store from './component/global-states/store'
+import store from './global-states/store'
 import ThemeProvider from '@mui/material/styles/ThemeProvider'
 import createTheme from '@mui/material/styles/createTheme'
 

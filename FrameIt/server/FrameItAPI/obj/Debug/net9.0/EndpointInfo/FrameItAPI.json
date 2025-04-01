@@ -102,7 +102,29 @@
         }
       }
     },
-    "/files/{id}/download": {
+    "/files/{fileName}/download": {
+      "get": {
+        "tags": [
+          "FrameItAPI"
+        ],
+        "parameters": [
+          {
+            "name": "fileName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/files/{id}/downloadToComputer": {
       "get": {
         "tags": [
           "FrameItAPI"
@@ -254,14 +276,46 @@
         }
       }
     },
-    "/folders/{id}/contents": {
+    "/folders/myFiles/{userId}": {
       "get": {
         "tags": [
           "FrameItAPI"
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/folders/{folderId}/contents/{userId}": {
+      "get": {
+        "tags": [
+          "FrameItAPI"
+        ],
+        "parameters": [
+          {
+            "name": "folderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "userId",
             "in": "path",
             "required": true,
             "schema": {
@@ -355,6 +409,29 @@
         }
       }
     },
+    "/tags/myCollections/{userId}": {
+      "get": {
+        "tags": [
+          "FrameItAPI"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/tags/{id}": {
       "get": {
         "tags": [
@@ -415,6 +492,29 @@
         "parameters": [
           {
             "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/tags/{tagId}/collection": {
+      "get": {
+        "tags": [
+          "FrameItAPI"
+        ],
+        "parameters": [
+          {
+            "name": "tagId",
             "in": "path",
             "required": true,
             "schema": {
@@ -757,6 +857,11 @@
             "type": "string",
             "format": "date-time"
           },
+          "tagId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "isDeleted": {
             "type": "boolean"
           }
@@ -843,6 +948,10 @@
           "name": {
             "type": "string",
             "nullable": true
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

@@ -2,50 +2,76 @@
 import React from 'react';
 import { Box, Typography, Button, Container } from '@mui/material';
 import { motion } from 'framer-motion';
-import './style.css';
 import { Link } from 'react-router-dom';
+import { PhotoCamera, Share, Cloud } from '@mui/icons-material';
+import './style.css';
 
 export default () => {
   return (
-    <Box className="hero" sx={{ mt: 8, bgcolor: 'transparent', height: '100%', display: 'flex', alignItems: 'center' }}>
+    <Box className="hero" sx={{ mt: 6, height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', bgcolor: 'background.default' }}>
       <Container>
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
+          style={{ textAlign: 'center' }}
         >
-       
-          {/* Title */}
-          <Typography variant="h2" component="h1" align="center" color='primary' sx={{ fontWeight: 'bold' }}>
-            Welcome to FrameIt
+          <Typography variant="h2" component="h1" color='primary' sx={{ fontWeight: 'bold', mb: 4 }}>
+            Welcome to <span style={{ color: '#ff4081' }}>FrameIt</span>
           </Typography>
-          <Typography variant="h6" align="center" color='secondary' sx={{ marginBottom: 2 }}>
-            Your go-to cloud photo management app. Organize, share, and enhance your memories with ease.
-          </Typography>
+        </motion.div>
 
-          {/* Add the logo image */}
-          <Box sx={{ display: 'flex', justifyContent: 'center', m: 4, position: 'relative' }}>
-            <img
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}
+        >
+          <Box>
+            <motion.img
               src="img/frameItLogo.png"
               alt="FrameIt Logo"
-              style={{ width: 400, objectFit: 'fill' }}
+              style={{ width: 350 }}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 1 }}
             />
           </Box>
-
-          {/* Button for Call to Action */}
-
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          
+          <Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+              <PhotoCamera color="primary" fontSize="large" />
+              <Typography variant="h6" color='text.secondary'>
+                Organize your photos effortlessly
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+              <Share color="primary" fontSize="large" />
+              <Typography variant="h6" color='text.secondary'>
+                Share your memories instantly
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+              <Cloud color="primary" fontSize="large" />
+              <Typography variant="h6" color='text.secondary'>
+                Secure cloud storage for all your moments
+              </Typography>
+            </Box>
+          </Box>
+        </motion.div>
+        
+        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3, flexWrap: 'wrap', mt: 6 }}>
+          <motion.div whileHover={{ scale: 1.1 }}>
             <Button variant="contained" color="primary" size="large" component={Link} to="/register">
               Get Started
             </Button>
-          </Box>
-          <Typography variant="h5" align="center" color='primary' sx={{ m: 2, mt: 6 }}>you have already an account?</Typography>
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Button variant="contained" color="primary" size="large" component={Link} to="/login">
-              sign in
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.1 }}>
+            <Button variant="outlined" color="primary" size="large" component={Link} to="/login">
+              Sign In
             </Button>
-          </Box>
-        </motion.div>
+          </motion.div>
+        </Box>
       </Container>
     </Box>
   );

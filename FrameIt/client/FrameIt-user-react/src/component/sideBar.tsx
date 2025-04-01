@@ -8,6 +8,7 @@ import StarIcon from '@mui/icons-material/Star';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountMenu from './account/accountMenu';
+import AI from '../page/AI';
 
 const NAVIGATION = [
     { path: '/gallery', title: 'Gallery', icon: <DashboardIcon /> },
@@ -34,6 +35,7 @@ const Sidebar = () => {
                 button: 0,
                 paddingLeft: 4, // תזוזה ימינה
                 width: open ? 240 : 80, // אם הסיידבר פתוח או סגור
+                position: 'relative'
                
             }}
         >
@@ -51,7 +53,7 @@ const Sidebar = () => {
                     <MenuIcon />
                 </IconButton>
             </Box>
-            <List>
+            <List sx={{zIndex: 2}}>
                 {NAVIGATION.map((item) => (
                     <ListItem 
                         button 
@@ -68,6 +70,8 @@ const Sidebar = () => {
                     </ListItem>
                 ))}
             </List>
+            <AI/>
+
         </Drawer>
         </>
 

@@ -18,6 +18,12 @@ export type Folder = {
 
 }
 
+export type Tag ={
+    id: number,
+    name: string,
+    userId: number
+}
+
 export type MyFile = {
     id: string;
     fileName: string; // שם הקובץ כפי שמגיע מהשרת
@@ -28,3 +34,12 @@ export type MyFile = {
     folderId: string,
     ownerId: string
 }
+
+export interface FileItemProps {
+    file: MyFile;
+    onDelete: () => void;
+    onSelect?: (id: string) => void;
+    isSelected?: boolean;
+    showCheckbox?: boolean;
+    onOpenPreview: (fileId: string) => void;
+  }

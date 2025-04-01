@@ -2,6 +2,7 @@
 using Amazon.S3;
 using FrameItAPI.Services.interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.StaticFiles;
 
 public static class FileEndpoints
 {
@@ -64,7 +65,7 @@ public static class FileEndpoints
             file.Id = id;
             var updatedFile = await fileService.UpdateFile(file);
             return Results.Ok(updatedFile);
-        }).RequireAuthorization("admin", "editor");
+        });//.RequireAuthorization("admin", "editor");
 
         routes.MapDelete("/files/{id}", async (IFileService fileService, int id) =>
         {
@@ -73,7 +74,36 @@ public static class FileEndpoints
         }).RequireAuthorization("admin", "editor");
 
 
-        routes.MapGet("/files/{id}/download", async (int id, IFileService fileService) =>
+        routes.MapGet("/files/{fileName}/download", async (string fileName, IFileService fileService) =>
+        {
+            try
+            {
+                var fileUrl = await fileService.Download(fileName); // מקבל את ה-URL
+
+                if (string.IsNullOrEmpty(fileUrl))
+                    return Results.NotFound("File not found.");
+
+                using var httpClient = new HttpClient();
+                var response = await httpClient.GetAsync(fileUrl);
+
+                if (!response.IsSuccessStatusCode)
+                    return Results.Problem("Failed to fetch file from S3.");
+
+                var fileBytes = await response.Content.ReadAsByteArrayAsync();
+                var contentType = response.Content.Headers.ContentType?.ToString() ?? "application/octet-stream";
+
+                return Results.File(fileBytes, contentType, fileName);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return Results.Problem("An error occurred.");
+            }
+        });
+
+
+
+        routes.MapGet("/files/{id}/downloadToComputer", async (int id, IFileService fileService) =>
         {
             try
             {
@@ -85,6 +115,7 @@ public static class FileEndpoints
 
                 // החזרת הקובץ ללקוח (עם סוג MIME שמזוהה לפי הסיומת)
                 return Results.File(fileStream, "application/octet-stream", "downloadedFile");
+
             }
             catch (Exception ex)
             {

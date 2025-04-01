@@ -1,39 +1,92 @@
+
 import React, { useEffect, useState } from 'react';
-import { Box, ImageListItemBar, IconButton, Typography } from '@mui/material';
+import { 
+  Box, 
+  IconButton, 
+  Menu, 
+  MenuItem, 
+  Divider, 
+  Tooltip 
+} from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CollectionsIcon from '@mui/icons-material/Collections';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { useSelector, useDispatch } from 'react-redux';
+import { AppDispatch, RootState } from '../../global-states/store';
+import { fetchUserCollections, addFileToCollection } from '../../global-states/tagSlice';
+import CreateCollection from '../../hooks/createCollection';
 import { downloadFile } from '../../hooks/download';
-import axios from 'axios';
+import { FileItemProps } from '../../types';
 
-interface FileItemProps {
-  file: {
-    s3Key: string;
-    fileType: string;
-    fileName: string;
-    id: string;
-  };
-  onDelete: () => void;
-}
 
-const FileItem: React.FC<FileItemProps> = ({ file, onDelete }) => {
-  const url = "http://localhost:5282/files/generate-url";
+const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) => {
   const [presignedUrl, setPresignedUrl] = useState('');
-  const [showBar, setShowBar] = useState(false);
-
+  const [imgUrl, setImgUrl] = useState('');
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [showTagMenu, setShowTagMenu] = useState(false);
+  const [openCreateCollection, setOpenCreateCollection] = useState(false);
+  
+  const dispatch = useDispatch<AppDispatch>();
+  const userId = useSelector((state: RootState) => state.user.user?.id);
+  const tags = useSelector((state: RootState) => state.tags.collections);
+  
   const isVideo = file.fileType.toLowerCase() === 'mp4' || file.fileType.toLowerCase() === 'mov';
 
-  const getPresignedUrl = async () => {
-    const encodeKey = encodeURIComponent(file.s3Key);
-    console.log('encodeKey: ' + encodeKey);
-    const res = await axios.get(`${url}?s3Key=${encodeKey}`);
-    console.log(res);
-    setPresignedUrl(res.data.url);
-    console.log(presignedUrl);
-  };
+  useEffect(() => {
+    const loadFileUrls = async () => {
+      const previewUrl = await getFilePreviewUrl(file.s3Key);
+      setPresignedUrl(previewUrl);
+      
+      const directUrl = await getFileDirectUrl(file.fileName);
+      setImgUrl(directUrl);
+    };
+    
+    loadFileUrls();
+  }, [file.s3Key, file.fileName]);
 
   useEffect(() => {
-    getPresignedUrl();
-  }, []);
+    if (userId) {
+      dispatch(fetchUserCollections(userId));
+    }
+  }, [userId, dispatch]);
+
+  const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const handleOpenTagMenu = () => {
+    setShowTagMenu(true);
+  };
+
+  const handleSelectTag = async (tagId: number) => {
+    setShowTagMenu(false);
+    dispatch(addFileToCollection({ fileId: file.id, tagId }));
+  };
+
+  const handleCreateNewCollection = () => {
+    setOpenCreateCollection(true);
+    setShowTagMenu(false);
+  };
+
+  const handleFileClick = () => {
+    onOpenPreview(file.id);
+  };
+
+  const handleDownload = () => {
+    downloadFile(file.id, file.fileName);
+    handleCloseMenu();
+  };
+
+  const handleDeleteFile = () => {
+    onDelete();
+    handleCloseMenu();
+  };
 
   return (
     <Box
@@ -48,56 +101,87 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete }) => {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'flex-start',
-        position: 'relative'
+        position: 'relative',
+        '&:hover .file-actions': {
+          opacity: 1,
+          visibility: 'visible',
+        },
       }}
-      onMouseEnter={() => setShowBar(true)}
-      onMouseLeave={() => setShowBar(false)}
+      onMouseEnter={() => setAnchorEl(null)}
+      onMouseLeave={() => setAnchorEl(null)}
     >
       {isVideo ? (
         <video
           controls
           style={{ width: '100%', height: '100%', objectFit: 'cover', cursor: 'pointer' }}
           onError={(e) => (e.currentTarget.style.display = 'none')}
+          onClick={handleFileClick}
         >
           <source src={presignedUrl} type={`video/${file.fileType}`} />
           הדפדפן שלך אינו תומך בניגון וידאו.
         </video>
       ) : (
         <img
-          src={presignedUrl ?? 'img/logo.png'}
+          src={presignedUrl || imgUrl || 'img/logo.png'}
           alt={file.fileName}
           loading="lazy"
           style={{ width: '100%', height: '100%', objectFit: 'cover', cursor: 'pointer' }}
           onError={(e) => (e.currentTarget.src = 'img/logo.png')}
+          onClick={handleFileClick}
         />
       )}
 
-      {showBar && (
-        <ImageListItemBar
-          sx={{
-            bgcolor: 'transparent',
-            width: '100%',
-            position: 'absolute',
-            bottom: 0,
-            borderRadius: '0 0 8px 8px'
-          }}
-          title={file.fileName}
-          actionIcon={
-            <Box>
-              <Typography variant="body2" sx={{ mt: 1, textAlign: 'center', fontWeight: 'bold', color: 'grey' }}>
-                {file.fileName}
-              </Typography>
-              <IconButton color='secondary' onClick={() => downloadFile(file.id, file.fileName)}>
-                <DownloadIcon />
-              </IconButton>
-              <IconButton color='secondary' onClick={onDelete}>
-                <DeleteIcon />
-              </IconButton>
-            
-            </Box>
-          }
-        />
-      )}
+      {/* Menu Button */}
+      <Box
+        className="file-actions"
+        sx={{
+          position: 'absolute',
+          top: '10px',
+          right: '10px',
+          opacity: 0,
+          visibility: 'hidden',
+          transition: 'opacity 0.3s, visibility 0.3s',
+          zIndex: 10,
+        }}
+      >
+        <Tooltip title="More options">
+          <IconButton onClick={handleOpenMenu} color='primary'>
+            <MoreVertIcon />
+          </IconButton>
+        </Tooltip>
+      </Box>
+
+      {/* Options Menu */}
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
+        <MenuItem onClick={handleDownload}>
+          <DownloadIcon sx={{ mr: 1 }} /> Download
+        </MenuItem>
+        <MenuItem onClick={handleDeleteFile}>
+          <DeleteIcon sx={{ mr: 1, color: 'red' }} /> Delete
+        </MenuItem>
+        <MenuItem onClick={handleOpenTagMenu}>
+          <CollectionsIcon sx={{ mr: 1 }} /> Add to Collection
+        </MenuItem>
+      </Menu>
+
+      {/* Tags Menu */}
+      <Menu anchorEl={anchorEl} open={showTagMenu} onClose={() => setShowTagMenu(false)}>
+        {tags.map((tag) => (
+          <MenuItem key={tag.id} onClick={() => handleSelectTag(tag.id)}>
+            <CollectionsIcon sx={{ mr: 1 }} /> {tag.name}
+          </MenuItem>
+        ))}
+        <Divider />
+        <MenuItem onClick={handleCreateNewCollection}>
+          <AddCircleIcon sx={{ mr: 1 }} /> Create New Collection
+        </MenuItem>
+      </Menu>
+
+      <CreateCollection
+        open={openCreateCollection}
+        onClose={() => setOpenCreateCollection(false)}
+        fetchData={() => userId && dispatch(fetchUserCollections(userId))}
+      />
     </Box>
   );
 };

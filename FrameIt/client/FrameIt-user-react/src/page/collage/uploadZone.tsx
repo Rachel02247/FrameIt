@@ -36,7 +36,7 @@ const UploadZone: React.FC<UploadZoneProps> = ({ onImageUpload, className }) => 
     accept: {
       'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.webp']
     },
-    maxFiles: 1
+    maxFiles: 10
   });
 
   return (

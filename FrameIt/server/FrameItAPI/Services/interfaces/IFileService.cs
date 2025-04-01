@@ -1,4 +1,5 @@
-﻿using FrameItAPI.Entities;
+﻿using Amazon.S3.Model;
+using FrameItAPI.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FrameItAPI.Services.interfaces
@@ -12,10 +13,11 @@ namespace FrameItAPI.Services.interfaces
         Task<bool> DeleteFile(int id);
         Task<bool> RestoreFile(int id);
         Task<List<Entities.File>> GetFilesWithNullParent();
-        Task<List<Entities.File>> GetFilesByFolderId(int folderId);
+        Task<List<Entities.File>> GetFilesByFolderId(int folderId, int userId);
         Task<Stream> DownloadFile(int id);
+        Task<string> Download(string fileName);
         IResult GetPresignedUrl(string fileName);
-
+        Task<IEnumerable<FrameItAPI.Entities.File>> GetFilesByTag(int tagId);
 
 
 

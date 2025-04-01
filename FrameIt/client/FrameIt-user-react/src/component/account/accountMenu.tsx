@@ -13,7 +13,7 @@ import Logout from '@mui/icons-material/Logout';
 import Login from '@mui/icons-material/Login';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { RootState } from '../global-states/store';
+import { RootState } from '../../global-states/store';
 
 export default () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -40,7 +40,7 @@ export default () => {
             aria-expanded={open ? 'true' : undefined}
           >
             <Avatar sx={{ width: 32, height: 32 }}>
-              {user?.user.name?.charAt(0).toUpperCase() ?? null}
+              {user?.user.name?.charAt(0).toUpperCase() ?? sessionStorage.getItem('name')?.charAt(0).toUpperCase ?? null}
             </Avatar>
           </IconButton>
         </Tooltip>

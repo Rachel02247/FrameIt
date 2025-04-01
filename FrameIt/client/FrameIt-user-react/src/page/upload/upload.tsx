@@ -4,7 +4,7 @@ import axios from "axios";
 import FileUpload from "./fileUpload";
 // import { MyFile } from "../../types";
 import { useSelector } from "react-redux";
-import { RootState } from "../../component/global-states/store";
+import { RootState } from "../../global-states/store";
 
 const Upload = () => {
   
