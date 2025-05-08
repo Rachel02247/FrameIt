@@ -11,8 +11,16 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  token: sessionStorage.getItem('token') ?? null,
-  user: { Name: sessionStorage.getItem('name') ?? "John", Email: "", Password: "", CreatedAt: "", UpdatedAt: "", id: sessionStorage.getItem('id') ?? null, RoleName: 'Editor' },
+  token: sessionStorage.getItem('token') ?? undefined, // Changed null to undefined
+  user: {
+    Name: sessionStorage.getItem('name') ?? "John",
+    Email: "",
+    Password: "",
+    CreatedAt: "",
+    UpdatedAt: "",
+    id: sessionStorage.getItem('id') ?? undefined, // Changed null to undefined
+    RoleName: 'Editor',
+  },
   loading: false,
   error: null,
 };
@@ -26,13 +34,14 @@ export const login = createAsyncThunk(
     try {
       const response = await axios.post<{ token: string; user: User }>(url + "login", {
         Email: credentials.email,
-        Password: credentials.password
+        Password: credentials.password,
       });
-      console.log(response);
       return response.data;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.response?.data?.message || "Login failed");
+    } catch (error: unknown) { // Changed `any` to `unknown`
+      if (axios.isAxiosError(error) && error.response) {
+        return thunkAPI.rejectWithValue(error.response.data.message || "Login failed");
+      }
+      return thunkAPI.rejectWithValue("Login failed");
     }
   }
 );
@@ -48,19 +57,14 @@ export const register = createAsyncThunk(
         Password: newUser.Password,
         RoleName: "Editor",
       });
-
       return response.data;
-    
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        return thunkAPI.rejectWithValue(error.response?.data || "Registration failed");
-      } else {
-          console.error("Unknown error", error);
+    } catch (error: unknown) { // Changed `any` to `unknown`
+      if (axios.isAxiosError(error) && error.response) {
+        return thunkAPI.rejectWithValue(error.response.data || "Registration failed");
       }
-  }
-  
+      return thunkAPI.rejectWithValue("Registration failed");
     }
-  
+  }
 );
 
 
