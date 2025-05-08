@@ -7,12 +7,11 @@ import {
     TextField,
     Typography,
     Container,
-    CircularProgress,
     FormHelperText,
     Paper
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AppDispatch, RootState } from '../../global-states/store';
 import { register } from '../../global-states/userSlice';
 
@@ -78,7 +77,7 @@ const Register = () => {
         <Paper sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', bgcolor: 'rgb(255, 255, 255)' }}>
             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', p: 3 }}>
                 <Container maxWidth="sm">
-                    <LogoRing sx={{ border: '25px solid #e60060'! }}>
+                    <LogoRing sx={{ border: '25px solid #666699'! }}>
                         <Typography variant="h4" component="div" align="center" color='primary' sx={{ position: 'absolute', width: '100%', fontWeight: 'bold', textShadow: '1px 1px 3px rgba(0,0,0,0.5)' }}>
                             welcome <br />Geust
                         </Typography>
@@ -100,9 +99,10 @@ const Register = () => {
                            </FormHelperText>
                            
                             )}
-                            <Button type="submit" fullWidth variant="outlined" disabled={loading} sx={{ py: 1.5, '&:hover': { bgcolor: '#d60b54', color: 'white' } }}>
+                            <Button type="submit" fullWidth variant="outlined" disabled={loading} sx={{ py: 1.5, '&:hover': { bgcolor: '#666699', color: 'white' } }}>
                                 {loading ? <img src="img/spinner.gif" alt="spinnre" width={24} /> : 'Register'}
                             </Button>
+                            <p>Already have an account? <Link to="/login">Sign In</Link></p>
                         </form>
                     </Paper>
                 </Container>

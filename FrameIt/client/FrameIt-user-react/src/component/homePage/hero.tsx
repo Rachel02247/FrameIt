@@ -16,9 +16,7 @@ export default () => {
           transition={{ duration: 1 }}
           style={{ textAlign: 'center' }}
         >
-          <Typography variant="h2" component="h1" color='primary' sx={{ fontWeight: 'bold', mb: 4 }}>
-            Welcome to <span style={{ color: '#ff4081' }}>FrameIt</span>
-          </Typography>
+        <Typography variant='h1' component='h1' color='secondary'  sx={{ fontWeight: 'bold', mb: 4 }}>FrameIt</Typography>
         </motion.div>
 
         <motion.div

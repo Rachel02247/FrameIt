@@ -324,6 +324,30 @@
     ]
   },
   {
+    "ContainingType": "FileEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapFileEndpoints\u003Eb__0_8",
+    "RelativePath": "files/myfiles/{userId}",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[FrameItAPI.Entities.File, FrameItAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "FolderEndpoints\u002B\u003C\u003Ec",
     "Method": "\u003CMapFolderEndpoints\u003Eb__0_0",
     "RelativePath": "folders",

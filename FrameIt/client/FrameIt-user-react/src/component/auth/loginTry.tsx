@@ -6,7 +6,6 @@ import {
     TextField,
     Typography,
     Container,
-    CircularProgress,
     FormHelperText,
     Paper
 } from '@mui/material';
@@ -75,7 +74,7 @@ const LoginTry = () => {
         <Paper sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', bgcolor: 'rgb(255, 255, 255)' }}>
             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', p: 3 }}>
                 <Container maxWidth="sm">
-                    <LogoRing sx={{ border: '25px solid #e60060'! }}>
+                    <LogoRing sx={{ border: '25px solid #666699'! }}>
                         <Typography variant="h4" component="div" align="center" color='primary' sx={{ position: 'absolute', width: '100%', fontWeight: 'bold', textShadow: '1px 1px 3px rgba(0,0,0,0.5)' }}>
                             Welcome <br /> Back!
                         </Typography>
@@ -94,7 +93,7 @@ const LoginTry = () => {
                                     {formError || error?.response?.data?.message || 'An unexpected error occurred'}
                                 </FormHelperText>
                             )}
-                            <Button type="submit" fullWidth variant="outlined" disabled={loading} sx={{ py: 1.5, '&:hover': { bgcolor: '#d60b54', color: 'white' } }}>
+                            <Button type="submit" fullWidth variant="outlined" disabled={loading} sx={{ py: 1.5, '&:hover': { bgcolor: '#666699', color: 'white' } }}>
                                 {loading ? <img src="img/spinner.gif" alt="spinnre" width={24} /> : 'Login'}
                             </Button>
 

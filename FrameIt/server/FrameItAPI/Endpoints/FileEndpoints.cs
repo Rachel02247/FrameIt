@@ -128,5 +128,11 @@ public static class FileEndpoints
             return await fileService.GetPresignedUrl(s3Key);
         });
 
+        routes.MapGet("/files/myfiles/{userId}", async (int userId, IFileService fileService) =>
+        {
+            return await fileService.GetFilesByaUserId(userId);
+        });
+           // .RequireAuthorization("admin", "editor");
+
     }
 }
