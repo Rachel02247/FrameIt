@@ -19,7 +19,7 @@ const initialState: TagState = {
   error: null,
 };
 
-const API_URL = 'http://localhost:5282';
+const API_URL = import.meta.env.VITE_API_URL;
 
 // Async thunks for API calls
 export const fetchUserCollections = createAsyncThunk(
@@ -72,9 +72,9 @@ const tagSlice = createSlice({
       const sortOrder = action.payload;
       state.files.sort((a, b) => {
         if (sortOrder === 'asc') {
-          return a.name.localeCompare(b.name);
+          return a.fileName.localeCompare(b.fileName);
         } else {
-          return b.name.localeCompare(a.name);
+          return b.fileName.localeCompare(a.fileName);
         }
       });
     },

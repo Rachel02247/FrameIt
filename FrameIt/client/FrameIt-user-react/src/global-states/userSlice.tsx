@@ -11,7 +11,7 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  token: sessionStorage.getItem('token') ?? undefined, // Changed null to undefined
+  token: sessionStorage.getItem('token') ?? null,
   user: {
     Name: sessionStorage.getItem('name') ?? "John",
     Email: "",
@@ -25,7 +25,7 @@ const initialState: AuthState = {
   error: null,
 };
 
-const url = "http://localhost:5282/auth/";
+const url = `${import.meta.env.VITE_API_URL}/auth/`;
 
 // Async Thunk for Login
 export const login = createAsyncThunk(

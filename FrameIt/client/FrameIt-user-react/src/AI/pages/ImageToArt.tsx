@@ -98,7 +98,6 @@ function ImageToArt() {
   const handleDownload = () => {
     if (!generatedArt) return
 
-    // Create a temporary anchor element
     const link = document.createElement("a")
     link.href = generatedArt
     link.download = `art-${selectedStyle}-${Date.now()}.png`

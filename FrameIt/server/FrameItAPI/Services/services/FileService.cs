@@ -139,7 +139,15 @@ namespace FrameItAPI.Services.services
             return await _context.Files
                 .Where(f => f.FolderId == folderId && f.OwnerId == userId)
                 .ToListAsync();
+        } 
+        
+        public async Task<List<Entities.File>> GetFilesByaUserId(int userId)
+        {
+            return await _context.Files
+                .Where(f => !f.IsDeleted && f.OwnerId == userId)
+                .ToListAsync();
         }
+
         public async Task<IEnumerable<FrameItAPI.Entities.File>> GetFilesByTag(int tagId)
         {
             var tag = await _context.Tags.FindAsync(tagId);

@@ -16,10 +16,10 @@ namespace FrameItAPI.Services.interfaces
         Task<List<Entities.File>> GetFilesByFolderId(int folderId, int userId);
         Task<Stream> DownloadFile(int id);
         Task<string> Download(string fileName);
-        Task<string> GetPresignedUrl(string fileName);
+        Task<string> GetPresignedUrl(string s3Key);
         Task<IEnumerable<FrameItAPI.Entities.File>> GetFilesByTag(int tagId);
         Task<byte[]> GetFileContent(int fileId);
-
+        Task<List<Entities.File>> GetFilesByaUserId(int userId);
 
 
 

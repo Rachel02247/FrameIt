@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FrameItAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+08d30dad55155b81be9424c3e4455789416c2858")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9bdb107cadade89544bbd63d6f6bcff342f3c9d7")]
 [assembly: System.Reflection.AssemblyProductAttribute("FrameItAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FrameItAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

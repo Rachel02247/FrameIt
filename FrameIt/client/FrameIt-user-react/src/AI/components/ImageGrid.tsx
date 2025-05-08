@@ -19,11 +19,12 @@ interface ImageGridProps {
 
 export function ImageGrid({ images }: ImageGridProps) {
   const [selectedImage, setSelectedImage] = useState<ImageProps | null>(null)
+  const [imgS3Url, setImgS3Url] = useState('');
 
   if (images.length === 0) {
     return <Box sx={{ textAlign: "center", py: 6, color: "text.secondary" }}>No images found</Box>
   }
-
+  
   return (
     <>
       <Grid container spacing={2}>
@@ -45,7 +46,7 @@ export function ImageGrid({ images }: ImageGridProps) {
             >
               <Box
                 component="img"
-                src={image.src || "/placeholder.svg"}
+                src={image.src ?? imgS3Url}
                 alt={image.alt}
                 sx={{
                   position: "absolute",

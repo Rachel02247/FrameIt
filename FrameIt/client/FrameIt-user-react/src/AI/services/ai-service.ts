@@ -85,7 +85,7 @@ export async function searchImagesByDescription(description: string, imageUrls: 
     try {
       const results = JSON.parse(text)
       // Filter to only include relevant images (score > 50)
-      return results.filter((item: any) => item.relevanceScore > 50)
+      return results.filter((item: MyFile) => item.relevanceScore > 50)
     } catch (e) {
       console.error("Failed to parse search results:", e)
       return []

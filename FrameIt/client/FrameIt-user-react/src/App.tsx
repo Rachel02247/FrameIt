@@ -10,11 +10,13 @@ import createTheme from '@mui/material/styles/createTheme'
 export const theme = createTheme({
   palette: {
     primary: {
-      main: '#e60060', 
+      main: '#666699',
+      // '#e60060', 
     },
     secondary: {
-      main: '#f088b6', 
-    },
+      main: '#a3a3c2', 
+      // main: '#f088b6', 
+    }
   },
 });
 function App() {
