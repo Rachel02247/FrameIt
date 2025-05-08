@@ -39,4 +39,40 @@ const downloadFile = async (fileId: string, fileName: string) => {
   }
 };
 
-export { downloadFile };
+const downloadByUrl = (url: string, fileName: string) => {
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', fileName);
+  link.setAttribute('target', '_blank'); // אופציונלי, אם רוצים לפתוח בחלון חדש
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+
+
+ const downloadFolder = async (folderId: string, folderName: string) => {
+  try {
+    const response = await fetch(`http://localhost:5282/folders/${folderId}/download`, {
+      method: "GET",
+    });
+
+    if (!response.ok) throw new Error("Download failed");
+
+    const blob = await response.blob();
+
+    // יצירת לינק זמני להורדה
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${folderName}.zip`; // שם הקובץ שיהיה בשמירה
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("Error downloading folder:", error);
+    alert("התרחשה שגיאה בהורדת התיקייה");
+  }
+};
+export { downloadFile, downloadFolder, downloadByUrl };

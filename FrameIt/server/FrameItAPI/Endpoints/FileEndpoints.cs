@@ -125,7 +125,7 @@ public static class FileEndpoints
 
         routes.MapGet("/files/generate-url", async (string s3Key, IFileService fileService) =>
         {
-            return await Task.FromResult(fileService.GetPresignedUrl(s3Key));
+            return await fileService.GetPresignedUrl(s3Key);
         });
 
     }

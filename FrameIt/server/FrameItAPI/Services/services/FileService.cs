@@ -80,39 +80,52 @@ namespace FrameItAPI.Services.services
             return _s3Client.GetPreSignedURL(request);
         }
 
-        public async Task<Stream> DownloadFile(int id)
-        {
-            var file = await _context.Files.FindAsync(id);
-            if (file == null || file.IsDeleted) return null;
+        //public async Task<Stream> DownloadFile(int id)
+        //{
+        //    var file = await _context.Files.FindAsync(id);
+        //    if (file == null || file.IsDeleted) return null;
 
-            var request = new GetObjectRequest
-            {
-                BucketName = _bucketName,
-                Key = file.S3Key
-            };
+        //    var request = new GetObjectRequest
+        //    {
+        //        BucketName = _bucketName,
+        //        Key = file.S3Key
+        //    };
 
-            var response = await _s3Client.GetObjectAsync(request);
+        //    var response = await _s3Client.GetObjectAsync(request);
 
-            return response.ResponseStream; // זהו ה-Stream שחוזר מהבקשה
-        }
+        //    return response.ResponseStream; // זהו ה-Stream שחוזר מהבקשה
+        //}
 
 
-        public IResult GetPresignedUrl(string s3Key)
+        public async Task<string> GetPresignedUrl(string s3Key)
         {
             var request = new GetPreSignedUrlRequest
             {
                 BucketName = _bucketName,
                 Key = s3Key,
-                Expires = DateTime.MaxValue,
+                Expires = DateTime.UtcNow.AddMinutes(30),
                 Verb = HttpVerb.GET
             };
 
-            var presignedUrl = _s3Client.GetPreSignedURL(request);
-            return Results.Ok(new { Url = presignedUrl });
+            return _s3Client.GetPreSignedURL(request);
+            
         }
 
 
-
+        public async Task<byte[]> GetFileContent(int fileId)
+        {
+            var file = await _context.Files.FindAsync(fileId);
+            if (file == null || file.IsDeleted) return null;
+            var request = new GetObjectRequest
+            {
+                BucketName = _bucketName,
+                Key = file.S3Key
+            };
+            using var response = await _s3Client.GetObjectAsync(request);
+            using var memoryStream = new MemoryStream();
+            await response.ResponseStream.CopyToAsync(memoryStream);
+            return memoryStream.ToArray();
+        }
 
         public async Task<List<Entities.File>> GetFilesWithNullParent()
         {
@@ -221,6 +234,73 @@ namespace FrameItAPI.Services.services
             _context.Files.Update(file);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+
+        public async Task<IEnumerable<Entities.File>> GetFilesByFolderId(int folderId)
+        {
+            return await _context.Files
+                .Where(f => f.FolderId == folderId) // הנחה שיש לך שדה FolderId
+                .ToListAsync();
+        }
+
+        //הורדה
+        public async Task<Stream> DownloadFile(int id)
+        {
+            var file = await _context.Files.FindAsync(id);
+            if (file == null || file.IsDeleted) return null;
+
+            // יצירת בקשה להורדת הקובץ מ-S3
+            var request = new GetObjectRequest
+            {
+                BucketName = _bucketName,
+                Key = file.S3Key // המפתח של הקובץ ב-S3
+            };
+
+            // קבלת התגובה עם זרם הקובץ
+            var response = await _s3Client.GetObjectAsync(request);
+
+            return response.ResponseStream; // מחזיר את הזרם של הקובץ
+        }
+
+        public async Task<Entities.File> UploadFileToS3(Entities.File file, Stream fileStream)
+        {
+            if (string.IsNullOrEmpty(_bucketName))
+            {
+                throw new Exception("Bucket name is not configured.");
+            }
+
+            // יצירת שם ייחודי לקובץ ב-S3
+            string fileKey = $"{file.FolderId}/{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+
+            try
+            {
+                // העלאת הקובץ ל-S3
+                var putRequest = new PutObjectRequest
+                {
+                    BucketName = _bucketName,
+                    Key = fileKey,
+                    InputStream = fileStream,
+                    ContentType = file.FileType,
+                    AutoCloseStream = true
+                };
+
+                await _s3Client.PutObjectAsync(putRequest);
+
+                // עדכון S3Key ו-CreatedAt
+                file.S3Key = fileKey;
+                file.CreatedAt = DateTime.UtcNow;
+
+                // שמירת הנתונים בבסיס הנתונים
+                _context.Files.Add(file);
+                await _context.SaveChangesAsync();
+
+                return file;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error uploading file to S3: {ex.Message}");
+            }
         }
     }
 }

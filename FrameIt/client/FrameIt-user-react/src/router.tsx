@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { createBrowserRouter } from "react-router-dom";
 import AppLayout from "./appLayout";
 import HomePage from "./component/homePage/homePage";
@@ -7,10 +8,17 @@ import Collections from "./page/collections";
 import Design from "./page/design/design";
 import More from "./page/more";
 import Settings from "./component/account/setting";
-import Sidebar from "./component/sideBar";
+// import Sidebar from "./component/sideBar";
 import Register from "./component/auth/register";
 import MyWorkspace from "./page/myWorkspace";
 import LoginTry from "./component/auth/loginTry";
+import CollageEditor from "./page/collageEditor/collage-editor";
+import ImageAnalyzer from "./page/AI/ImageAnalyzer";
+import AIFeaturesDashboard from "./AI/pages/AIFeaturesDashboard";
+import SmartFiltering from "./AI/pages/SmartFiltering";
+import ImageAnalysis from "./AI/pages/ImageAnalysis";
+import FreeSearch from "./AI/pages/FreeSearch";
+import ImageToArt from "./AI/pages/ImageToArt";
 
 export const router = createBrowserRouter([
     {
@@ -20,22 +28,22 @@ export const router = createBrowserRouter([
                 <AppLayout />
             </>
         ),
-        
+
         children: [
-            
+
             {
                 path: '/home',
                 element: <HomePage />,
             },
-           
+
             {
                 path: '/login',
                 element: <LoginTry />,
-            }, 
-             {
+            },
+            {
                 path: '/register',
                 element: <Register />,
-            }, 
+            },
             {
                 path: '/settings',
                 element: <Settings />,
@@ -54,16 +62,36 @@ export const router = createBrowserRouter([
             },
             {
                 path: '/design',
-                element: <Design />,
+                element: <CollageEditor />,
             },
             {
                 path: '/more',
-                element: <More />,
+                element: <Design />,
+            },
+            {
+                path: '/ai-features',
+                element: <AIFeaturesDashboard />,
+            },
+            {
+                path: "/ai-features/smart-filtering",
+                element: <SmartFiltering />
+            },
+            {
+                path: '/ai-features/image-analysis',
+                element: <ImageAnalysis />,
+            },
+            {
+                path: '/ai-features/free-search',
+                element: <FreeSearch />,
+            },
+            {
+                path: '/ai-features/image-to-art',
+                element: <ImageToArt />,
             },
             {
                 path: '/myWorkspace',
-                element: <MyWorkspace/>,
-                children:[
+                element: <MyWorkspace />,
+                children: [
                     {
                         path: '/myWorkspace/gallery',
                         element: <Gallery />,
@@ -82,11 +110,11 @@ export const router = createBrowserRouter([
                     },
                     {
                         path: '/myWorkspace/more',
-                        element: <More />,
+                        element: <CollageEditor />,
                     },
                 ]
             }
-          
+
         ]
     }
 ]);

@@ -1,12 +1,11 @@
 import React from "react";
 import { Container, Typography, Grid, Card, CardContent, Button } from "@mui/material";
 import { CloudUpload, Collections, Filter, Edit } from "@mui/icons-material";
-import { useSelector } from "react-redux";
-import { RootState } from "../global-states/store";
 
 const MyWorkspace: React.FC = () => {
 
-    const userName = useSelector((state: RootState) => state.user.user?.name);
+    const userName =  sessionStorage.getItem('name');
+    
 
     return (
         <Container maxWidth="lg" sx={{ mt: 4 }}>

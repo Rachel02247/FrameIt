@@ -1,6 +1,7 @@
 ﻿using FrameItAPI.Entities;
 using FrameItAPI.Services.interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.IO.Compression;
 
 public static class FolderEndpoints
 {
@@ -69,5 +70,31 @@ public static class FolderEndpoints
             var result = await folderService.DeleteFolder(id);
             return result ? Results.NoContent() : Results.NotFound();
         }).RequireAuthorization("admin", "editor");
+
+        routes.MapGet("/folders/{id}/download", async (int id, IFolderService folderService, IFileService fileService) =>
+        {
+            var folder = await folderService.GetFolder(id);
+            if (folder == null) return Results.NotFound("Folder not found");
+
+            var allFiles = await folderService.GetAllFilesInFolder(id, folder.Name);
+
+            using var memoryStream = new MemoryStream();
+            using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+            {
+                foreach (var (relativePath, file) in allFiles)
+                {
+                    var entry = archive.CreateEntry(relativePath);
+                    using var entryStream = entry.Open();
+
+                    var fileContent = await fileService.GetFileContent(file.Id);
+                    if (fileContent != null)
+                    {
+                        await entryStream.WriteAsync(fileContent, 0, fileContent.Length);
+                    }
+                }
+            }
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return Results.File(memoryStream.ToArray(), "application/zip", $"{folder.Name}.zip");
+        });
     }
 }

@@ -94,7 +94,7 @@ namespace FrameItAPI.Services.services
 
 
 
-       
+
         public async Task<Folder> CreateFolder(Folder folder)
         {
             _context.Folders.Add(folder);
@@ -120,7 +120,7 @@ namespace FrameItAPI.Services.services
                 .ToListAsync();
             foreach (var child in childFolders)
             {
-                await DeleteFolder(child.Id); 
+                await DeleteFolder(child.Id);
             }
 
             var files = await _context.Files
@@ -128,7 +128,7 @@ namespace FrameItAPI.Services.services
                 .ToListAsync();
             foreach (var file in files)
             {
-                file.IsDeleted = true; 
+                file.IsDeleted = true;
                 _context.Files.Update(file);
             }
 
@@ -137,6 +137,31 @@ namespace FrameItAPI.Services.services
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<List<(string RelativePath, Entities.File File)>> GetAllFilesInFolder(int folderId, string basePath = "")
+        {
+            var result = new List<(string, Entities.File)>();
+            var files = await _context.Files
+                .Where(f => f.FolderId == folderId && !f.IsDeleted)
+                .ToListAsync();
+            foreach (var file in files)
+            {
+                string relativePath = Path.Combine(basePath, file.FileName);
+                result.Add((relativePath, file));
+            }
+            var childFolders = await _context.Folders
+                .Where(f => f.ParentFolderId == folderId && !f.IsDeleted)
+                .ToListAsync();
+
+            foreach (var child in childFolders)
+            {
+                string newPath = Path.Combine(basePath, child.Name);
+                var childFiles = await GetAllFilesInFolder(child.Id, newPath);
+                result.AddRange(childFiles);
+            }
+
+            return result;
+        }
+
     }
 
 }

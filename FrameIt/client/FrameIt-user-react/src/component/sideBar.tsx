@@ -8,7 +8,7 @@ import StarIcon from '@mui/icons-material/Star';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountMenu from './account/accountMenu';
-import AI from '../page/AI';
+import AI from '../page/AI/AI';
 
 const NAVIGATION = [
     { path: '/gallery', title: 'Gallery', icon: <DashboardIcon /> },

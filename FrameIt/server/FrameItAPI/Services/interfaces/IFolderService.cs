@@ -17,6 +17,7 @@ namespace FrameItAPI.Services.interfaces
         Task<Folder> GetParentFolder(int fileId);
         Task<List<Folder>> GetBreadcrumb(int folderId);
         Task<List<Folder>> GetFoldersByUserId(int userId);
+        Task<List<(string RelativePath, Entities.File File)>> GetAllFilesInFolder(int folderId, string basePath = "");
 
 
     }

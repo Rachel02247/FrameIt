@@ -60,6 +60,7 @@ const LoginTry = () => {
             const resultAction = await dispatch(login(credentials));
             sessionStorage.setItem('token', resultAction.payload?.token);
             sessionStorage.setItem('name', resultAction.payload?.user.name);
+            sessionStorage.setItem('id', resultAction.payload?.user.id);
 
             if (login.fulfilled.match(resultAction)) {
                 navigate("/myWorkspace");

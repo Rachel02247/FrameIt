@@ -1,51 +1,3 @@
-// import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-// import axios from "axios";
-// import { User } from "../../types"; // Adjust the import path as necessary
-// import { RootState } from "./store";
-
-// const url = "http://localhost:5282/users"; // Adjust the URL to your API endpoint
-
-// // Add user
-// export const addUser = createAsyncThunk('users/add', async (user: Partial<User>, thunkApi) => {
-//   try {
-//     const response = await axios.post(url, user);
-//     return response.data as User;
-//   } catch (error) {
-//     return thunkApi.rejectWithValue(error);
-//   }
-// });
-
-// const userSlice = createSlice({
-//   name: 'users',
-//   initialState: {
-//     list: [] as User[],
-//     loading: false,
-//     error: null as null | string,
-//   },
-//   reducers: {},
-//   extraReducers: (builder) => {
-//     builder
-//       .addCase(addUser.pending, (state) => {
-//         state.loading = true;
-//         state.error = null;
-//       })
-//       .addCase(addUser.fulfilled, (state, action: PayloadAction<User>) => {
-//         state.loading = false;
-//         state.error = null;
-//         // Add the new user to the list after successful addition
-//         state.list.push(action.payload);
-//       })
-//       .addCase(addUser.rejected, (state, action) => {
-//         state.loading = false;
-//         state.error = action.error.message || "Failed to add user";
-//       });
-//   },
-// });
-
-// export const selectUsers = (state: RootState) => state.user;
-// export default userSlice.reducer;
-
-
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "./store";
@@ -60,7 +12,7 @@ interface AuthState {
 
 const initialState: AuthState = {
   token: sessionStorage.getItem('token') ?? null,
-  user: { Name: sessionStorage.getItem('name') ?? "John", Email: "", Password: "", CreatedAt: "", UpdatedAt: "", id: '0', RoleName: 'Editor' },
+  user: { Name: sessionStorage.getItem('name') ?? "John", Email: "", Password: "", CreatedAt: "", UpdatedAt: "", id: sessionStorage.getItem('id') ?? null, RoleName: 'Editor' },
   loading: false,
   error: null,
 };
@@ -98,10 +50,17 @@ export const register = createAsyncThunk(
       });
 
       return response.data;
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.response?.data || "Registration failed");
-    }
+    
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return thunkAPI.rejectWithValue(error.response?.data || "Registration failed");
+      } else {
+          console.error("Unknown error", error);
+      }
   }
+  
+    }
+  
 );
 
 

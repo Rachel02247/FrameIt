@@ -26,7 +26,8 @@ export default () => {
   };
 
   const user = useSelector((state: RootState) => state.user); // או לפי האיד של המשתמש הנוכחי אם יש לך
-
+  const UserName = sessionStorage.getItem('name');
+  
   return (
     <React.Fragment>
       <Box sx={{ left: 4, top: 20, position: 'absolute', display: 'flex', alignItems: 'center', textAlign: 'center' }}>
@@ -40,7 +41,7 @@ export default () => {
             aria-expanded={open ? 'true' : undefined}
           >
             <Avatar sx={{ width: 32, height: 32 }}>
-              {user?.user.name?.charAt(0).toUpperCase() ?? sessionStorage.getItem('name')?.charAt(0).toUpperCase ?? null}
+              { UserName?.charAt(0).toUpperCase() ?? null}
             </Avatar>
           </IconButton>
         </Tooltip>
