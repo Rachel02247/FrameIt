@@ -14,7 +14,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AppDispatch, RootState } from '../../global-states/store';
 import { login } from '../../global-states/userSlice';
 
-// Custom styled components
 const LogoRing = styled(Box)(({ theme }) => ({
     width: 250,
     height: 250,
