@@ -21,10 +21,16 @@ using Microsoft.Extensions.Options;
 var builder = WebApplication.CreateBuilder(args);
 
 // ====== add DbContext =========
+
+//local
 builder.Services.AddDbContext<DataContext>(options =>
-    options.UseMySql(
-        builder.Configuration.GetConnectionString("FrameItDB"),
-        new MySqlServerVersion(new Version(8, 0, 36))));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+//clever cloud
+//builder.Services.AddDbContext<DataContext>(options =>
+//    options.UseMySql(
+//        builder.Configuration.GetConnectionString("FrameItDB"),
+//        new MySqlServerVersion(new Version(8, 0, 36))));
 
 
 //========= add env var ============
