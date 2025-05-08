@@ -1,8 +1,21 @@
-import { generateText, experimental_generateImage } from "ai"
-import { openai } from "@ai-sdk/openai"
+import { generateText, experimental_generateImage } from "ai";
+import { openai } from "@ai-sdk/openai";
+
+// Types
+type ImageAnalysisResult = {
+  objects: string[];
+  colors: string[];
+  scene: string;
+  confidence: number;
+};
+
+type SearchResult = {
+  imageUrl: string;
+  relevanceScore: number;
+};
 
 // For image analysis
-export async function analyzeImage(imageUrl: string) {
+export async function analyzeImage(imageUrl: string): Promise<ImageAnalysisResult | null> {
   try {
     const { text } = await generateText({
       model: openai("gpt-4o"),
@@ -22,28 +35,28 @@ export async function analyzeImage(imageUrl: string) {
         "confidence": number between 0-100
       }`,
       system: "You are an expert image analyzer. Provide detailed, accurate analysis of images in JSON format only.",
-    })
+    });
 
     try {
-      return JSON.parse(text)
+      return JSON.parse(text) as ImageAnalysisResult;
     } catch (e) {
-      console.error("Failed to parse analysis result:", e)
+      console.error("Failed to parse analysis result:", e);
       return {
         objects: ["Unknown"],
         colors: ["Unknown"],
         scene: "Could not determine",
         confidence: 0,
-      }
+      };
     }
   } catch (error) {
-    console.error("Error analyzing image:", error)
-    return null
+    console.error("Error analyzing image:", error);
+    return null;
   }
 }
 
 // For image-to-art transformation
-export async function transformImageToArt(imageUrl: string, style: string) {
-  const styleDescriptions = {
+export async function transformImageToArt(imageUrl: string, style: string): Promise<string | null> {
+  const styleDescriptions: Record<string, string> = {
     picasso: "in the style of Pablo Picasso, with cubist elements, geometric shapes, and bold lines",
     vangogh: "in the style of Vincent van Gogh, with swirling brushstrokes, vibrant colors, and expressive technique",
     watercolor: "as a delicate watercolor painting with soft edges, transparent washes, and gentle color blending",
@@ -52,25 +65,30 @@ export async function transformImageToArt(imageUrl: string, style: string) {
     realistic: "in a photorealistic style with fine details, accurate lighting, and true-to-life representation",
     anime:
       "in Japanese anime style with characteristic large eyes, simplified facial features, and stylized expressions",
-  }
+  };
 
-  const styleDescription = styleDescriptions[style as keyof typeof styleDescriptions] || styleDescriptions.picasso
+  const styleDescription =
+    styleDescriptions[style as keyof typeof styleDescriptions] || styleDescriptions.picasso;
 
   try {
-    const { url } = await experimental_generateImage({
+    const { images } = await experimental_generateImage({
       model: openai("dall-e-3"),
       prompt: `Transform this image ${styleDescription}. Maintain the main subject and composition of the original image: ${imageUrl}`,
-    })
+    });
 
-    return url
+    // Assumes images is an array of { url: string }
+    return images?.[0]?.url || null;
   } catch (error) {
-    console.error("Error transforming image:", error)
-    return null
+    console.error("Error transforming image:", error);
+    return null;
   }
 }
 
 // For smart filtering and free search
-export async function searchImagesByDescription(description: string, imageUrls: string[]) {
+export async function searchImagesByDescription(
+  description: string,
+  imageUrls: string[]
+): Promise<SearchResult[]> {
   try {
     const { text } = await generateText({
       model: openai("gpt-4o"),
@@ -80,18 +98,17 @@ export async function searchImagesByDescription(description: string, imageUrls: 
       
       Return only a JSON array of objects with imageUrl and relevanceScore keys.`,
       system: "You are an expert image search system. Help find the most relevant images based on text descriptions.",
-    })
+    });
 
     try {
-      const results = JSON.parse(text)
-      // Filter to only include relevant images (score > 50)
-      return results.filter((item: MyFile) => item.relevanceScore > 50)
+      const results = JSON.parse(text) as SearchResult[];
+      return results.filter((item) => item.relevanceScore > 50);
     } catch (e) {
-      console.error("Failed to parse search results:", e)
-      return []
+      console.error("Failed to parse search results:", e);
+      return [];
     }
   } catch (error) {
-    console.error("Error searching images:", error)
-    return []
+    console.error("Error searching images:", error);
+    return [];
   }
 }

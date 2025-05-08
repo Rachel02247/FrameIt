@@ -221,7 +221,6 @@ import { fetchUserCollections, addFileToCollection } from "../../global-states/t
 import CreateCollection from "../../hooks/createCollection"
 import { downloadByUrl, downloadFile } from "../../hooks/download"
 import type { FileItemProps } from "../../types"
-import axios from "axios"
 
 // Function to get file preview URL from server
 

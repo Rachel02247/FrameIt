@@ -13,6 +13,7 @@ using Amazon.S3;
 using DotNetEnv;
 using Amazon;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.Options;
 
 
 
@@ -21,7 +22,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // ====== add DbContext =========
 builder.Services.AddDbContext<DataContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("FrameItDB"),
+        new MySqlServerVersion(new Version(8, 0, 36))));
 
 
 //========= add env var ============
