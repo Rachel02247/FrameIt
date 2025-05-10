@@ -1,5 +1,8 @@
-﻿namespace FrameItAPI.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace FrameItAPI.Entities
 {
+    [Table("File")]
     public class File
     {
         public int Id { get; set; }
@@ -14,6 +17,5 @@
         public DateTime UpdatedAt { get; set; }
         public int? TagId { get; set; }
         public bool IsDeleted { get; set; }
-
     }
 }

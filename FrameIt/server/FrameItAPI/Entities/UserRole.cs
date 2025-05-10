@@ -1,16 +1,17 @@
-﻿using System.Data;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
 
 namespace FrameItAPI.Entities
 {
+    [Table("UserRole")]
 
     public class UserRole
     {
         public int Id { get; set; }
-        public int UserId { get; set; } // מזהה המשתמש (FK to Users)
-        public int RoleId { get; set; } // מזהה התפקיד (FK to Roles)
+        public int UserId { get; set; } 
+        public int RoleId { get; set; }
 
-        //gpt
-        public User User { get; set; } // הקשר למשתמש
-        public Role Role { get; set; } // הקשר לתפקיד
+        public User User { get; set; }
+        public Role Role { get; set; } 
     }
 }

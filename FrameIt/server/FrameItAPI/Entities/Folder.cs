@@ -1,5 +1,9 @@
-﻿namespace FrameItAPI.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace FrameItAPI.Entities
 {
+    [Table("Folder")]
+
     public class Folder
     {
         public int Id { get; set; }
