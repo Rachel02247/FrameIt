@@ -863,15 +863,18 @@
           },
           "userId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "template": {
+            "maxLength": 255,
             "type": "string",
             "nullable": true
           },
           "createdAt": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           }
         },
         "additionalProperties": false

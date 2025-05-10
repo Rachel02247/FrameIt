@@ -39,7 +39,7 @@ builder.Configuration.AddEnvironmentVariables();
 // ========= load env var ==========
 Env.Load();
 
-// הוספת אפשרויות AWS
+// ========= AWS options ===========
 var awsOptions = new AWSOptions
 {
     Region = RegionEndpoint.GetBySystemName(Environment.GetEnvironmentVariable("AWS_REGION")),
@@ -49,7 +49,7 @@ var awsOptions = new AWSOptions
     )
 };
 
-// הוספת AWS S3 לשירותים
+// ======== AWS S3 srvices ==========
 builder.Services.AddDefaultAWSOptions(awsOptions);
 builder.Services.AddAWSService<IAmazonS3>();
 
@@ -170,8 +170,8 @@ app.UseCors("AllowAll");
 // =========== Authentication and Authorization Middleware ============
 
 app.UseRouting();
-app.UseAuthentication(); // הוספת Middleware לאימות
-app.UseAuthorization();  // הוספת Middleware להרשאות
+app.UseAuthentication(); 
+app.UseAuthorization(); 
 
 
 // =========== endpoints injection ===========
@@ -181,7 +181,16 @@ app.MapFolderEndpoints();
 app.MapTagEndpoints();
 app.MapCollageEndpoints();
 app.MapUserEndpoints();
-AuthEndpoints.MapAuthEndpoints(app); // Update this line
+AuthEndpoints.MapAuthEndpoints(app);
+
+
+//// ========== database migration ============
+
+//using (var scope = app.Services.CreateScope())
+//{
+//    var db = scope.ServiceProvider.GetRequiredService<DataContext>();
+//    db.Database.Migrate(); 
+//}
 
 
 // ========== run app ============

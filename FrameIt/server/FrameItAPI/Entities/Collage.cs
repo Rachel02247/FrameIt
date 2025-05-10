@@ -1,10 +1,14 @@
-﻿namespace FrameItAPI.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace FrameItAPI.Entities
 {
     public class Collage
     {
-        public int Id { get; set; } // Corresponds to id INT PRIMARY KEY
-        public int UserId { get; set; } // Corresponds to user_id INT FOREIGN KEY → Users(id)
-        public string Template { get; set; } // Corresponds to template VARCHAR(100) NOT NULL
-        public DateTime CreatedAt { get; set; } = DateTime.Now; // Corresponds to created_at DATETIME DEFAULT NOW()
+        public int Id { get; set; } 
+        public int? UserId { get; set; }
+
+        [MaxLength(255)]
+        public string? Template { get; set; } 
+        public DateTime? CreatedAt { get; set; } = DateTime.Now; 
     }
 }
