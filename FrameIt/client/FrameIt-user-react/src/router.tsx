@@ -6,14 +6,12 @@ import Gallery from "./page/gallery/gallery";
 import Upload from "./page/upload/upload";
 import Collections from "./page/collections";
 import Design from "./page/design/design";
-import More from "./page/more";
 import Settings from "./component/account/setting";
 // import Sidebar from "./component/sideBar";
 import Register from "./component/auth/register";
 import MyWorkspace from "./page/myWorkspace";
-import LoginTry from "./component/auth/loginTry";
+import Login from "./component/auth/login";
 import CollageEditor from "./page/collageEditor/collage-editor";
-import ImageAnalyzer from "./page/AI/ImageAnalyzer";
 import AIFeaturesDashboard from "./AI/pages/AIFeaturesDashboard";
 import SmartFiltering from "./AI/pages/SmartFiltering";
 import ImageAnalysis from "./AI/pages/ImageAnalysis";
@@ -38,7 +36,7 @@ export const router = createBrowserRouter([
 
             {
                 path: '/login',
-                element: <LoginTry />,
+                element: <Login />,
             },
             {
                 path: '/register',
@@ -91,28 +89,26 @@ export const router = createBrowserRouter([
             {
                 path: '/myWorkspace',
                 element: <MyWorkspace />,
-                children: [
-                    {
-                        path: '/myWorkspace/gallery',
-                        element: <Gallery />,
-                    },
-                    {
-                        path: '/myWorkspace/upload',
-                        element: <Upload />,
-                    },
-                    {
-                        path: '/myWorkspace/collections',
-                        element: <Collections />,
-                    },
-                    {
-                        path: '/myWorkspace/design',
-                        element: <Design />,
-                    },
-                    {
-                        path: '/myWorkspace/more',
-                        element: <CollageEditor />,
-                    },
-                ]
+            },
+            {
+                path: '/myWorkspace/gallery',
+                element: <Gallery />,
+            },
+            {
+                path: '/myWorkspace/upload',
+                element: <Upload />,
+            },
+            {
+                path: '/myWorkspace/collections',
+                element: <Collections />,
+            },
+            {
+                path: '/myWorkspace/design',
+                element: <Design />,
+            },
+            {
+                path: '/myWorkspace/more',
+                element: <CollageEditor />,
             }
 
         ]

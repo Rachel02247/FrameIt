@@ -1,126 +1,109 @@
-/* eslint-disable react-refresh/only-export-components */
 import React, { useState } from 'react';
-import { TextField, Button, Container, Box, Modal, Typography } from '@mui/material';
-import { styleModal } from '../../styles';
-import { User } from '../../types';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../global-states/store';
-import addUser from '../global-states/userSlice';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    Box,
+    Button,
+    TextField,
+    Typography,
+    Container,
+    FormHelperText,
+    Paper
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { Link, useNavigate } from 'react-router-dom';
+import { AppDispatch, RootState } from '../../global-states/store';
+import { login } from '../../global-states/userSlice';
 
-export default () => {
-    const [openModal, setOpenModal] = useState(true);
-    const [status, setStatus] = useState('login');
-    const [userData, setUserData] = useState({
-        name: '',
+const LogoRing = styled(Box)(({ theme }) => ({
+    width: 250,
+    height: 250,
+    border: `25px solid ${theme.palette.error.main}`, // No changes needed here
+    borderRadius: '50%',
+    position: 'relative',
+    margin: '0 auto 40px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+}));
+
+const Login = () => {
+    const dispatch = useDispatch<AppDispatch>();
+    const { loading, error } = useSelector((state: RootState) => state.user);
+    const navigate = useNavigate();
+
+    const [credentials, setCredentials] = useState({
         email: '',
         password: ''
     });
-    
-    const userDispatch = useDispatch<AppDispatch>();
-    const navigate = useNavigate();
 
-    const navToMain = () => {
-        navigate('/myWorkspace');
-    };
-
-    const changeToSignUp = () => {
-        setStatus('register');
-    };
+    const [formError, setFormError] = useState<string | null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setUserData({
-            ...userData,
-            [name]: value
+        setCredentials({
+            ...credentials,
+            [e.target.name]: e.target.value
         });
+        setFormError(null);
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log('User signed in');
-    
-        const newUser: User = {
-            name: status === 'login' ? '' : userData.name,
-            password: userData.password,
-            email: userData.email,
-            roleName: 'Editor'
-        };
-    
+
+        if (!credentials.email || !credentials.password) {
+            setFormError("You have to fill all the fields");
+            return;
+        }
+
         try {
-            
-            const res = await axios.post(`http://localhost:5282/auth/${status}`, newUser);
-            console.log(res);
-    
-            const resultAction = await userDispatch(addUser(newUser));
-    
-            if (addUser.fulfilled.match(resultAction)) {
-                console.log('User added:', resultAction.payload);
-                setOpenModal(false); // Close modal after success
-                navToMain(); // Navigate to workspace after successful registration
-            } else {
-                setErrorMessage('Failed to add user: ' + resultAction.error.message);
+            const resultAction = await dispatch(login(credentials));
+            sessionStorage.setItem('token', resultAction.payload?.token);
+            sessionStorage.setItem('name', resultAction.payload?.user.name);
+            sessionStorage.setItem('id', resultAction.payload?.user.id);
+
+            if (login.fulfilled.match(resultAction)) {
+                navigate("/myWorkspace");
             }
-        } catch (error) {
-            console.log(error);
-            setErrorMessage('An error occurred while processing your request.');
+        } catch (err) {
+            setFormError("Login error, please try again");
+            console.log(err);
         }
     };
-    
 
     return (
-        <Container>
-            <Modal open={openModal} >
-                <Box sx={styleModal}>
-                    <form onSubmit={handleSubmit}>
-                        <Typography variant="h5" sx={{ margin: '20px', fontWeight: 'bold', textAlign: 'center' }}>
-                            {status === 'login' ? "Sign In" : "Sign Up"}
+        <Paper sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', bgcolor: 'rgb(255, 255, 255)' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', p: 3 }}>
+                <Container maxWidth="sm">
+                    <LogoRing sx={{ border: '25px solid #666699'! }}>
+                        <Typography variant="h4" component="div" align="center" color='primary' sx={{ position: 'absolute', width: '100%', fontWeight: 'bold', textShadow: '1px 1px 3px rgba(0,0,0,0.5)' }}>
+                            Welcome <br /> Back!
                         </Typography>
-                        {status === 'register' && 
-                            <TextField
-                                label='Name'
-                                variant="filled"
-                                margin="normal"
-                                type="text"
-                                fullWidth
-                                name="name"
-                                value={userData.name}
-                                onChange={handleChange}
-                                required
-                            />
-                        }
-                        <TextField
-                            label='Email'
-                            variant="filled"
-                            margin="normal"
-                            type="email"
-                            fullWidth
-                            name="email"
-                            value={userData.email}
-                            onChange={handleChange}
-                            required
-                        />
-                        <TextField
-                            label='Password'
-                            variant="filled"
-                            margin="normal"
-                            type='password'
-                            fullWidth
-                            name="password"
-                            value={userData.password}
-                            onChange={handleChange}
-                            required
-                        />
-                        {errorMessage && <Typography color="error" sx={{ marginTop: '10px' }}>{errorMessage}</Typography>}
-                        <Button sx={{ marginTop: '2px' }} fullWidth variant="text" color='primary' type="submit">
-                            {status === 'login' ? 'Login' : 'Register'}
-                        </Button>
-                    </form>
+                    </LogoRing>
+                    <Typography variant="h4" component="h1" mb={4}>
+                        Login to Your Account
+                    </Typography>
+                </Container>
+                <Container maxWidth="sm">
+                    <Paper elevation={0} sx={{ width: '100%', bgcolor: 'transparent', p: 2 }}>
+                        <form onSubmit={handleLogin}>
+                            <TextField fullWidth name="email" placeholder="*Email" variant="outlined" margin="normal" value={credentials.email} onChange={handleChange} sx={{ bgcolor: 'white', borderRadius: 1, mb: 2 }} error={!!formError} />
+                            <TextField fullWidth name="password" type="password" placeholder="*Password" variant="outlined" margin="normal" value={credentials.password} onChange={handleChange} sx={{ bgcolor: 'white', borderRadius: 1, mb: 2 }} error={!!formError} />
+                            {(formError || error) && (
+                                <FormHelperText error sx={{ mb: 2 }}>
+                                    {formError || error?.response?.data?.message || 'An unexpected error occurred'}
+                                </FormHelperText>
+                            )}
+                            <Button type="submit" fullWidth variant="outlined" disabled={loading} sx={{ py: 1.5, '&:hover': { bgcolor: '#666699', color: 'white' } }}>
+                                {loading ? <img src="img/spinner.gif" alt="spinnre" width={24} /> : 'Login'}
+                            </Button>
 
-                    <p>Don't have an account? <a onClick={changeToSignUp}>Sign Up</a></p>
-                </Box>
-            </Modal>
-        </Container>
+                        </form>
+                        <p>Don't have an account? <Link to="/register">Sign Up</Link></p>
+
+                    </Paper>
+                </Container>
+            </Box>
+        </Paper>
     );
 };
+
+export default Login;
