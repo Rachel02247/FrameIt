@@ -158,25 +158,22 @@ var app = builder.Build();
 
 
 
-// ========== Enable CORS ================
-app.UseCors("AllowAll");
 
+//// ========== Enable HTTPS redirection ================
+//app.Use(async (context, next) =>
+//{
+//    if (context.Request.Method == HttpMethods.Options)
+//    {
+//        context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+//        context.Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+//        context.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//        context.Response.StatusCode = 200;
+//        await context.Response.CompleteAsync();
+//        return;
+//    }
 
-// ========== Enable HTTPS redirection ================
-app.Use(async (context, next) =>
-{
-    if (context.Request.Method == HttpMethods.Options)
-    {
-        context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
-        context.Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        context.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Authorization");
-        context.Response.StatusCode = 200;
-        await context.Response.CompleteAsync();
-        return;
-    }
-
-    await next();
-});
+//    await next();
+//});
 
 
 // =========== run Swagger ============
@@ -194,8 +191,11 @@ app.UseSwaggerUI(c =>
 // =========== Authentication and Authorization Middleware ============
 
 app.UseRouting();
-app.UseAuthentication(); 
-app.UseAuthorization(); 
+
+app.UseCors("AllowAll");
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 
 // =========== endpoints injection ===========

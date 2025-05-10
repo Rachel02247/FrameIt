@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Drawer, List, ListItem, ListItemIcon, ListItemText, IconButton, Box } from '@mui/material';
+import { Drawer, List,  ListItemIcon, ListItemText, IconButton, Box, ListItemButton } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import CollectionsIcon from '@mui/icons-material/Collections';
@@ -11,11 +11,11 @@ import AccountMenu from './account/accountMenu';
 import AI from '../page/AI/AI';
 
 const NAVIGATION = [
-    { path: '/gallery', title: 'Gallery', icon: <DashboardIcon /> },
-    { path: '/upload', title: 'Upload', icon: <UploadFileIcon /> },
-    { path: '/collections', title: 'My Collections', icon: <CollectionsIcon /> },
-    { path: '/design', title: 'Design', icon: <StarIcon /> },
-    { path: '/more', title: 'More', icon: <MoreHorizIcon /> },
+    { path: '/myWorkspace/gallery', title: 'Gallery', icon: <DashboardIcon /> },
+    { path: '/myWorkspace/upload', title: 'Upload', icon: <UploadFileIcon /> },
+    { path: '/myWorkspace/collections', title: 'My Collections', icon: <CollectionsIcon /> },
+    { path: '/myWorkspace/design', title: 'Design', icon: <StarIcon /> },
+    { path: '/myWorkspace/more', title: 'More', icon: <MoreHorizIcon /> },
 ];
 
 const Sidebar = () => {
@@ -55,8 +55,7 @@ const Sidebar = () => {
             </Box>
             <List sx={{zIndex: 2}}>
                 {NAVIGATION.map((item) => (
-                    <ListItem 
-                        button 
+                    <ListItemButton 
                         key={item.path} 
                         component={Link} 
                         to={item.path} 
@@ -67,7 +66,7 @@ const Sidebar = () => {
                             {item.icon}
                         </ListItemIcon>
                         {open && <ListItemText primaryTypographyProps={{ color: location.pathname === item.path ? 'primary.main' : 'secondary.main' }} primary={item.title} />}
-                    </ListItem>
+                    </ListItemButton>
                 ))}
             </List>
             <AI/>
