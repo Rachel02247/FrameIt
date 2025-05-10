@@ -1,5 +1,9 @@
-﻿namespace FrameItAPI.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace FrameItAPI.Entities
 {
+    [Table("Tag")]
+
     public class Tag
     {
         public int Id { get; set; } 
