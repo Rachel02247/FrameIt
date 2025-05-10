@@ -82,13 +82,13 @@ function ImageToArt() {
         setGeneratedArt(artUrl)
       } else {
         enqueueSnackbar("Could not generate artwork. Please try again.", {
-          variant: "error",
+          variant: "error", // No changes needed here
         })
       }
     } catch (error) {
       console.error("Error generating art:", error)
       enqueueSnackbar("An error occurred during art generation.", {
-        variant: "error",
+        variant: "error", // No changes needed here
       })
     } finally {
       setIsGenerating(false)

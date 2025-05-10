@@ -29,11 +29,11 @@ const CreateFolder = ({ folderId = '0', fetchData }: { folderId: string; fetchDa
       console.log(folderId);
       const newFolder = {
         name: folderName,
-        parentFolderId: folderId.folderId,
+        // parentFolderId: folderId.folderId,
         ownerId: user?.id ?? 0,
         isDeleted: false
       };
-      console.log(newFolder)
+
       const response = await axios.post(
         'http://localhost:5282/folders',
         newFolder,
@@ -51,7 +51,7 @@ const CreateFolder = ({ folderId = '0', fetchData }: { folderId: string; fetchDa
      catch(err){
       console.log("failes fething data" + err);
      }
-    } catch (error) {
+    } catch (error: unknown) { // Added explicit type for error
       alert('Error creating folder');
       console.error(error);
     }

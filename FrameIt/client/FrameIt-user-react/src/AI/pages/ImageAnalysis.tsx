@@ -65,13 +65,13 @@ function ImageAnalysis() {
         setAnalysisResults(results)
       } else {
         enqueueSnackbar("Could not analyze the image. Please try again.", {
-          variant: "error",
+          variant: "error", // No changes needed here
         })
       }
     } catch (error) {
       console.error("Error analyzing image:", error)
       enqueueSnackbar("An error occurred during image analysis.", {
-        variant: "error",
+        variant: "error", // No changes needed here
       })
     } finally {
       setIsAnalyzing(false)

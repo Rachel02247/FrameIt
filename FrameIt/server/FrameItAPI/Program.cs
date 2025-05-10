@@ -132,6 +132,9 @@ builder.Services.AddCors(options =>
                         .AllowAnyHeader());
 });
 
+
+
+
 // ========== add cors based roles =============
 
 builder.Services.AddAuthorization(options =>
@@ -142,6 +145,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("all", policy => policy.RequireRole("Admin", "Editor", "Viewer"));
 });
 
+
 // ============ JSON srializer =============
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
@@ -150,6 +154,29 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 
 var app = builder.Build();
+
+
+
+
+// ========== Enable CORS ================
+app.UseCors("AllowAll");
+
+
+// ========== Enable HTTPS redirection ================
+app.Use(async (context, next) =>
+{
+    if (context.Request.Method == HttpMethods.Options)
+    {
+        context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+        context.Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        context.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        context.Response.StatusCode = 200;
+        await context.Response.CompleteAsync();
+        return;
+    }
+
+    await next();
+});
 
 
 // =========== run Swagger ============
@@ -162,9 +189,6 @@ app.UseSwaggerUI(c =>
 
 });
 
-
-// ========== Enable CORS ================
-app.UseCors("AllowAll");
 
 
 // =========== Authentication and Authorization Middleware ============
