@@ -7,7 +7,6 @@ using Amazon.S3.Model;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using FrameItAPI.Migrations;
 
 namespace FrameItAPI.Services.services
 {
@@ -21,7 +20,7 @@ namespace FrameItAPI.Services.services
         {
             _context = context;
             _s3Client = s3Client;
-            _bucketName = "001687204140frameit";// קבלת שם הדלי מה-ENV
+            _bucketName = "001687204140frameit";
         }
 
         public async Task<FrameItAPI.Entities.File> CreateFile(FrameItAPI.Entities.File file, Stream fileStream)
@@ -32,16 +31,14 @@ namespace FrameItAPI.Services.services
                 throw new Exception("Bucket name is not configured.");
             }
 
-            // יצירת שם ייחודי לקובץ ב-S3
             string fileKey = $"{Guid.NewGuid()}_{file.FileName}";
 
             try
             {
-                // העלאת הקובץ ל-S3
                 var putRequest = new PutObjectRequest
                 {
                     BucketName = _bucketName,
-                    Key = fileKey, // שימוש בשם הקובץ החדש
+                    Key = fileKey,
                     InputStream = fileStream,
                     ContentType = file.FileType,
                     AutoCloseStream = true
@@ -252,23 +249,20 @@ namespace FrameItAPI.Services.services
                 .ToListAsync();
         }
 
-        //הורדה
         public async Task<Stream> DownloadFile(int id)
         {
             var file = await _context.Files.FindAsync(id);
             if (file == null || file.IsDeleted) return null;
 
-            // יצירת בקשה להורדת הקובץ מ-S3
             var request = new GetObjectRequest
             {
                 BucketName = _bucketName,
-                Key = file.S3Key // המפתח של הקובץ ב-S3
+                Key = file.S3Key 
             };
 
-            // קבלת התגובה עם זרם הקובץ
             var response = await _s3Client.GetObjectAsync(request);
 
-            return response.ResponseStream; // מחזיר את הזרם של הקובץ
+            return response.ResponseStream; 
         }
 
         public async Task<Entities.File> UploadFileToS3(Entities.File file, Stream fileStream)
@@ -278,12 +272,10 @@ namespace FrameItAPI.Services.services
                 throw new Exception("Bucket name is not configured.");
             }
 
-            // יצירת שם ייחודי לקובץ ב-S3
             string fileKey = $"{file.FolderId}/{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
 
             try
             {
-                // העלאת הקובץ ל-S3
                 var putRequest = new PutObjectRequest
                 {
                     BucketName = _bucketName,
