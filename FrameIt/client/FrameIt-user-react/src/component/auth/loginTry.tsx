@@ -17,7 +17,7 @@ import { login } from '../../global-states/userSlice';
 const LogoRing = styled(Box)(({ theme }) => ({
     width: 250,
     height: 250,
-    border: `25px solid ${theme.palette.error.main}`,
+    border: `25px solid ${theme.palette.error.main}`, // No changes needed here
     borderRadius: '50%',
     position: 'relative',
     margin: '0 auto 40px',

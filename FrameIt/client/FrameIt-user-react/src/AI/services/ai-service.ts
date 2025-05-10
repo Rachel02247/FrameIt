@@ -40,7 +40,7 @@ export async function analyzeImage(imageUrl: string): Promise<ImageAnalysisResul
     try {
       return JSON.parse(text) as ImageAnalysisResult;
     } catch (e) {
-      console.error("Failed to parse analysis result:", e);
+      console.error("Failed to parse analysis result:", e as Error); // Explicitly cast error to `Error`
       return {
         objects: ["Unknown"],
         colors: ["Unknown"],

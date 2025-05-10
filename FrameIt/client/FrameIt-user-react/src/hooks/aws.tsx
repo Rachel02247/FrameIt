@@ -1,4 +1,3 @@
-
 export const getS3Url = async (s3Key: string): Promise<string> => {
   try {
     const encodedKey = encodeURIComponent(s3Key)
@@ -10,7 +9,7 @@ export const getS3Url = async (s3Key: string): Promise<string> => {
 
     const data = await response.json()
     return data.url
-  } catch (error) {
+  } catch (error: unknown) { // Added explicit type for error
     console.error("Error getting S3 URL:", error)
     return ""
   }

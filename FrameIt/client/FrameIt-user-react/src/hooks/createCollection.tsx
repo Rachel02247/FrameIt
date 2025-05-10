@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Dialog, 
@@ -37,7 +36,7 @@ const CreateCollection: React.FC<CreateCollectionProps> = ({ open, onClose, fetc
       setCollectionName('');
       fetchData();
       onClose();
-    } catch (error) {
+    } catch (error: unknown) { // Added explicit type for error
       console.error('Error creating collection:', error);
     } finally {
       setIsSubmitting(false);

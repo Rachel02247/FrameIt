@@ -34,7 +34,7 @@ const downloadFile = async (fileId: string, fileName: string) => {
     // ניקוי המשאבים
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
-  } catch (error) {
+  } catch (error: unknown) { // Added explicit type for error
     console.error('Error downloading file:', error);
   }
 };

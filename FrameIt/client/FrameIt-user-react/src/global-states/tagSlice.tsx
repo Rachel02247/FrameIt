@@ -1,4 +1,3 @@
-
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { Tag, MyFile } from '../types';
@@ -8,7 +7,7 @@ interface TagState {
   files: MyFile[];
   selectedTagId: number;
   loading: boolean;
-  error: string | null;
+  error: string | null; // No changes needed here
 }
 
 const initialState: TagState = {
