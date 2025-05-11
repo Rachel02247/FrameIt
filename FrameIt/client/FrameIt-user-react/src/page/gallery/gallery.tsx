@@ -161,7 +161,7 @@ import type { RootState } from "../../component/global-states/store"
 import { useSelector } from "react-redux"
 import ImagePreviewModal from "../../hooks/imagePreviewModal"
 
-const API_BASE_URL = "http://localhost:5282"
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function Gallery() {
   const [files, setFiles] = useState<MyFile[]>([])
