@@ -113,7 +113,7 @@ const Hero = () => {
               variant="outlined"
               color="primary"
               size="large"
-              sx={{ borderRadius: 6, px: 4 }}
+              sx={{ borderRadius: 3, px: 4 }}
             >
               My Gallery
             </Button>
@@ -125,7 +125,7 @@ const Hero = () => {
               size="large"
               component={Link}
               to="/register"
-              sx={{ borderRadius: 6, px: 4 }}
+              sx={{ borderRadius: 3, px: 4 }}
             >
               Get Started
             </Button>
