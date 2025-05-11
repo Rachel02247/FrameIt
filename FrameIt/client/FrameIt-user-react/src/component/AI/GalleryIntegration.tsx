@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { Box, Typography, CircularProgress } from "@mui/material"
 import type { MyFile } from "../../types"
+import { fetchFilesByUserId } from "../../services/filesService"
 
 // This component will fetch and provide images from your gallery
 export function useGalleryImages() {
@@ -10,15 +11,13 @@ export function useGalleryImages() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-
-  const userId = localStorage.getItem("userId") || "0" 
+  const userId = localStorage.getItem("userId") || "0"
 
   useEffect(() => {
     const fetchImages = async () => {
       setLoading(true)
       try {
-
-        const { data } = fetchFilesByUserId(userId);
+        const data = await fetchFilesByUserId(Number(userId)) // Await the async function
         setFiles(data)
       } catch (error) {
         console.error("Error fetching gallery images:", error)
@@ -31,7 +30,7 @@ export function useGalleryImages() {
     fetchImages()
   }, [userId])
 
- 
+  const getImageUrl = (s3Key: string) => `${import.meta.env.VITE_API_URL}/files/download/${s3Key}`
 
   return { files, loading, error, getImageUrl }
 }

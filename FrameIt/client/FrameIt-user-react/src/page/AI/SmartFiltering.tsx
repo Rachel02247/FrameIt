@@ -63,7 +63,7 @@ function SmartFiltering() {
       const urls: Record<string, string> = {}
 
       for (const file of files) {
-        const url = await getImageUrl(file.s3Key)
+        const url = getImageUrl(file.s3Key) // Fixed to directly use getImageUrl
         if (url) {
           urls[file.id] = url
         }

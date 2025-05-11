@@ -19,7 +19,7 @@ import { register } from '../global-states/userSlice';
 const LogoRing = styled(Box)(({ theme }) => ({
     width: 250,
     height: 250,
-    border: `25px solid ${theme.palette.error.main}`, // No changes needed here
+    border: `25px solid ${theme.palette.error.main}`, 
     borderRadius: '50%',
     position: 'relative',
     margin: '0 auto 40px',
@@ -81,7 +81,10 @@ const Register = () => {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'center',
-                bgcolor: theme.palette.background.default, // Use theme background
+                zIndex: -0.5,
+                top: 50,
+                position: 'relative',
+                bgcolor: theme.palette.background.default,
             }}
         >
             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', p: 3 }}>
