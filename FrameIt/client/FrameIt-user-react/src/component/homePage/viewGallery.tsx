@@ -9,6 +9,8 @@ const ViewGallery = () => {
       sx={{
         position: "relative",
         minHeight: "85vh",
+        top: 10,
+        zIndex: -1,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -24,7 +26,7 @@ const ViewGallery = () => {
           backgroundImage: `url("https://www.transparenttextures.com/patterns/wavecut.png")`,
           opacity: 0.3,
           backgroundRepeat: "repeat",
-          backgroundSize: "180px 180px",
+          backgroundSize: "170px 150px",
           zIndex: 0,
         }}
       />
