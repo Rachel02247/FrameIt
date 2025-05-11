@@ -60,6 +60,19 @@ export const addFileToCollection = createAsyncThunk(
   }
 );
 
+export const createCollection = createAsyncThunk(
+  'tags/createCollection',
+  async ({ name, userId }: { name: string; userId: string }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${API_URL}/tags`, { name, userId });
+      return response.data;
+    } catch (error) {
+      console.error("Error creating collection:", error);
+      return rejectWithValue('Failed to create collection');
+    }
+  }
+);
+
 const tagSlice = createSlice({
   name: 'tags',
   initialState,
@@ -103,6 +116,19 @@ const tagSlice = createSlice({
         state.loading = false;
       })
       .addCase(fetchCollectionFiles.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      // Create Collection
+      .addCase(createCollection.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createCollection.fulfilled, (state, action) => {
+        state.collections.push(action.payload);
+        state.loading = false;
+      })
+      .addCase(createCollection.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

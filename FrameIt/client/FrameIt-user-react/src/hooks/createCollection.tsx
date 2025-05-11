@@ -8,10 +8,10 @@ import {
   DialogActions,
   Box
 } from '@mui/material';
-import axios from 'axios';
-import { useSelector } from 'react-redux';
-import { RootState } from '../component/global-states/store';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState, AppDispatch } from '../component/global-states/store';
 import { useLanguage } from "../context/LanguageContext";
+import { createCollection } from "../component/global-states/tagSlice";
 
 interface CreateCollectionProps {
   open: boolean;
@@ -23,6 +23,7 @@ const CreateCollection: React.FC<CreateCollectionProps> = ({ open, onClose, fetc
   const [collectionName, setCollectionName] = useState('');
   const userId = useSelector((state: RootState) => state.user.user?.id);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
   const { language } = useLanguage();
   const translations = {
     en: {
@@ -47,14 +48,11 @@ const CreateCollection: React.FC<CreateCollectionProps> = ({ open, onClose, fetc
 
     setIsSubmitting(true);
     try {
-      await axios.post('http://localhost:5282/tags', {
-        name: collectionName,
-        userId
-      });
+      await dispatch(createCollection({ name: collectionName, userId }));
       setCollectionName('');
       fetchData();
       onClose();
-    } catch (error: unknown) { // Added explicit type for error
+    } catch (error) {
       console.error('Error creating collection:', error);
     } finally {
       setIsSubmitting(false);

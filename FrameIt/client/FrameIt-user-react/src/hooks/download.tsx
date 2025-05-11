@@ -1,9 +1,12 @@
 import axios from 'axios';
 
+const API_URL = import.meta.env.VITE_API_URL;
+const API_URL_BASE = `${API_URL}/files`;
+
 const downloadFile = async (fileId: string, fileName: string) => {
   try {
     console.log(fileName);
-    const response = await axios.get(`http://localhost:5282/files/${fileId?? '0'}/downloadToComputer`, {
+    const response = await axios.get(`${API_URL_BASE}/${fileId?? '0'}/downloadToComputer`, {
       responseType: 'blob',
       headers: {
         'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
@@ -11,19 +14,6 @@ const downloadFile = async (fileId: string, fileName: string) => {
       
     });
 
-    // טיפול בשם הקובץ מה-Headers
-    // const contentDisposition = response.headers['content-disposition'];
-    // let filename = 'downloaded-file';
-
-    // if (contentDisposition) {
-    //   const filenameRegex = /filename\*=UTF-8''(.+)|filename=(["']?)(.+?)\2/;
-    //   const match = contentDisposition.match(filenameRegex);
-    //   if (match) {
-    //     filename = decodeURIComponent(match[1] || match[3]);
-    //   }
-    
-
-    // יצירת URL להורדת הקובץ
     const url = window.URL.createObjectURL(response.data);
     const link = document.createElement('a');
     link.href = url;
@@ -31,10 +21,9 @@ const downloadFile = async (fileId: string, fileName: string) => {
     document.body.appendChild(link);
     link.click();
 
-    // ניקוי המשאבים
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
-  } catch (error: unknown) { // Added explicit type for error
+  } catch (error: unknown) { 
     console.error('Error downloading file:', error);
   }
 };
@@ -43,7 +32,7 @@ const downloadByUrl = (url: string, fileName: string) => {
   const link = document.createElement('a');
   link.href = url;
   link.setAttribute('download', fileName);
-  link.setAttribute('target', '_blank'); // אופציונלי, אם רוצים לפתוח בחלון חדש
+  link.setAttribute('target', '_blank'); 
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -53,7 +42,7 @@ const downloadByUrl = (url: string, fileName: string) => {
 
  const downloadFolder = async (folderId: string, folderName: string) => {
   try {
-    const response = await fetch(`http://localhost:5282/folders/${folderId}/download`, {
+    const response = await fetch(`${API_URL}/folders/${folderId}/download`, {
       method: "GET",
     });
 
@@ -61,18 +50,17 @@ const downloadByUrl = (url: string, fileName: string) => {
 
     const blob = await response.blob();
 
-    // יצירת לינק זמני להורדה
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `${folderName}.zip`; // שם הקובץ שיהיה בשמירה
+    link.download = `${folderName}.zip`; 
     document.body.appendChild(link);
     link.click();
     link.remove();
     window.URL.revokeObjectURL(url);
   } catch (error) {
     console.error("Error downloading folder:", error);
-    alert("התרחשה שגיאה בהורדת התיקייה");
+    alert("Failed to download folder");
   }
 };
 export { downloadFile, downloadFolder, downloadByUrl };
