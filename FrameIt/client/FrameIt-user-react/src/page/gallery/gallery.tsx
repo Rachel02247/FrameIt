@@ -101,7 +101,7 @@ export default function Gallery() {
   }
 
   return (
-    <Container width="100%" maxWidth="lg" sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+    <Container sx={{width: "80%"}}  >
       <Paper
         elevation={3}
         sx={{
