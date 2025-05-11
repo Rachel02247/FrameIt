@@ -110,7 +110,7 @@ export default function Gallery() {
         sx={{
           padding: { xs: 2, sm: 3, md: 4 },
           borderRadius: 3,
-          backgroundColor: "#fff",
+          backgroundColor: theme.palette.background.default,
           minHeight: "80vh",
           mt: 4,
           mb: 4,

@@ -3,7 +3,6 @@ import React from 'react';
 import { Grid, Typography, Paper, Container } from '@mui/material';
 import { motion } from 'framer-motion';
 import { Cloud, Collections, Dashboard, Sort, Share } from '@mui/icons-material';
-import ScienceIcon from '@mui/icons-material/Science';
 import './style.css';
 
 export default () => {
@@ -36,7 +35,7 @@ export default () => {
     ];
 
     return (
-        <Paper id="features" sx={{ padding: '50px 20px', backgroundColor: '#fff', mt: 12 }}>
+        <Paper id="features" sx={{ padding: '50px 20px', mt: 12 }}>
             <Container>
                 <Typography variant="h3" align="center" color='primary' sx={{ marginBottom: 5 }}>
                     All in one
@@ -49,7 +48,7 @@ export default () => {
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ delay: index * 0.2, duration: 0.8 }}
                             >
-                                <Paper elevation={3} sx={{ padding: 4, textAlign: 'center', backgroundColor: '#ffffff', borderRadius: '8px' }}>
+                                <Paper elevation={3} sx={{ padding: 4, textAlign: 'center', borderRadius: '8px' }}>
                                     {feature.icon}
                                     <Typography variant="h5" color='secondary' sx={{ marginTop: 2, marginBottom: 2 }}>
                                         {feature.title}
