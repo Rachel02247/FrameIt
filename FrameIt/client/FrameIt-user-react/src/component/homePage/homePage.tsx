@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button } from '@mui/material';
 import Features from './features';
-import Footer from './footer';
 import Hero from './hero';
 import PhotoGrid from './photoGrid';
 import { Link } from 'react-router-dom';
@@ -51,7 +50,6 @@ const HomePage = () => {
             <Hero />
             <Features />
             <PhotoGrid />
-            <Footer />
         </div>
     );
 };
