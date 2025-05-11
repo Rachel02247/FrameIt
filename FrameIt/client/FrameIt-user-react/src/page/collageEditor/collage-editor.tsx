@@ -10,8 +10,10 @@ import { CollageCanvas } from "./collage-canvas"
 import { Button, Grid, Box, Typography, Paper } from "@mui/material"
 import DownloadIcon from "@mui/icons-material/Download"
 import type { CollageImage, Template, AspectRatio } from "../../types"
+import { useTheme } from "@mui/material/styles"
 
 const CollageEditor = () => {
+  const theme = useTheme()
   const [images, setImages] = useState<CollageImage[]>([])
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null)
   const [aspectRatio, setAspectRatio] = useState<AspectRatio>({ id: "1:1", name: "Square (1:1)", value: 1 })
@@ -126,7 +128,7 @@ const CollageEditor = () => {
   return (
     <Grid container spacing={3} ml={20}>
       <Grid item xs={12} lg={3}>
-        <Paper sx={{ p: 3, bgcolor: "#f9f9f9" }}>
+        <Paper sx={{ p: 3, bgcolor: theme.palette.background.paper }}>
           <Box sx={{ mb: 3 }}>
             <Typography variant="h5" fontWeight="bold">
               Collage Editor
@@ -154,7 +156,7 @@ const CollageEditor = () => {
           <CollageCanvas
             ref={collageRef}
             images={images}
-            backgroundColor={backgroundColor}
+            backgroundColor={theme.palette.background.default} // Use theme background
             width={canvasWidth}
             height={canvasHeight}
             selectedImageId={selectedImageId}

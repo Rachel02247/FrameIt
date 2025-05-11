@@ -8,23 +8,34 @@ import { Link } from 'react-router-dom';
 import { Favorite } from '@mui/icons-material';
 import ViewGallery from './viewGallery';
 import { motion } from 'framer-motion';
-
+import { useLanguage } from '../../context/LanguageContext';
 
 const HomePage = () => {
-    return (
+    const { language } = useLanguage();
+    const translations = {
+        en: {
+            myPhotos: "My Photos",
+        },
+        he: {
+            myPhotos: "התמונות שלי",
+        },
+    };
 
+    const t = translations[language];
+
+    return (
         <>
-        
-            <motion.div whileHover={{}} >
+            <motion.div whileHover={{}}>
                 <Button
                     component={Link}
                     to={sessionStorage.getItem("id") ? "myWorkspace/gallery" : "/login"}
                     variant="contained"
                     color="primary"
                     size="large"
-                    sx={{ position: 'absolute', top: 30, right: 110, zIndex: 3 }}>
+                    sx={{ position: 'absolute', top: 30, right: 110, zIndex: 3 }}
+                >
                     <Favorite />
-                    my photos
+                    {t.myPhotos}
                 </Button>
             </motion.div>
             <ViewGallery />

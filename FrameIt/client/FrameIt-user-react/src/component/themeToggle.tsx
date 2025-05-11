@@ -63,7 +63,7 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ children }) => {
   return (
     <ThemeProvider theme={getTheme(mode)}>
       <CssBaseline />
-      <Box sx={{ position: "absolute", top: 16, left: 16, zIndex: 0 }}>
+      <Box sx={{ position: "absolute", top: 20, left: 16, zIndex: 0 }}>
         <TinyIconSwitch
           checked={mode === "dark"}
           onChange={toggleTheme}

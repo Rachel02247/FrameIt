@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-refresh/only-export-components */
 import React from 'react';
 import { Box, Container, Typography, Link } from '@mui/material';
@@ -16,7 +17,7 @@ export default () => {
         height: 60,
         position: 'absolute',
         p: 6,
-        pb: 10,
+        mb: 10,
         backgroundColor: theme.palette.background.default, 
       }}
       id="contact"
