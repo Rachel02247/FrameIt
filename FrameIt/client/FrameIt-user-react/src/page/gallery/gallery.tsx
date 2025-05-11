@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 
 import { useEffect, useState } from "react"
@@ -30,6 +31,11 @@ import FolderMenu from "../../hooks/folderMenu"
 import ImagePreviewModal from "../../hooks/imagePreviewModal"
 import { fetchFolderByCurrentFolder, fetchFoldersBreadcrumbs } from "../../services/folderService"
 
+type CreateFolderProps = {
+  folderId: string;
+  fetchData: (_folderId: string) => void;
+  onClose: () => void; // Added onClose prop
+};
 
 export default function Gallery() {
   const [files, setFiles] = useState<MyFile[]>([])
@@ -40,23 +46,23 @@ export default function Gallery() {
   const [searchTerm, setSearchTerm] = useState("")
   const [error, setError] = useState<string | null>(null)
   const [selectedFileIndex, setSelectedFileIndex] = useState<number | null>(null)
+  const [openCreateFolder, setOpenCreateFolder] = useState<boolean>(false) // Added state for CreateFolder dialog
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
   const isMedium = useMediaQuery(theme.breakpoints.down("md"))
 
-  const userId = sessionStorage.getItem("id") || 0;
+  const userId = sessionStorage.getItem("id") || "0" // Ensure userId is a string
 
   const fetchData = async (folderId: string | null = "0") => {
     setLoading(true)
     setError(null)
     try {
-      const { data } = await fetchFolderByCurrentFolder(folderId ?? '0', +userId);
+      const { data } = await fetchFolderByCurrentFolder(folderId ?? "0", +userId)
       setFolders(data.folders)
       setFiles(data.files)
 
-      const breadcrumbRes = await fetchFoldersBreadcrumbs(folderId ?? '0');
+      const breadcrumbRes = await fetchFoldersBreadcrumbs(folderId ?? "0")
       setBreadcrumb(breadcrumbRes.data)
-
     } catch (error) {
       console.error("Error fetching data:", error)
       setError("Failed to load gallery content. Please try again later.")
@@ -82,7 +88,7 @@ export default function Gallery() {
 
   const handleNext = () => {
     setSelectedFileIndex((prevIndex) =>
-      prevIndex !== null && prevIndex < files.length - 1 ? prevIndex + 1 : prevIndex,
+      prevIndex !== null && prevIndex < files.length - 1 ? prevIndex + 1 : prevIndex
     )
   }
 
@@ -91,7 +97,6 @@ export default function Gallery() {
   }
 
   const filteredFolders = folders.filter((folder) => folder.name.toLowerCase().includes(searchTerm.toLowerCase()))
-
   const filteredFiles = files.filter((file) => file.fileName.toLowerCase().includes(searchTerm.toLowerCase()))
 
   const getColumnCount = () => {
@@ -101,7 +106,14 @@ export default function Gallery() {
   }
 
   return (
-    <Container sx={{ width: "1000", position: 'relative'}}> {/* Fixed width to 70% */}
+    <Container
+      sx={{
+        maxWidth: "1200px",
+        width: "95%",
+        mx: "auto",
+        position: "relative",
+      }}
+    >
       <Paper
         elevation={3}
         sx={{
@@ -113,7 +125,6 @@ export default function Gallery() {
           mb: 4,
           position: "relative",
           overflow: "hidden",
-          width: "100%",
           "&::before": {
             content: '""',
             position: "absolute",
@@ -181,20 +192,13 @@ export default function Gallery() {
             variant="contained"
             startIcon={<CreateNewFolderIcon />}
             size="small"
-            onClick={() => {
-              // Trigger your create folder dialog here
-              const createFolderElement = document.getElementById("create-folder-button")
-              if (createFolderElement) {
-                createFolderElement.click()
-              }
-            }}
+            onClick={() => setOpenCreateFolder(true)} // Open CreateFolder dialog
           >
             New Folder
           </Button>
         </Box>
 
         <Box sx={{ display: "none" }}>
-          <CreateFolder folderId={currentFolder ?? "0"} fetchData={fetchData} />
           <FolderMenu />
         </Box>
 
@@ -250,10 +254,7 @@ export default function Gallery() {
                             <FolderItem
                               folder={folder}
                               onClick={() => setCurrentFolder(folder.id)}
-                              onDelete={() => {
-                                // Implement folder deletion
-                                console.log("Delete folder:", folder.id)
-                              }}
+                              onDelete={() => fetchData(currentFolder)}
                             />
                           </ImageListItem>
                         ))}
@@ -287,6 +288,14 @@ export default function Gallery() {
               </Fade>
             )}
           </>
+        )}
+
+        {/* CreateFolder Dialog */}
+        {openCreateFolder && (
+          <CreateFolder
+            folderId={currentFolder ?? "0"}
+            fetchData={fetchData}
+          />
         )}
 
         {/* Image preview modal */}
