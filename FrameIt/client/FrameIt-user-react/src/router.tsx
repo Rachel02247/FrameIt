@@ -15,6 +15,7 @@ import SmartFiltering from "./page/AI/SmartFiltering";
 import ImageAnalysis from "./page/AI/ImageAnalysis";
 import FreeSearch from "./page/AI/FreeSearch";
 import ImageToArt from "./page/AI/ImageToArt";
+import GetFolders from "./page/gallery/getFolders";
 
 export const router = createBrowserRouter([
     {
@@ -70,7 +71,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: '/myWorkspace/gallery',
-                element: <Gallery />,
+                element: <GetFolders />,
             },
             {
                 path: '/myWorkspace/upload',
