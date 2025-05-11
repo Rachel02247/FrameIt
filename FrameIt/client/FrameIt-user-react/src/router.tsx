@@ -6,7 +6,6 @@ import Gallery from "./page/gallery/gallery";
 import Upload from "./page/upload/upload";
 import Collections from "./page/collections";
 import Settings from "./component/account/setting";
-// import Sidebar from "./component/sideBar";
 import Register from "./component/auth/register";
 import MyWorkspace from "./page/myWorkspace";
 import Login from "./component/auth/login";
