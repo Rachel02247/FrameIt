@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{2C50D4A0-E71C-4EB5-807E-3822AA2BBA15}|FrameItAPI.csproj|c:\\users\\user\\documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\frameit\\server\\frameitapi\\endpoints\\authendpoints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2C50D4A0-E71C-4EB5-807E-3822AA2BBA15}|FrameItAPI.csproj|solutionrelative:endpoints\\authendpoints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{2C50D4A0-E71C-4EB5-807E-3822AA2BBA15}|FrameItAPI.csproj|c:\\users\\user\\documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\frameit\\server\\frameitapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2C50D4A0-E71C-4EB5-807E-3822AA2BBA15}|FrameItAPI.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -19,6 +23,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "AuthEndpoints.cs",
+              "DocumentMoniker": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Endpoints\\AuthEndpoints.cs",
+              "RelativeDocumentMoniker": "Endpoints\\AuthEndpoints.cs",
+              "ToolTip": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Endpoints\\AuthEndpoints.cs",
+              "RelativeToolTip": "Endpoints\\AuthEndpoints.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-11T00:42:17.943Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
