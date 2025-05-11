@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import StarIcon from '@mui/icons-material/Star';
+import AutoAwesomeMosaicIcon from '@mui/icons-material/AutoAwesomeMosaic';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountMenu from './account/accountMenu';
@@ -39,7 +39,7 @@ const Sidebar = () => {
         { path: "/myWorkspace/gallery", title: t.gallery, icon: <DashboardIcon /> },
         { path: "/myWorkspace/upload", title: t.upload, icon: <UploadFileIcon /> },
         { path: "/myWorkspace/collections", title: t.collections, icon: <CollectionsIcon /> },
-        { path: "/myWorkspace/design", title: t.design, icon: <StarIcon /> },
+        { path: "/myWorkspace/design", title: t.design, icon: <AutoAwesomeMosaicIcon /> },
         { path: "/myWorkspace/more", title: t.more, icon: <MoreHorizIcon /> },
     ];
 
