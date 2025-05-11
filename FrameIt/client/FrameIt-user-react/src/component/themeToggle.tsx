@@ -68,8 +68,8 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ children }) => {
       <Box
         sx={{
           position: "absolute",
-          top: 20,
-          [language === "he" ? "right" : "left"]: 32,
+          top: 30,
+          [language === "he" ? "right" : "left"]: 122,
           zIndex: 0,
         }}
       >

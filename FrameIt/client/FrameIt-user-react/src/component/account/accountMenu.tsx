@@ -14,6 +14,7 @@ import Login from '@mui/icons-material/Login';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../global-states/store';
+import { useLanguage } from "../../context/LanguageContext";
 
 export default () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -25,13 +26,40 @@ export default () => {
     setAnchorEl(null);
   };
 
-  const user = useSelector((state: RootState) => state.user); // או לפי האיד של המשתמש הנוכחי אם יש לך
+  const user = useSelector((state: RootState) => state.user);
   const UserName = sessionStorage.getItem('name');
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+  const { language } = useLanguage();
+
+  const translations = {
+    en: {
+      profile: "Profile",
+      settings: "Settings",
+      logout: "Logout",
+      login: "Login",
+    },
+    he: {
+      profile: "פרופיל",
+      settings: "הגדרות",
+      logout: "התנתק",
+      login: "התחבר",
+    },
+  };
+
+  const t = translations[language];
 
   return (
     <React.Fragment>
-      <Box sx={{ left: 4, top: 20, position: 'absolute', display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+      <Box
+        sx={{
+          left: 4,
+          top: 20,
+          position: 'absolute',
+          display: 'flex',
+          alignItems: 'center',
+          textAlign: 'center',
+        }}
+      >
         <Tooltip title="Account settings">
           <IconButton
             onClick={handleClick}
@@ -42,7 +70,7 @@ export default () => {
             aria-expanded={open ? 'true' : undefined}
           >
             <Avatar sx={{ width: 32, height: 32 }}>
-              { UserName?.charAt(0).toUpperCase() ?? null}
+              {UserName?.charAt(0).toUpperCase() ?? null}
             </Avatar>
           </IconButton>
         </Tooltip>
@@ -86,21 +114,21 @@ export default () => {
       >
         <MenuItem onClick={() => navigate('/settings')}>
           <Avatar />
-          <Link to="/settings">Profile</Link>
+          <Link to="/settings">{t.profile}</Link>
         </MenuItem>
 
         <Divider />
-        <MenuItem onClick={() => navigate('/settings')}>
+        <MenuItem onClick={() => navigate('/settings?tab=1')}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
-          <Link to="/settings">Settings</Link>
+          <Link to="/settings?tab=1">{t.settings}</Link>
         </MenuItem>
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
             {user ? <Logout fontSize="small" /> : <Login fontSize="small" />}
           </ListItemIcon>
-          <Link to="/login">{user ? 'Logout' : 'Login'}</Link>
+          <Link to="/login">{user ? t.logout : t.login}</Link>
         </MenuItem>
       </Menu>
     </React.Fragment>
