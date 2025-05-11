@@ -7,7 +7,7 @@ import { TemplateSelector } from "./template-selector"
 import { AspectRatioSelector } from "./aspect-ratio-selector"
 import { BackgroundColorPicker } from "./background-color-picker"
 import { CollageCanvas } from "./collage-canvas"
-import { Button, Grid, Box, Typography, Paper } from "@mui/material"
+import { Divider, Button, Box, Typography, Paper } from "@mui/material"
 import DownloadIcon from "@mui/icons-material/Download"
 import type { CollageImage, Template, AspectRatio } from "../../types"
 import { useTheme } from "@mui/material/styles"
@@ -20,13 +20,23 @@ const CollageEditor = () => {
   const [backgroundColor, setBackgroundColor] = useState<string>("#ffffff")
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null)
   const collageRef = useRef<HTMLDivElement>(null)
-  const [canvasWidth, ] = useState<number>(800)
-  const [canvasHeight, setCanvasHeight] = useState<number>(800)
+  const [canvasWidth, setCanvasWidth] = useState<number>(600)
+  const [canvasHeight, setCanvasHeight] = useState<number>(600)
 
   useEffect(() => {
-    // Update canvas height based on aspect ratio
-    setCanvasHeight(canvasWidth / aspectRatio.value)
-  }, [aspectRatio, canvasWidth])
+    const updateCanvasSize = () => {
+      const maxWidth = window.innerWidth * 0.8 // Limit canvas width to 80% of the viewport
+      const maxHeight = window.innerHeight * 0.5 // Limit canvas height to 50% of the viewport
+      const calculatedWidth = Math.min(maxWidth, 600) // Ensure it doesn't exceed 600px
+      const calculatedHeight = calculatedWidth / aspectRatio.value
+      setCanvasWidth(calculatedWidth)
+      setCanvasHeight(Math.min(calculatedHeight, maxHeight)) // Ensure height fits within the viewport
+    }
+
+    updateCanvasSize()
+    window.addEventListener("resize", updateCanvasSize)
+    return () => window.removeEventListener("resize", updateCanvasSize)
+  }, [aspectRatio])
 
   const handleImageUpload = (files: File[]) => {
     const newImages = files.map((file) => {
@@ -87,7 +97,7 @@ const CollageEditor = () => {
   }
 
   const handleBackgroundColorChange = (color: string) => {
-    setBackgroundColor(color)
+    setBackgroundColor(color) // Update background color immediately
   }
 
   const handleImageSelect = (id: string) => {
@@ -126,47 +136,62 @@ const CollageEditor = () => {
   }
 
   return (
-    <Grid container spacing={3} ml={20}>
-      <Grid item xs={12} lg={3}>
-        <Paper sx={{ p: 3, bgcolor: theme.palette.background.paper }}>
-          <Box sx={{ mb: 3 }}>
-            <Typography variant="h5" fontWeight="bold">
-              Collage Editor
-            </Typography>
-          </Box>
+    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3, p: 3, maxWidth: "80%", mx: "auto" }}>
+      {/* Title */}
+      <Typography variant="h4" fontWeight="bold" sx={{ mb: 2 }}>
+        Collage Editor
+      </Typography>
 
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-            <ImageUploader onUpload={handleImageUpload} />
+      {/* Canvas Section */}
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "flex-start", gap: 3, mb: 3 }}>
+        {/* Canvas */}
+        <CollageCanvas
+          ref={collageRef}
+          images={images}
+          backgroundColor={backgroundColor} // Pass updated background color
+          width={canvasWidth}
+          height={canvasHeight}
+          selectedImageId={selectedImageId}
+          onImageSelect={handleImageSelect}
+          onImageUpdate={handleImageUpdate}
+          onImageRemove={handleImageRemove}
+        />
 
-            <TemplateSelector onSelect={handleTemplateSelect} />
-
-            <AspectRatioSelector selectedRatio={aspectRatio} onChange={handleAspectRatioChange} />
-
-            <BackgroundColorPicker color={backgroundColor} onChange={handleBackgroundColorChange} />
-
-            <Button variant="contained" color="primary" fullWidth onClick={handleDownload} startIcon={<DownloadIcon />}>
-              Download Collage
-            </Button>
-          </Box>
-        </Paper>
-      </Grid>
-
-      <Grid item xs={12} lg={9}>
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
-          <CollageCanvas
-            ref={collageRef}
-            images={images}
-            backgroundColor={theme.palette.background.default} // Use theme background
-            width={canvasWidth}
-            height={canvasHeight}
-            selectedImageId={selectedImageId}
-            onImageSelect={handleImageSelect}
-            onImageUpdate={handleImageUpdate}
-            onImageRemove={handleImageRemove}
-          />
+        {/* Upload and Download Section */}
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <ImageUploader onUpload={handleImageUpload} />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleDownload}
+            startIcon={<DownloadIcon />}
+          >
+            Download Collage
+          </Button>
         </Box>
-      </Grid>
-    </Grid>
+      </Box>
+
+      <Divider sx={{ width: "100%", my: 2 }} />
+
+      {/* Options Section */}
+      <Paper sx={{ p: 3, bgcolor: theme.palette.background.paper, display: "flex", flexWrap: "wrap", gap: 3, justifyContent: "space-between" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
+          <TemplateSelector onSelect={handleTemplateSelect} />
+        </Box>
+
+        <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
+
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
+          <AspectRatioSelector selectedRatio={aspectRatio} onChange={handleAspectRatioChange} />
+        </Box>
+
+        <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
+
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
+          <BackgroundColorPicker color={backgroundColor} onChange={handleBackgroundColorChange} />
+        </Box>
+      </Paper>
+    </Box>
   )
 }
 
