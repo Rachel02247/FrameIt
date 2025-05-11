@@ -7,7 +7,7 @@ interface AuthState {
   token: string | null;
   user: Partial<User>;
   loading: boolean;
-  error: string | null; // No changes needed here
+  error: string | null; 
 }
 
 const initialState: AuthState = {

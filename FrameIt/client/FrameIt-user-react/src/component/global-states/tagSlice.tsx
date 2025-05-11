@@ -7,7 +7,7 @@ interface TagState {
   files: MyFile[];
   selectedTagId: number;
   loading: boolean;
-  error: string | null; // No changes needed here
+  error: string | null; 
 }
 
 const initialState: TagState = {
