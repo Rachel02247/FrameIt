@@ -90,7 +90,7 @@ const Collections: React.FC = () => {
   const selectedCollection = collections.find((collection) => collection.id === selectedTagId)
 
   return (
-    <Container maxWidth="lg">
+    <Container sx={{ width: "70%", mx: "auto" }}> {/* Fixed width to 70% */}
       <Paper
         elevation={3}
         sx={{
