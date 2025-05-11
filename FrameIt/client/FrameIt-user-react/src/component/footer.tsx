@@ -3,10 +3,10 @@
 import React from 'react';
 import { Box, Container, Typography, Link } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import './style.css';
+import './homePage/style.css';
 
 export default () => {
-  const theme = useTheme();
+  //const theme = useTheme();
 
   return (
     <Box
@@ -16,10 +16,11 @@ export default () => {
         width: '100%',
         left: 0,
         height: 60,
-        position: 'absolute',
+        position: 'relative',
         p: 6,
-        mb: 10,
-        backgroundColor: theme.palette.background.default, 
+        // mb: 10,
+        bottom: 0,
+      //  backgroundColor: theme.palette.background.default, 
       }}
       id="contact"
     >

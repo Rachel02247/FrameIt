@@ -3,7 +3,7 @@ import { Outlet, useLocation } from "react-router-dom"
 import NavBar from "./component/NavBar";
 import Sidebar from "./component/sideBar";
 import HomePage from "./component/homePage/homePage";
-import Footer from "./component/homePage/footer";
+import Footer from "./component/footer";
 
 const AppLayout = () => {
 
