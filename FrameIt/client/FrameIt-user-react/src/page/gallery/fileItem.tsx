@@ -27,6 +27,7 @@ import CreateCollection from "../../hooks/createCollection"
 import { downloadByUrl, downloadFile } from "../../hooks/download"
 import type { FileItemProps } from "../../types"
 import { useLanguage } from "../../context/LanguageContext"
+import { getImageUrl } from "../../services/awsService"
 
 // Function to get file preview URL from server
 
@@ -64,13 +65,12 @@ const [urlTrick, ] = useState('');
 
   const isVideo = file.fileType.toLowerCase() === "mp4" || file.fileType.toLowerCase() === "mov"
 
-  const getFilePreviewUrl = await getImageUrl(s3Key);
+  const getFilePreviewUrl =  getImageUrl(file.s3Key);
   useEffect(() => {
-    const loadFileUrl = () => {
+    const loadFileUrl = async () => {
       setIsLoading(true)
       try {
-        const url =  getFilePreviewUrl(file.s3Key)
-        setPresignedUrl(url)
+        setPresignedUrl(await getFilePreviewUrl);
       } catch (error) {
         console.error("Error loading file URL:", error)
         setImageError(true)

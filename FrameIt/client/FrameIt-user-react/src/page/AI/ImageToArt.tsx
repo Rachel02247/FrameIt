@@ -22,6 +22,7 @@ import { ArrowBack, Download, Loop } from "@mui/icons-material"
 import { ImageSelector } from "../../component/AI/ImageSelector"
 import { useSnackbar } from "notistack"
 import { useGalleryImages } from "../../component/AI/GalleryIntegration"
+import { transformImageToArt } from "../../services/aiService"
 
 const artStyles = [
   { id: "picasso", name: "Picasso", description: "Cubist style with geometric shapes" },

@@ -21,9 +21,8 @@ import { Folder, MyFile } from "../../types";
 import axios from "axios";
 import CreateFolder from "../../hooks/createFolder";
 import { useDropzone, Accept } from "react-dropzone";
-import { useSelector } from "react-redux";
-import { RootState } from "../../component/global-states/store";
 import { useLanguage } from "../../context/LanguageContext";
+import { fetchFilesByUserIdAndFolderId } from "../../services/folderService";
 
 interface FileUploadProps {
     onUpload: (files: MyFile[], folderId: string) => Promise<void>;
@@ -52,11 +51,11 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload }) => {
     const [loading, setLoading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [files, setFiles] = useState<MyFile[]>([]);
-    const [selectedFolder, setSelectedFolder] = useState("");
+    const [selectedFolder, setSelectedFolder] = useState<string>("");
     const [folders, setFolders] = useState<Folder[]>([]);
     const [subFolders, setSubFolders] = useState<Folder[]>([]);
     const url = `${process.env.REACT_APP_API_URL}/`;
-    const userId = useSelector((state: RootState) => state.user.user?.id);
+    const userId = sessionStorage.getItem("userId") || "0";
 
     useEffect(() => {
         const fetchData = async () => {
@@ -75,7 +74,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload }) => {
             if (!selectedFolder) return;
 
             try {
-                const res = await fetchFilesByUserIdAndFolderId(selectedFolder, userId);
+                const res = await fetchFilesByUserIdAndFolderId(+selectedFolder, +userId );
                 setSubFolders(res.data.folders); 
             } catch (error) {
                 console.error("Error fetching subfolders:", error);
@@ -95,7 +94,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload }) => {
             file,
             isDeleted: false,
             folderId: selectedFolder,
-            ownerId: userId || "",
+            ownerId: userId,
         }));
         setFiles((prevFiles) => [...prevFiles, ...newFiles]);
     };
@@ -244,7 +243,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload }) => {
                             {t.cancel}
                         </Button>
                         <Button onClick={handleUpload} color="primary" disabled={loading}>
-                           {loading? <img src="img/spinner.gif" alt="spinnre" width={24} /> : t.upload } 
+                           {loading? <img src="img/spinner.gif" alt="spinner" width={24} /> : t.upload } 
                         </Button>
                     </DialogActions>
                 </Dialog>

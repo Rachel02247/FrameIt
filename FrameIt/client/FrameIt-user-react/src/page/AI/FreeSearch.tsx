@@ -17,7 +17,7 @@ import {
 } from "@mui/material"
 import { ArrowBack, Search } from "@mui/icons-material"
 import { ImageGrid } from "../../component/AI/ImageGrid"
-import { searchImagesByDescription } from "../../services/ai-service"
+import { searchImagesByDescription } from "../../services/aiService"
 import { useSnackbar } from "notistack"
 import { useGalleryImages } from "../../component/AI/GalleryIntegration"
 

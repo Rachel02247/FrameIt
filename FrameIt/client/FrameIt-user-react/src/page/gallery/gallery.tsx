@@ -27,9 +27,8 @@ import LoadingIndicator from "../../hooks/loadingIndicator"
 import type { Folder, MyFile } from "../../types"
 import CreateFolder from "../../hooks/createFolder"
 import FolderMenu from "../../hooks/folderMenu"
-import type { RootState } from "../../component/global-states/store"
-import { useSelector } from "react-redux"
 import ImagePreviewModal from "../../hooks/imagePreviewModal"
+import { fetchFolderByCurrentFolder, fetchFoldersBreadcrumbs } from "../../services/folderService"
 
 
 export default function Gallery() {
@@ -40,21 +39,22 @@ export default function Gallery() {
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [error, setError] = useState<string | null>(null)
-  const userId = useSelector((state: RootState) => state.user.user?.id)
   const [selectedFileIndex, setSelectedFileIndex] = useState<number | null>(null)
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
   const isMedium = useMediaQuery(theme.breakpoints.down("md"))
 
+  const userId = sessionStorage.getItem("id") || 0;
+
   const fetchData = async (folderId: string | null = "0") => {
     setLoading(true)
     setError(null)
     try {
-      const { data } = await fetchFolderByCurrentFolder(folderId, userId || 0);
+      const { data } = await fetchFolderByCurrentFolder(folderId ?? '0', +userId);
       setFolders(data.folders)
       setFiles(data.files)
 
-      const breadcrumbRes = await fetchFoldersBreadcrumbs(folderId);
+      const breadcrumbRes = await fetchFoldersBreadcrumbs(folderId ?? '0');
       setBreadcrumb(breadcrumbRes.data)
 
     } catch (error) {
