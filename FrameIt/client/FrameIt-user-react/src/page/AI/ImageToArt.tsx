@@ -20,7 +20,6 @@ import {
 } from "@mui/material"
 import { ArrowBack, Download, Loop } from "@mui/icons-material"
 import { ImageSelector } from "../../component/AI/ImageSelector"
-import { transformImageToArt } from "../../services/ai-service"
 import { useSnackbar } from "notistack"
 import { useGalleryImages } from "../../component/AI/GalleryIntegration"
 
@@ -82,13 +81,13 @@ function ImageToArt() {
         setGeneratedArt(artUrl)
       } else {
         enqueueSnackbar("Could not generate artwork. Please try again.", {
-          variant: "error", // No changes needed here
+          variant: "error", 
         })
       }
     } catch (error) {
       console.error("Error generating art:", error)
       enqueueSnackbar("An error occurred during art generation.", {
-        variant: "error", // No changes needed here
+        variant: "error", 
       })
     } finally {
       setIsGenerating(false)

@@ -56,7 +56,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
   const [openCreateCollection, setOpenCreateCollection] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [imageError, setImageError] = useState(false)
-const [urlTrick, setUrlTrick] = useState('');
+const [urlTrick, ] = useState('');
 
   const dispatch = useDispatch<AppDispatch>()
   const userId = useSelector((state: RootState) => state.user.user?.id)
@@ -64,30 +64,12 @@ const [urlTrick, setUrlTrick] = useState('');
 
   const isVideo = file.fileType.toLowerCase() === "mp4" || file.fileType.toLowerCase() === "mov"
 
-  const getFilePreviewUrl = async (s3Key: string): Promise<string> => {
-    const encodedKey = encodeURIComponent(s3Key)
-    console.log(s3Key);
-    console.log(encodedKey);
-    const url = `https://001687204140frameit.s3.us-east-1.amazonaws.com/${encodedKey}`
-    console.log(url);
-    setUrlTrick(url)
-   
-    return url
-  //   const response = await axios.get(`http://localhost:5282/files/generate-url?s3Key=${encodedKey}`)
-  //   // const response = await axios.get(`http://localhost:5282/files/${file.fileName}/download`)
-  // console.log(response);
-  //   if (!response.ok) {
-  //     throw new Error("Failed to fetch presigned URL")
-  //   }
-  
-  //   const data = await response.json()
-  //   return data
-  }
+  const getFilePreviewUrl = await getImageUrl(s3Key);
   useEffect(() => {
-    const loadFileUrl = async () => {
+    const loadFileUrl = () => {
       setIsLoading(true)
       try {
-        const url = await getFilePreviewUrl(file.s3Key)
+        const url =  getFilePreviewUrl(file.s3Key)
         setPresignedUrl(url)
       } catch (error) {
         console.error("Error loading file URL:", error)

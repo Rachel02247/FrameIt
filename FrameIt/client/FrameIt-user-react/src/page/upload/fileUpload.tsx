@@ -75,8 +75,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload }) => {
             if (!selectedFolder) return;
 
             try {
-                const res = await axios.get(`${url}folders/${selectedFolder}/contents/${userId}`);
-                setSubFolders(res.data.folders);  // Store subfolders here
+                const res = await fetchFilesByUserIdAndFolderId(selectedFolder, userId);
+                setSubFolders(res.data.folders); 
             } catch (error) {
                 console.error("Error fetching subfolders:", error);
             }
