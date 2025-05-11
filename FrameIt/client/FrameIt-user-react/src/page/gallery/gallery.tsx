@@ -157,7 +157,7 @@ import LoadingIndicator from "../../hooks/loadingIndicator"
 import type { Folder, MyFile } from "../../types"
 import CreateFolder from "../../hooks/createFolder"
 import FolderMenu from "../../hooks/folderMenu"
-import type { RootState } from "../../global-states/store"
+import type { RootState } from "../../component/global-states/store"
 import { useSelector } from "react-redux"
 import ImagePreviewModal from "../../hooks/imagePreviewModal"
 

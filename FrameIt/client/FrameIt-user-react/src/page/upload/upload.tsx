@@ -3,7 +3,7 @@ import { Container, Typography } from "@mui/material";
 import axios from "axios";
 import FileUpload from "./fileUpload";
 import { useSelector } from "react-redux";
-import { RootState } from "../../global-states/store";
+import { RootState } from "../../component/global-states/store";
 import { MyFile } from "../../types";
 
 const Upload = () => {

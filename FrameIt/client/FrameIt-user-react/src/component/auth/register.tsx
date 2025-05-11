@@ -11,8 +11,8 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Link, useNavigate } from 'react-router-dom';
-import { AppDispatch, RootState } from '../../global-states/store';
-import { register } from '../../global-states/userSlice';
+import { AppDispatch, RootState } from '../global-states/store';
+import { register } from '../global-states/userSlice';
 
 
 // Custom styled components

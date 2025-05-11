@@ -16,10 +16,10 @@ import {
   Stack,
 } from "@mui/material"
 import { ArrowBack, ImageSearch } from "@mui/icons-material"
-import { ImageSelector } from "../components/ImageSelector"
-import { analyzeImage } from "../services/ai-service"
+import { ImageSelector } from "../../component/AI/ImageSelector"
+import { analyzeImage } from "../../services/ai-service"
 import { useSnackbar } from "notistack"
-import { useGalleryImages } from "../components/GalleryIntegration"
+import { useGalleryImages } from "../../component/AI/GalleryIntegration"
 import { AnalysisResult } from "../../types"
 
 function ImageAnalysis() {

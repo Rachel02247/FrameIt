@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-import { RootState } from '../global-states/store';
+import { RootState } from '../component/global-states/store';
 
 interface CreateCollectionProps {
   open: boolean;

@@ -15,10 +15,10 @@ import {
   CircularProgress,
 } from "@mui/material"
 import { ArrowBack, Search } from "@mui/icons-material"
-import { ImageGrid } from "../components/ImageGrid"
-import { searchImagesByDescription } from "../services/ai-service"
+import { ImageGrid } from "../../component/AI/ImageGrid"
+import { searchImagesByDescription } from "../../services/ai-service"
 import { useSnackbar } from "notistack"
-import { useGalleryImages } from "../components/GalleryIntegration"
+import { useGalleryImages } from "../../component/AI/GalleryIntegration"
 
 function FreeSearch() {
   const navigate = useNavigate()
