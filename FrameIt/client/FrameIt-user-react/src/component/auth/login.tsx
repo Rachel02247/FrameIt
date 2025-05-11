@@ -98,11 +98,14 @@ const Login = () => {
     return (
         <Paper
             sx={{
+                zIndex: -0.5,
                 minHeight: '100vh',
                 display: 'flex',
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'center',
+                 top: 50,
+                position: 'relative',
                 bgcolor: theme.palette.background.default, // Use theme background
             }}
         >

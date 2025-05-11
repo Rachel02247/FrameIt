@@ -5,6 +5,7 @@ import FileUpload from "./fileUpload";
 import { useSelector } from "react-redux";
 import { RootState } from "../../component/global-states/store";
 import { MyFile } from "../../types";
+import { uploadFiles } from "../../services/filesService";
 
 const Upload = () => {
   const user = useSelector((state: RootState) => state.user.user);
@@ -28,7 +29,7 @@ const Upload = () => {
 
         const response =  uploadFiles(formData);
 
-        console.log("File uploaded successfully:", response.data);
+        console.log("File uploaded successfully:", response);
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error("Error uploading file:", error.response?.data || error.message);

@@ -39,7 +39,7 @@ const HomePage = () => {
                     sx={{
                         position: "absolute",
                         top: 30,
-                        [language === "he" ? "left" : "right"]: 110,
+                        [language === "he" ? "left" : "right"]: 120,
                         zIndex: 3,
                     }}
                 >

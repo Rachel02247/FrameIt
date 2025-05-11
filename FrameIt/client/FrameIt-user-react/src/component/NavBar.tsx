@@ -12,7 +12,7 @@ export default () => {
           style={{
             width: 50,
             top: 20,
-            [language === "he" ? "left" : "right"]: 40,
+            [language === "he" ? "left" : "right"]: 50,
             position: "absolute",
             zIndex: 2,
           }}
