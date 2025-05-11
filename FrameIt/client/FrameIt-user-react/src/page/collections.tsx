@@ -90,7 +90,14 @@ const Collections: React.FC = () => {
   const selectedCollection = collections.find((collection) => collection.id === selectedTagId)
 
   return (
-    <Container sx={{ width: "1000", position: 'relative' }}> {/* Fixed width to 70% */}
+    <Container
+      sx={{
+        maxWidth: "1200px",
+        width: "95%", 
+        mx: "auto", 
+        position: "relative",
+      }}
+    >
       <Paper
         elevation={3}
         sx={{
@@ -101,7 +108,6 @@ const Collections: React.FC = () => {
           mb: 4,
           position: "relative",
           overflow: "hidden",
-          width: "100%",
           "&::before": {
             content: '""',
             position: "absolute",
