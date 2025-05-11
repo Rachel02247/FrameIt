@@ -7,7 +7,6 @@ import PhotoGrid from './photoGrid';
 import { Link } from 'react-router-dom';
 import { Favorite } from '@mui/icons-material';
 import ViewGallery from './viewGallery';
-import Home from './try/Home';
 import { motion } from 'framer-motion';
 
 
