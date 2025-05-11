@@ -1,9 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Box, Typography, CircularProgress } from "@mui/material"
+import { Box, Typography } from "@mui/material"
 import type { MyFile } from "../../types"
 import { fetchFilesByUserId } from "../../services/filesService"
+import LoadingIndicator from "../../hooks/loadingIndicator"
 
 // This component will fetch and provide images from your gallery
 export function useGalleryImages() {
@@ -38,7 +39,7 @@ export function useGalleryImages() {
 export function GalleryLoading() {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", py: 8 }}>
-      <CircularProgress size={60} />
+      <LoadingIndicator />
       <Typography variant="h6" sx={{ mt: 2 }}>
         Loading your gallery images...
       </Typography>

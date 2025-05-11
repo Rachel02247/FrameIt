@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TextField, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import axios from 'axios';
+import { createFolder } from "../services/filesService";
 import AddIcon from '@mui/icons-material/Add';
 import { useSelector } from 'react-redux';
 import { RootState } from '../component/global-states/store';
@@ -26,32 +26,22 @@ const CreateFolder = ({ folderId = '0', fetchData }: { folderId: string; fetchDa
     }
 
     try {
-      console.log(folderId);
       const newFolder = {
         name: folderName,
-        // parentFolderId: folderId.folderId,
-        ownerId: user?.id ?? 0,
-        isDeleted: false
+        ownerId: typeof user?.id === 'string' ? parseInt(user.id, 10) : user?.id ?? 0,
+        isDeleted: false,
       };
 
-      const response = await axios.post(
-        'http://localhost:5282/folders',
-        newFolder,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      console.log(response.data);
+      const response = await createFolder(newFolder); 
+      console.log(response);
       handleClose();
-     
-     try{ fetchData(folderId);
-     }
-     catch(err){
-      console.log("failes fething data" + err);
-     }
-    } catch (error: unknown) { // Added explicit type for error
+
+      try {
+        fetchData(folderId);
+      } catch (err) {
+        console.log("Failed fetching data: " + err);
+      }
+    } catch (error: unknown) {
       alert('Error creating folder');
       console.error(error);
     }
