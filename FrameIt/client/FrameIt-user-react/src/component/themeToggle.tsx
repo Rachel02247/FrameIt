@@ -9,6 +9,7 @@ import {
 import WbSunnyIcon from "@mui/icons-material/WbSunny";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import getTheme from "../theme";
+import { useLanguage } from "../context/LanguageContext";
 
 interface ThemeToggleProps {
   children: React.ReactNode;
@@ -55,6 +56,7 @@ const TinyIconSwitch = styled(Switch)(({ theme }) => ({
 
 const ThemeToggle: React.FC<ThemeToggleProps> = ({ children }) => {
   const [mode, setMode] = useState<"light" | "dark">("light");
+  const { language } = useLanguage();
 
   const toggleTheme = () => {
     setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
@@ -63,7 +65,14 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ children }) => {
   return (
     <ThemeProvider theme={getTheme(mode)}>
       <CssBaseline />
-      <Box sx={{ position: "absolute", top: 20, left: 16, zIndex: 0 }}>
+      <Box
+        sx={{
+          position: "absolute",
+          top: 20,
+          [language === "he" ? "right" : "left"]: 32,
+          zIndex: 0,
+        }}
+      >
         <TinyIconSwitch
           checked={mode === "dark"}
           onChange={toggleTheme}
