@@ -17,7 +17,7 @@ import {
 } from "@mui/material"
 import { ArrowBack, ImageSearch } from "@mui/icons-material"
 import { ImageSelector } from "../../component/AI/ImageSelector"
-import { analyzeImage } from "../../services/ai-service"
+import { analyzeImage } from "../../services/aiService"
 import { useSnackbar } from "notistack"
 import { useGalleryImages } from "../../component/AI/GalleryIntegration"
 import { AnalysisResult } from "../../types"

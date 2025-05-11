@@ -8,6 +8,7 @@ import { Favorite } from '@mui/icons-material';
 import ViewGallery from './viewGallery';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
+import PopupNotice from '../popupNotice';
 
 const HomePage = () => {
     const { language } = useLanguage();
@@ -46,6 +47,9 @@ const HomePage = () => {
                     {t.myPhotos}
                 </Button>
             </motion.div>
+
+            <PopupNotice />
+
             <ViewGallery />
             <Hero />
             <Features />

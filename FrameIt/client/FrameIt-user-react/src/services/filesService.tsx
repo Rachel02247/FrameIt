@@ -1,28 +1,27 @@
-const API_URL_BASE =  `${import.meta.env.VITE_API_URL}/files`
+import axios from "axios";
 
-export const fetchFilesByUserId = async((userId: number) =>{
+const API_URL_BASE = `${import.meta.env.VITE_API_URL}/files`;
 
-    await axios.get(`${API_URL_BASE}/myFiles/${userId}`)
-    .then((response) => {
-        return response.data;
-    })  
-    .catch((error) => {
-        console.error("Error fetching files by user ID:", error);
-        throw error;
+export const fetchFilesByUserId = async (userId: number) => {
+  try {
+    const response = await axios.get(`${API_URL_BASE}/myFiles/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching files by user ID:", error);
+    throw error;
+  }
+};
+
+export const uploadFiles = async (formData: FormData) => {
+  try {
+    const response = await axios.post(`${API_URL_BASE}/upload`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
-})
-
-export const uploadFiles = async((formData) => { 
-        axios.post(url, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((response) => {
-            return response.data;
-        })
-        .catch((error) => {
-            console.error("Error uploading files:", error);
-            throw error;
-        });
-    });
+    return response.data;
+  } catch (error) {
+    console.error("Error uploading files:", error);
+    throw error;
+  }
+};
