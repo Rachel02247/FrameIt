@@ -188,14 +188,7 @@ export default function Gallery() {
             ))}
           </Breadcrumbs>
 
-          <Button
-            variant="contained"
-            startIcon={<CreateNewFolderIcon />}
-            size="small"
-            onClick={() => setOpenCreateFolder(true)} // Open CreateFolder dialog
-          >
-            New Folder
-          </Button>
+          
         </Box>
 
         <Box sx={{ display: "none" }}>

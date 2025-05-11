@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react';
 import { TextField, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { createFolder } from "../services/filesService";
 import AddIcon from '@mui/icons-material/Add';
+import { createFolder } from '../services/folderService';
 
 const CreateFolder = ({ folderId = '0', fetchData }: { folderId: string; fetchData: (_folderId: string) => void; }) => {
   const [folderName, setFolderName] = useState<string>('');

@@ -31,3 +31,17 @@ export const fetchFilesByUserIdAndFolderId = async (folderId: number, userId: nu
     throw error;
   }
 };
+
+export const createFolder = async (folderData: { name: string; ownerId: number; isDeleted: boolean }) => {
+  try {
+    const response = await axios.post(API_URL_BASE, folderData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error creating folder:", error);
+    throw error;
+  }
+};
