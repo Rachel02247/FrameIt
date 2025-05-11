@@ -20,10 +20,9 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { Folder, MyFile } from "../../types";
 import axios from "axios";
 import CreateFolder from "../../hooks/createFolder";
-import { useDropzone } from "react-dropzone";
+import { useDropzone, Accept } from "react-dropzone";
 import { useSelector } from "react-redux";
 import { RootState } from "../../global-states/store";
-import LoadingIndicator from "../../hooks/loadingIndicator";
 
 interface FileUploadProps {
     onUpload: (files: MyFile[], folderId: string) => Promise<void>;
@@ -33,11 +32,11 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload }) => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
-    const [files, setFiles] = useState<File[]>([]);
+    const [files, setFiles] = useState<MyFile[]>([]);
     const [selectedFolder, setSelectedFolder] = useState("");
     const [folders, setFolders] = useState<Folder[]>([]);
     const [subFolders, setSubFolders] = useState<Folder[]>([]);
-    const url = "http://localhost:5282/";
+    const url = `${process.env.REACT_APP_API_URL}/`;
     const userId = useSelector((state: RootState) => state.user.user?.id);
 
     useEffect(() => {
@@ -68,13 +67,27 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload }) => {
     }, [selectedFolder, userId]);
 
     const onDrop = (acceptedFiles: File[]) => {
-        setFiles(acceptedFiles);
+        const newFiles: MyFile[] = acceptedFiles.map((file) => ({
+            id: crypto.randomUUID(),
+            fileName: file.name,
+            fileType: file.type,
+            size: file.size,
+            s3Key: "",
+            file,
+            isDeleted: false,
+            folderId: selectedFolder,
+            ownerId: userId || "",
+        }));
+        setFiles((prevFiles) => [...prevFiles, ...newFiles]);
     };
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
-        accept: "image/*,video/*",
-        multiple: true
+        accept: {
+            "image/*": [".jpeg", ".jpg", ".png", ".gif", ".webp"],
+            "video/*": [".mp4", ".mov", ".avi"],
+        } as Accept,
+        multiple: true,
     });
 
     const handleUpload = async () => {
@@ -139,7 +152,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload }) => {
                                 </Typography>
                                 <List>
                                     {files.map((file, index) => (
-                                        <ListItem key={index}
+                                        <ListItem key={file.id}
                                             secondaryAction={
                                                 <IconButton edge="end" aria-label="delete" onClick={() => setFiles(files.filter((_, i) => i !== index))}>
                                                     <CancelIcon />
@@ -147,7 +160,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload }) => {
                                             }
                                         >
                                             <ListItemText
-                                                primary={file.name}
+                                                primary={file.fileName}
                                                 secondary={`Size: ${(file.size / 1024).toFixed(2)} KB`}
                                             />
                                         </ListItem>
@@ -198,7 +211,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload }) => {
                             </>
                         )}
 
-                        <CreateFolder />
+                        <CreateFolder folderId={selectedFolder} fetchData={() => {}} />
 
                         {loading && (
                             <>

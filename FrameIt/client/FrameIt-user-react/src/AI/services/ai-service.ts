@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { generateText, experimental_generateImage } from "ai";
 import { openai } from "@ai-sdk/openai";
 
@@ -55,7 +56,7 @@ export async function analyzeImage(imageUrl: string): Promise<ImageAnalysisResul
 }
 
 // For image-to-art transformation
-export async function transformImageToArt(imageUrl: string, style: string): Promise<string | null> {
+export async function transformImageToArt(imageUrl: string, style: string) {
   const styleDescriptions: Record<string, string> = {
     picasso: "in the style of Pablo Picasso, with cubist elements, geometric shapes, and bold lines",
     vangogh: "in the style of Vincent van Gogh, with swirling brushstrokes, vibrant colors, and expressive technique",
@@ -70,18 +71,18 @@ export async function transformImageToArt(imageUrl: string, style: string): Prom
   const styleDescription =
     styleDescriptions[style as keyof typeof styleDescriptions] || styleDescriptions.picasso;
 
-  try {
-    const { images } = await experimental_generateImage({
-      model: openai("dall-e-3"),
-      prompt: `Transform this image ${styleDescription}. Maintain the main subject and composition of the original image: ${imageUrl}`,
-    });
+  // try {
+  //   const { images } = await experimental_generateImage({
+  //     model: openai("dall-e-3"),
+  //     prompt: `Transform this image ${styleDescription}. Maintain the main subject and composition of the original image: ${imageUrl}`,
+  //   });
 
-    // Assumes images is an array of { url: string }
-    return images?.[0]?.url || null;
-  } catch (error) {
-    console.error("Error transforming image:", error);
-    return null;
-  }
+  //   // Assumes images is an array of { url: string }
+  //   return images?.[0]?.url || null;
+  // } catch (error) {
+  //   console.error("Error transforming image:", error);
+  //   return null;
+  // }
 }
 
 // For smart filtering and free search

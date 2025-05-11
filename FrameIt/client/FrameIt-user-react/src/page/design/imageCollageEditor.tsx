@@ -3,63 +3,82 @@ import { Box, Typography, Button, IconButton } from "@mui/material";
 import { Delete, CloudUpload, ZoomIn, ZoomOut, RotateLeft, RotateRight, Flip } from "@mui/icons-material";
 import html2canvas from "html2canvas";
 
-const collageTemplates = [
+interface Image {
+  src: string;
+  position: { x: number; y: number };
+  size: number;
+  rotation: number;
+  flipped: boolean;
+}
+
+interface Template {
+  id: number;
+  name: string;
+  grid: string;
+}
+
+interface AspectRatio {
+  label: string;
+  width: number;
+  height: number;
+}
+
+const collageTemplates: Template[] = [
   { id: 1, name: "Single Row", grid: "repeat(1, 1fr)" },
   { id: 2, name: "Two Columns", grid: "repeat(2, 1fr)" },
   { id: 3, name: "Three Columns", grid: "repeat(3, 1fr)" },
   { id: 4, name: "Four Columns", grid: "repeat(4, 1fr)" },
   { id: 5, name: "Grid", grid: "repeat(3, 3fr)" },
-  { id: 6, name: "Masonry", grid: "repeat(2, 2fr)" }
+  { id: 6, name: "Masonry", grid: "repeat(2, 2fr)" },
 ];
 
-const aspectRatios = [
+const aspectRatios: AspectRatio[] = [
   { label: "1:1", width: 450, height: 450 },
   { label: "3:4", width: 450, height: 600 },
   { label: "6:9", width: 450, height: 675 },
   { label: "5:7", width: 450, height: 630 },
-  { label: "Wide", width: 600, height: 450 }
+  { label: "Wide", width: 600, height: 450 },
 ];
 
-const ImageCollageEditor = () => {
-  const [images, setImages] = useState([]);
-  const [selectedTemplate, setSelectedTemplate] = useState(collageTemplates[0]);
-  const [workspaceSize, setWorkspaceSize] = useState(aspectRatios[0]);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const imageRefs = useRef([]);
-  
+const ImageCollageEditor: React.FC = () => {
+  const [images, setImages] = useState<Image[]>([]);
+  const [selectedTemplate, setSelectedTemplate] = useState<Template>(collageTemplates[0]);
+  const [workspaceSize, setWorkspaceSize] = useState<AspectRatio>(aspectRatios[0]);
+  const imageRefs = useRef<(null | { startX: number; startY: number })[]>([]);
+
   // Handle image drag and drop
-  const handleDrop = (e) => {
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     const files = Array.from(e.dataTransfer.files);
-    const newImages = files.map((file) => ({
+    const newImages: Image[] = files.map((file) => ({
       src: URL.createObjectURL(file),
       position: { x: 0, y: 0 },
       size: 160,
       rotation: 0,
       flipped: false,
     }));
-    setImages([...images, ...newImages]);
+    setImages((prevImages) => [...prevImages, ...newImages]);
   };
 
-  const handleDragOver = (e) => {
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
   };
 
   // Handle image upload
-  const handleImageUpload = (event) => {
-    const files = Array.from(event.target.files);
-    const newImages = files.map((file) => ({
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    const newImages: Image[] = files.map((file) => ({
       src: URL.createObjectURL(file),
       position: { x: 0, y: 0 },
       size: 160,
       rotation: 0,
       flipped: false,
     }));
-    setImages([...images, ...newImages]);
+    setImages((prevImages) => [...prevImages, ...newImages]);
   };
 
   // Handle image rotation
-  const handleRotate = (index, direction) => {
+  const handleRotate = (index: number, direction: "left" | "right") => {
     setImages((prevImages) => {
       const updatedImages = [...prevImages];
       updatedImages[index].rotation += direction === "left" ? -90 : 90;
@@ -68,7 +87,7 @@ const ImageCollageEditor = () => {
   };
 
   // Handle image flip
-  const handleFlip = (index) => {
+  const handleFlip = (index: number) => {
     setImages((prevImages) => {
       const updatedImages = [...prevImages];
       updatedImages[index].flipped = !updatedImages[index].flipped;
@@ -77,7 +96,7 @@ const ImageCollageEditor = () => {
   };
 
   // Handle resizing
-  const handleResize = (index, action) => {
+  const handleResize = (index: number, action: "increase" | "decrease") => {
     setImages((prevImages) => {
       const updatedImages = [...prevImages];
       if (action === "increase") updatedImages[index].size += 20;
@@ -89,6 +108,7 @@ const ImageCollageEditor = () => {
   // Download collage as image
   const downloadCollage = () => {
     const collage = document.getElementById("collage-container");
+    if (!collage) return;
     html2canvas(collage).then((canvas) => {
       const link = document.createElement("a");
       link.href = canvas.toDataURL("image/png");
@@ -104,7 +124,6 @@ const ImageCollageEditor = () => {
       </Typography>
 
       <Box mb={2}>
-        {/* Image Upload Icon */}
         <Box
           sx={{
             border: "2px dashed gray",
@@ -133,7 +152,6 @@ const ImageCollageEditor = () => {
         </Box>
       </Box>
 
-      {/* Template Selection */}
       <Box mb={2}>
         {collageTemplates.map((template) => (
           <Button
@@ -147,7 +165,6 @@ const ImageCollageEditor = () => {
         ))}
       </Box>
 
-      {/* Aspect Ratio Selection */}
       <Box mb={2}>
         {aspectRatios.map((ratio) => (
           <Button
@@ -161,7 +178,6 @@ const ImageCollageEditor = () => {
         ))}
       </Box>
 
-      {/* Collage Display */}
       <Box
         id="collage-container"
         sx={{
@@ -178,7 +194,6 @@ const ImageCollageEditor = () => {
           backgroundColor: "#f0f0f0",
         }}
       >
-        {/* Render images in the grid */}
         {images.map((image, index) => (
           <Box
             key={index}
@@ -193,17 +208,16 @@ const ImageCollageEditor = () => {
               backgroundPosition: "center",
               cursor: "move",
               transform: `rotate(${image.rotation}deg) ${image.flipped ? "scaleX(-1)" : ""}`,
-              borderRadius: "8px", // Rounded corners
-              transition: "all 0.3s ease", // Smooth transition
+              borderRadius: "8px",
+              transition: "all 0.3s ease",
             }}
-            onMouseDown={(e) => {
-              // Handle drag and drop
+            onMouseDown={(e: React.MouseEvent) => {
               imageRefs.current[index] = { startX: e.clientX, startY: e.clientY };
             }}
-            onMouseMove={(e) => {
+            onMouseMove={(e: React.MouseEvent) => {
               if (imageRefs.current[index]) {
-                const deltaX = e.clientX - imageRefs.current[index].startX;
-                const deltaY = e.clientY - imageRefs.current[index].startY;
+                const deltaX = e.clientX - imageRefs.current[index]!.startX;
+                const deltaY = e.clientY - imageRefs.current[index]!.startY;
                 setImages((prevImages) => {
                   const updatedImages = [...prevImages];
                   updatedImages[index].position = {
@@ -212,18 +226,17 @@ const ImageCollageEditor = () => {
                   };
                   return updatedImages;
                 });
-                imageRefs.current[index].startX = e.clientX;
-                imageRefs.current[index].startY = e.clientY;
+                imageRefs.current[index]!.startX = e.clientX;
+                imageRefs.current[index]!.startY = e.clientY;
               }
             }}
             onMouseUp={() => {
-              imageRefs.current[index] = null; // Stop dragging
+              imageRefs.current[index] = null;
             }}
             onMouseLeave={() => {
-              imageRefs.current[index] = null; // Stop dragging
+              imageRefs.current[index] = null;
             }}
           >
-            {/* Show icons only when hovering over the image */}
             <Box
               sx={{
                 position: "absolute",

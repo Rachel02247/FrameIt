@@ -78,7 +78,7 @@ function ImageToArt() {
       // Call the AI service to transform the image
       const artUrl = await transformImageToArt(selectedImageUrl, selectedStyle)
 
-      if (artUrl) {
+      if (artUrl !== undefined && artUrl !== null) {
         setGeneratedArt(artUrl)
       } else {
         enqueueSnackbar("Could not generate artwork. Please try again.", {

@@ -5,7 +5,6 @@ import HomePage from "./component/homePage/homePage";
 import Gallery from "./page/gallery/gallery";
 import Upload from "./page/upload/upload";
 import Collections from "./page/collections";
-import Design from "./page/design/design";
 import Settings from "./component/account/setting";
 // import Sidebar from "./component/sideBar";
 import Register from "./component/auth/register";
@@ -64,27 +63,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: '/more',
-                element: <Design />,
-            },
-            {
-                path: '/ai-features',
-                element: <AIFeaturesDashboard />,
-            },
-            {
-                path: "/ai-features/smart-filtering",
-                element: <SmartFiltering />
-            },
-            {
-                path: '/ai-features/image-analysis',
-                element: <ImageAnalysis />,
-            },
-            {
-                path: '/ai-features/free-search',
-                element: <FreeSearch />,
-            },
-            {
-                path: '/ai-features/image-to-art',
-                element: <ImageToArt />,
+                element: <AIFeaturesDashboard/>,
             },
             {
                 path: '/myWorkspace',
@@ -104,12 +83,32 @@ export const router = createBrowserRouter([
             },
             {
                 path: '/myWorkspace/design',
-                element: <Design />,
+                element: <CollageEditor />,
             },
             {
                 path: '/myWorkspace/more',
-                element: <CollageEditor />,
-            }
+                element: <AIFeaturesDashboard />,
+            },
+            {
+                path: '/myWorkspace/aiFeatures',
+                element: <AIFeaturesDashboard />,
+            },
+            {
+                path: "/myWorkspace/aiFeatures/smartFiltering",
+                element: <SmartFiltering />
+            },
+            {
+                path: '/myWorkspace/aiFeatures/imageAnalysis',
+                element: <ImageAnalysis />,
+            },
+            {
+                path: '/myWorkspace/aiFeatures/freeSearch',
+                element: <FreeSearch />,
+            },
+            {
+                path: '/myWorkspace/aiFeatures/imageToArt',
+                element: <ImageToArt />,
+            },
 
         ]
     }
