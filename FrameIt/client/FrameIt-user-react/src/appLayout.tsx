@@ -5,7 +5,7 @@ import Sidebar from "./component/sideBar";
 import HomePage from "./component/homePage/homePage";
 import Footer from "./component/homePage/footer";
 import { useSelector } from "react-redux";
-import { RootState } from "./global-states/store";
+import { RootState } from "./component/global-states/store";
 
 const AppLayout = () => {
 

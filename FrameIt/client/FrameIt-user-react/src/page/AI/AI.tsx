@@ -9,7 +9,7 @@ export default () => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate("/aiFeatures");
+    navigate("/myWorkspace/aiFeatures");
   };
 
   return (

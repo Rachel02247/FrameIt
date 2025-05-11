@@ -3,7 +3,7 @@ import { TextField, Button, Dialog, DialogActions, DialogContent, DialogTitle } 
 import axios from 'axios';
 import AddIcon from '@mui/icons-material/Add';
 import { useSelector } from 'react-redux';
-import { RootState } from '../global-states/store';
+import { RootState } from '../component/global-states/store';
 
 const CreateFolder = ({ folderId = '0', fetchData }: { folderId: string; fetchData: (_folderId: string) => void }) => {
   const [folderName, setFolderName] = useState<string>('');

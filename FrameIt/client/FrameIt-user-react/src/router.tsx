@@ -11,11 +11,11 @@ import Register from "./component/auth/register";
 import MyWorkspace from "./page/myWorkspace";
 import Login from "./component/auth/login";
 import CollageEditor from "./page/collageEditor/collage-editor";
-import AIFeaturesDashboard from "./AI/pages/AIFeaturesDashboard";
-import SmartFiltering from "./AI/pages/SmartFiltering";
-import ImageAnalysis from "./AI/pages/ImageAnalysis";
-import FreeSearch from "./AI/pages/FreeSearch";
-import ImageToArt from "./AI/pages/ImageToArt";
+import AIFeaturesDashboard from "./page/AI/AIFeaturesDashboard";
+import SmartFiltering from "./page/AI/SmartFiltering";
+import ImageAnalysis from "./page/AI/ImageAnalysis";
+import FreeSearch from "./page/AI/FreeSearch";
+import ImageToArt from "./page/AI/ImageToArt";
 
 export const router = createBrowserRouter([
     {

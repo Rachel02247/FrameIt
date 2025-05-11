@@ -22,7 +22,7 @@ import axios from "axios";
 import CreateFolder from "../../hooks/createFolder";
 import { useDropzone, Accept } from "react-dropzone";
 import { useSelector } from "react-redux";
-import { RootState } from "../../global-states/store";
+import { RootState } from "../../component/global-states/store";
 
 interface FileUploadProps {
     onUpload: (files: MyFile[], folderId: string) => Promise<void>;

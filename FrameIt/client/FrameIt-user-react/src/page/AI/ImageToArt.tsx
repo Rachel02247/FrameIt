@@ -19,10 +19,10 @@ import {
   FormControl,
 } from "@mui/material"
 import { ArrowBack, Download, Loop } from "@mui/icons-material"
-import { ImageSelector } from "../components/ImageSelector"
-import { transformImageToArt } from "../services/ai-service"
+import { ImageSelector } from "../../component/AI/ImageSelector"
+import { transformImageToArt } from "../../services/ai-service"
 import { useSnackbar } from "notistack"
-import { useGalleryImages } from "../components/GalleryIntegration"
+import { useGalleryImages } from "../../component/AI/GalleryIntegration"
 
 const artStyles = [
   { id: "picasso", name: "Picasso", description: "Cubist style with geometric shapes" },

@@ -1,76 +1,107 @@
-/* eslint-disable react-refresh/only-export-components */
-import React from 'react';
-import { Box, Typography, Button, Container } from '@mui/material';
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { PhotoCamera, Share, Cloud } from '@mui/icons-material';
-import './style.css';
+import React from "react";
+import { Box, Typography, Button, Container } from "@mui/material";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { PhotoLibrary, CloudUpload, Collections, Brush, SmartToy } from "@mui/icons-material";
 
-export default () => {
+const Hero = () => {
+  const features = [
+    { icon: <PhotoLibrary fontSize="large" color="primary" />, text: "My Gallery" },
+    { icon: <CloudUpload fontSize="large" color="primary" />, text: "Easy Upload" },
+    { icon: <Collections fontSize="large" color="primary" />, text: "Choose Collections" },
+    { icon: <Brush fontSize="large" color="primary" />, text: "Collage Maker" },
+    { icon: <SmartToy fontSize="large" color="primary" />, text: "AI Features" },
+  ];
+
   return (
-    <Box className="hero" sx={{ mt: 6, height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', bgcolor: 'background.default' }}>
-      <Container>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        bgcolor: "background.default",
+        px: 2,
+      }}
+    >
+      <Container maxWidth="md">
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          style={{ textAlign: 'center' }}
+          transition={{ duration: 0.9 }}
+          style={{ textAlign: "center" }}
         >
-        <Typography variant='h1' component='h1' color='secondary'  sx={{ fontWeight: 'bold', mb: 4 }}>FrameIt</Typography>
+          <Typography
+            variant="h2"
+            sx={{
+              fontWeight: "bold",
+              mb: 1,
+              color: "primary.main",
+            }}
+          >
+            FrameIt
+          </Typography>
+          <Typography variant="h6" sx={{ color: "text.secondary", mb: 4 }}>
+            Your smart photo world in one place.
+          </Typography>
+          <img
+            src="/img/logo.png"
+            alt="FrameIt Logo"
+            style={{ width: 220, marginBottom: 32 }}
+          />
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            gap: 4,
+            mb: 5,
+          }}
         >
-          <Box>
-            <motion.img
-              src="img/frameItLogo.png"
-              alt="FrameIt Logo"
-              style={{ width: 350 }}
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 1 }}
-            />
-          </Box>
-          
-          <Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-              <PhotoCamera color="primary" fontSize="large" />
-              <Typography variant="h6" color='text.secondary'>
-                Organize your photos effortlessly
+          {features.map((feature, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 + i * 0.15, duration: 0.4 }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "column",
+                width: 100,
+              }}
+            >
+              {feature.icon}
+              <Typography variant="body2" color="text.primary" sx={{ mt: 1 }}>
+                {feature.text}
               </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-              <Share color="primary" fontSize="large" />
-              <Typography variant="h6" color='text.secondary'>
-                Share your memories instantly
-              </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-              <Cloud color="primary" fontSize="large" />
-              <Typography variant="h6" color='text.secondary'>
-                Secure cloud storage for all your moments
-              </Typography>
-            </Box>
-          </Box>
-        </motion.div>
-        
-        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3, flexWrap: 'wrap', mt: 6 }}>
-          <motion.div whileHover={{ scale: 1.1 }}>
-            <Button variant="contained" color="primary" size="large" component={Link} to="/register">
-              Get Started
+            </motion.div>
+          ))}
+        </Box>
+
+        <Box sx={{ display: "flex", justifyContent: "center", gap: 2, flexWrap: "wrap" }}>
+          <motion.div whileHover={{ scale: 1.05 }}>
+            <Button
+              component={Link}
+              to={sessionStorage.getItem("id") ? "myWorkspace/gallery" : "/login"}
+              variant="outlined"
+              color="primary"
+              size="large"
+            >
+              my gallery
             </Button>
           </motion.div>
-          <motion.div whileHover={{ scale: 1.1 }}>
-            <Button variant="outlined" color="primary" size="large" component={Link} to="/login">
-              Sign In
+          <motion.div whileHover={{ scale: 1.05 }}>
+            <Button variant="contained" color="primary" size="large" component={Link} to="/register">
+              Get Started
             </Button>
           </motion.div>
         </Box>
       </Container>
     </Box>
   );
-}
+};
+
+export default Hero;

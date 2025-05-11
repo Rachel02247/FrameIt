@@ -13,7 +13,7 @@ import Logout from '@mui/icons-material/Logout';
 import Login from '@mui/icons-material/Login';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../global-states/store';
+import { RootState } from '../global-states/store';
 
 export default () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
