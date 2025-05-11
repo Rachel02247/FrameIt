@@ -2,7 +2,13 @@ import React from "react";
 import { Box, Typography, Button, Container } from "@mui/material";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { PhotoLibrary, CloudUpload, Collections, Brush, SmartToy } from "@mui/icons-material";
+import {
+  PhotoLibrary,
+  CloudUpload,
+  Collections,
+  Brush,
+  SmartToy,
+} from "@mui/icons-material";
 
 const Hero = () => {
   const features = [
@@ -24,31 +30,49 @@ const Hero = () => {
         px: 2,
       }}
     >
-      <Container maxWidth="md">
+      <Container maxWidth="md" sx={{ textAlign: "center" }}>
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9 }}
-          style={{ textAlign: "center" }}
+          transition={{ duration: 1 }}
         >
+          <img
+            src="/img/logo.png"
+            alt="FrameIt Logo"
+            style={{
+              width: 200,
+              height: 200,
+              borderRadius: "50%",
+              objectFit: "cover",
+              boxShadow: "0 8px 20px rgba(0,0,0,0.2)",
+              marginBottom: 24,
+              marginLeft: "auto",
+              marginRight: "auto",
+            }}
+          />
+
           <Typography
             variant="h2"
             sx={{
-              fontWeight: "bold",
-              mb: 1,
+              fontWeight: 800,
               color: "primary.main",
+              mb: 1,
+              letterSpacing: 1,
             }}
           >
             FrameIt
           </Typography>
-          <Typography variant="h6" sx={{ color: "text.secondary", mb: 4 }}>
-            Your smart photo world in one place.
+          <Typography
+            variant="h6"
+            sx={{
+              color: "text.secondary",
+              mb: 4,
+              maxWidth: 500,
+              mx: "auto",
+            }}
+          >
+            Your smart photo world in one place. Organized, personal and AI-powered.
           </Typography>
-          <img
-            src="/img/logo.png"
-            alt="FrameIt Logo"
-            style={{ width: 220, marginBottom: 32 }}
-          />
         </motion.div>
 
         <Box
@@ -57,7 +81,7 @@ const Hero = () => {
             justifyContent: "center",
             flexWrap: "wrap",
             gap: 4,
-            mb: 5,
+            mb: 6,
           }}
         >
           {features.map((feature, i) => (
@@ -89,12 +113,20 @@ const Hero = () => {
               variant="outlined"
               color="primary"
               size="large"
+              sx={{ borderRadius: 6, px: 4 }}
             >
-              my gallery
+              My Gallery
             </Button>
           </motion.div>
           <motion.div whileHover={{ scale: 1.05 }}>
-            <Button variant="contained" color="primary" size="large" component={Link} to="/register">
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              component={Link}
+              to="/register"
+              sx={{ borderRadius: 6, px: 4 }}
+            >
               Get Started
             </Button>
           </motion.div>
