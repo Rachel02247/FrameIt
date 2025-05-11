@@ -11,7 +11,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import Login from '@mui/icons-material/Login';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../global-states/store';
 
@@ -27,7 +27,8 @@ export default () => {
 
   const user = useSelector((state: RootState) => state.user); // או לפי האיד של המשתמש הנוכחי אם יש לך
   const UserName = sessionStorage.getItem('name');
-  
+  const navigate = useNavigate(); 
+
   return (
     <React.Fragment>
       <Box sx={{ left: 4, top: 20, position: 'absolute', display: 'flex', alignItems: 'center', textAlign: 'center' }}>
@@ -83,13 +84,13 @@ export default () => {
         transformOrigin={{ horizontal: 'left', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={() => navigate('/settings')}>
           <Avatar />
           <Link to="/settings">Profile</Link>
         </MenuItem>
 
         <Divider />
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={() => navigate('/settings')}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
@@ -97,12 +98,9 @@ export default () => {
         </MenuItem>
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
-            {user ?
-              <Logout fontSize="small" /> :
-              <Login fontSize="small" />
-            }
+            {user ? <Logout fontSize="small" /> : <Login fontSize="small" />}
           </ListItemIcon>
-          <Link to="/login">{user ? 'logout' : 'login'}</Link>
+          <Link to="/login">{user ? 'Logout' : 'Login'}</Link>
         </MenuItem>
       </Menu>
     </React.Fragment>

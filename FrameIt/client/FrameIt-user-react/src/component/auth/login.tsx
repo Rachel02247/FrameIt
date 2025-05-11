@@ -13,6 +13,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import { Link, useNavigate } from 'react-router-dom';
 import { AppDispatch, RootState } from '../global-states/store';
 import { login } from '../global-states/userSlice';
+import { useLanguage } from "../../context/LanguageContext";
 
 const LogoRing = styled(Box)(({ theme }) => ({
     width: 250,
@@ -31,6 +32,29 @@ const Login = () => {
     const dispatch = useDispatch<AppDispatch>();
     const { loading, error } = useSelector((state: RootState) => state.user);
     const navigate = useNavigate();
+    const { language } = useLanguage();
+    const translations = {
+        en: {
+            welcome: "Welcome Back!",
+            login: "Login to Your Account",
+            email: "*Email",
+            password: "*Password",
+            submit: "Login",
+            noAccount: "Don't have an account?",
+            signUp: "Sign Up",
+        },
+        he: {
+            welcome: "ברוך שובך!",
+            login: "התחבר לחשבונך",
+            email: "*אימייל",
+            password: "*סיסמה",
+            submit: "התחבר",
+            noAccount: "אין לך חשבון?",
+            signUp: "הרשם",
+        },
+    };
+
+    const t = translations[language];
 
     const [credentials, setCredentials] = useState({
         email: '',
@@ -97,12 +121,11 @@ const Login = () => {
                                 textShadow: '1px 1px 3px rgba(0,0,0,0.5)',
                             }}
                         >
-                            Welcome <br />
-                            Back!
+                            {t.welcome}
                         </Typography>
                     </LogoRing>
                     <Typography variant="h4" component="h1" mb={4}>
-                        Login to Your Account
+                        {t.login}
                     </Typography>
                 </Container>
                 <Container maxWidth="sm">
@@ -118,7 +141,7 @@ const Login = () => {
                             <TextField
                                 fullWidth
                                 name="email"
-                                placeholder="*Email"
+                                placeholder={t.email}
                                 variant="outlined"
                                 margin="normal"
                                 value={credentials.email}
@@ -134,7 +157,7 @@ const Login = () => {
                                 fullWidth
                                 name="password"
                                 type="password"
-                                placeholder="*Password"
+                                placeholder={t.password}
                                 variant="outlined"
                                 margin="normal"
                                 value={credentials.password}
@@ -152,11 +175,11 @@ const Login = () => {
                                 </FormHelperText>
                             )}
                             <Button type="submit" fullWidth variant="outlined" disabled={loading} sx={{ py: 1.5, '&:hover': { bgcolor: '#666699', color: 'white' } }}>
-                                {loading ? <img src="img/spinner.gif" alt="spinnre" width={24} /> : 'Login'}
+                                {loading ? <img src="img/spinner.gif" alt="spinnre" width={24} /> : t.submit}
                             </Button>
 
                         </form>
-                        <p>Don't have an account? <Link to="/register">Sign Up</Link></p>
+                        <p>{t.noAccount} <Link to="/register">{t.signUp}</Link></p>
 
                     </Paper>
                 </Container>

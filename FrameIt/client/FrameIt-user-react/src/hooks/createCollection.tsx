@@ -11,6 +11,7 @@ import {
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../component/global-states/store';
+import { useLanguage } from "../context/LanguageContext";
 
 interface CreateCollectionProps {
   open: boolean;
@@ -22,6 +23,23 @@ const CreateCollection: React.FC<CreateCollectionProps> = ({ open, onClose, fetc
   const [collectionName, setCollectionName] = useState('');
   const userId = useSelector((state: RootState) => state.user.user?.id);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { language } = useLanguage();
+  const translations = {
+    en: {
+      title: "Create New Collection",
+      namePlaceholder: "Collection Name",
+      cancel: "Cancel",
+      create: "Create",
+    },
+    he: {
+      title: "צור אוסף חדש",
+      namePlaceholder: "שם האוסף",
+      cancel: "ביטול",
+      create: "צור",
+    },
+  };
+
+  const t = translations[language];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,13 +63,13 @@ const CreateCollection: React.FC<CreateCollectionProps> = ({ open, onClose, fetc
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>Create New Collection</DialogTitle>
+      <DialogTitle>{t.title}</DialogTitle>
       <form onSubmit={handleSubmit}>
         <DialogContent>
           <Box sx={{ my: 2 }}>
             <TextField
               autoFocus
-              label="Collection Name"
+              label={t.namePlaceholder}
               fullWidth
               value={collectionName}
               onChange={(e) => setCollectionName(e.target.value)}
@@ -61,7 +79,7 @@ const CreateCollection: React.FC<CreateCollectionProps> = ({ open, onClose, fetc
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} color="primary">
-            Cancel
+            {t.cancel}
           </Button>
           <Button 
             type="submit" 
@@ -69,7 +87,7 @@ const CreateCollection: React.FC<CreateCollectionProps> = ({ open, onClose, fetc
             variant="contained" 
             disabled={!collectionName.trim() || isSubmitting}
           >
-            Create
+            {t.create}
           </Button>
         </DialogActions>
       </form>

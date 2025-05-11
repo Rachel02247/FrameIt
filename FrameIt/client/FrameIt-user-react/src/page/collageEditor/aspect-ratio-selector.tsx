@@ -4,6 +4,7 @@ import type React from "react"
 
 import { Box, Typography, RadioGroup, Radio, Grid, Paper } from "@mui/material"
 import { AspectRatio } from "../../types"
+import { useLanguage } from "../../context/LanguageContext";
 
 const aspectRatios: AspectRatio[] = [
   { id: "1:1", name: "Square (1:1)", value: 1 },
@@ -19,6 +20,18 @@ interface AspectRatioSelectorProps {
 }
 
 export const AspectRatioSelector = ({ selectedRatio, onChange }: AspectRatioSelectorProps) => {
+  const { language } = useLanguage();
+  const translations = {
+    en: {
+      title: "Aspect Ratio",
+    },
+    he: {
+      title: "יחס גובה-רוחב",
+    },
+  };
+
+  const t = translations[language];
+
   const handleRatioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const ratioId = event.target.value
     const ratio = aspectRatios.find((r) => r.id === ratioId)
@@ -30,7 +43,7 @@ export const AspectRatioSelector = ({ selectedRatio, onChange }: AspectRatioSele
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
       <Typography variant="subtitle1" fontWeight="medium">
-        Aspect Ratio
+        {t.title}
       </Typography>
 
       <RadioGroup value={selectedRatio.id} onChange={handleRatioChange}>

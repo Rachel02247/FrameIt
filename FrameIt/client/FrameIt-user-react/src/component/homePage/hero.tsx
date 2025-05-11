@@ -9,15 +9,44 @@ import {
   Brush,
   SmartToy,
 } from "@mui/icons-material";
+import { useLanguage } from "../../context/LanguageContext";
 
 const Hero = () => {
-  const features = [
-    { icon: <PhotoLibrary fontSize="large" color="primary" />, text: "My Gallery" },
-    { icon: <CloudUpload fontSize="large" color="primary" />, text: "Easy Upload" },
-    { icon: <Collections fontSize="large" color="primary" />, text: "Choose Collections" },
-    { icon: <Brush fontSize="large" color="primary" />, text: "Collage Maker" },
-    { icon: <SmartToy fontSize="large" color="primary" />, text: "AI Features" },
-  ];
+  const { language } = useLanguage();
+  const translations = {
+    en: {
+      title: "FrameIt",
+      subtitle: "Your smart photo world in one place. Organized, personal and AI-powered.",
+      features: [
+        { icon: <PhotoLibrary fontSize="large" color="primary" />, text: "My Gallery" },
+        { icon: <CloudUpload fontSize="large" color="primary" />, text: "Easy Upload" },
+        { icon: <Collections fontSize="large" color="primary" />, text: "Choose Collections" },
+        { icon: <Brush fontSize="large" color="primary" />, text: "Collage Maker" },
+        { icon: <SmartToy fontSize="large" color="primary" />, text: "AI Features" },
+      ],
+      buttons: {
+        gallery: "My Gallery",
+        getStarted: "Get Started",
+      },
+    },
+    he: {
+      title: "FrameIt",
+      subtitle: "עולם התמונות החכם שלך במקום אחד. מאורגן, אישי ומבוסס AI.",
+      features: [
+        { icon: <PhotoLibrary fontSize="large" color="primary" />, text: "הגלריה שלי" },
+        { icon: <CloudUpload fontSize="large" color="primary" />, text: "העלאה קלה" },
+        { icon: <Collections fontSize="large" color="primary" />, text: "בחר אוספים" },
+        { icon: <Brush fontSize="large" color="primary" />, text: "יוצר קולאז'" },
+        { icon: <SmartToy fontSize="large" color="primary" />, text: "תכונות AI" },
+      ],
+      buttons: {
+        gallery: "הגלריה שלי",
+        getStarted: "התחל עכשיו",
+      },
+    },
+  };
+
+  const t = translations[language];
 
   return (
     <Box
@@ -60,7 +89,7 @@ const Hero = () => {
               letterSpacing: 1,
             }}
           >
-            FrameIt
+            {t.title}
           </Typography>
           <Typography
             variant="h6"
@@ -71,7 +100,7 @@ const Hero = () => {
               mx: "auto",
             }}
           >
-            Your smart photo world in one place. Organized, personal and AI-powered.
+            {t.subtitle}
           </Typography>
         </motion.div>
 
@@ -84,7 +113,7 @@ const Hero = () => {
             mb: 6,
           }}
         >
-          {features.map((feature, i) => (
+          {t.features.map((feature, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 20 }}
@@ -115,7 +144,7 @@ const Hero = () => {
               size="large"
               sx={{ borderRadius: 3, px: 4 }}
             >
-              My Gallery
+              {t.buttons.gallery}
             </Button>
           </motion.div>
           <motion.div whileHover={{ scale: 1.05 }}>
@@ -127,7 +156,7 @@ const Hero = () => {
               to="/register"
               sx={{ borderRadius: 3, px: 4 }}
             >
-              Get Started
+              {t.buttons.getStarted}
             </Button>
           </motion.div>
         </Box>

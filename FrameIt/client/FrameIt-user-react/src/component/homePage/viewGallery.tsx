@@ -3,6 +3,7 @@ import { Box, Typography, Button, Container, Grid } from "@mui/material";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
+import { useLanguage } from "../../context/LanguageContext";
 
 const galleryImages = [
     "https://images.pexels.com/photos/3933025/pexels-photo-3933025.jpeg",
@@ -13,6 +14,22 @@ const galleryImages = [
 
 const ViewGallery = () => {
     const theme = useTheme();
+    const { language } = useLanguage();
+    const translations = {
+        en: {
+            welcome: `Your Memories.\n One Place.`,
+            description: "Dive into your private gallery \n organized, beautiful and always accessible.",
+            button: "View Gallery",
+        },
+        he: {
+            welcome: "הזכרונות שלך\n במקום אחד",
+            description: "צפה בגלריה הפרטית שלך – מאורגנת, יפה ותמיד נגישה",
+            button: "צפה בגלריה",
+        },
+    };
+
+    const t = translations[language];
+
     const [index, setIndex] = useState(0);
     const [prevIndex, setPrevIndex] = useState(0);
 
@@ -36,7 +53,7 @@ const ViewGallery = () => {
                 px: 2,
                 backgroundColor: theme.palette.mode === "light" ? "#e7e3f2" : "inherit", // Apply background only in light mode
                 overflow: "hidden",
-                mb: 10,
+                mb: 20,
                 p: 5,
             }}
         >
@@ -65,11 +82,20 @@ const ViewGallery = () => {
                                     variant="h3"
                                     sx={{ fontWeight: "bold", mb: 2, color: "primary.main" }}
                                 >
-                                    Your Memories. <br /> One Place.
+                                    {t.welcome.split("\n").map((line, index) => (
+                                        <React.Fragment key={index}>
+                                            {line}
+                                            <br />
+                                        </React.Fragment>
+                                    ))}
                                 </Typography>
                                 <Typography variant="h6" sx={{ mb: 4, color: "text.secondary" }}>
-                                    Dive into your private gallery –<br />
-                                    organized, beautiful and always accessible.
+                                    {t.description.split("\n").map((line, index) => (
+                                        <React.Fragment key={index}>
+                                            {line}
+                                            <br />
+                                        </React.Fragment>
+                                    ))}
                                 </Typography>
                                 <Button
                                     component={Link}
@@ -79,7 +105,7 @@ const ViewGallery = () => {
                                     color="primary"
                                     sx={{ px: 4, borderRadius: 3 }}
                                 >
-                                    View Gallery
+                                    {t.button}
                                 </Button>
                             </motion.div>
                         </Box>

@@ -5,6 +5,7 @@ import type React from "react"
 import { useState } from "react"
 import { Box, Typography, RadioGroup, Radio, Grid, Paper } from "@mui/material"
 import type { Template } from "../../types"
+import { useLanguage } from "../../context/LanguageContext";
 
 // Define template thumbnails
 const templates: Template[] = [
@@ -77,6 +78,17 @@ interface TemplateSelectorProps {
 }
 
 export const TemplateSelector = ({ onSelect }: TemplateSelectorProps) => {
+  const { language } = useLanguage();
+  const translations = {
+    en: {
+      title: "Collage Templates",
+    },
+    he: {
+      title: "תבניות קולאז'",
+    },
+  };
+
+  const t = translations[language];
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>("")
 
   const handleTemplateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,7 +103,7 @@ export const TemplateSelector = ({ onSelect }: TemplateSelectorProps) => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
       <Typography variant="subtitle1" fontWeight="medium">
-        Collage Templates
+        {t.title}
       </Typography>
 
       <RadioGroup value={selectedTemplateId} onChange={handleTemplateChange}>

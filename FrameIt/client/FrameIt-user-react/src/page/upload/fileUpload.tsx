@@ -23,12 +23,31 @@ import CreateFolder from "../../hooks/createFolder";
 import { useDropzone, Accept } from "react-dropzone";
 import { useSelector } from "react-redux";
 import { RootState } from "../../component/global-states/store";
+import { useLanguage } from "../../context/LanguageContext";
 
 interface FileUploadProps {
     onUpload: (files: MyFile[], folderId: string) => Promise<void>;
 }
 
 const FileUpload: React.FC<FileUploadProps> = ({ onUpload }) => {
+    const { language } = useLanguage();
+    const translations = {
+        en: {
+            subfolders: "Subfolders:",
+            uploading: "Uploading...",
+            cancel: "Cancel",
+            upload: "Upload",
+        },
+        he: {
+            subfolders: "תיקיות משנה:",
+            uploading: "מעלה...",
+            cancel: "ביטול",
+            upload: "העלה",
+        },
+    };
+
+    const t = translations[language];
+
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
@@ -194,7 +213,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload }) => {
                         {subFolders.length > 0 && (
                             <>
                                 <Typography variant="h6" color="primary" sx={{ mt: 4 }}>
-                                    Subfolders:
+                                    {t.subfolders}
                                 </Typography>
                                 <Select
                                     value={selectedFolder}
@@ -215,17 +234,17 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload }) => {
 
                         {loading && (
                             <>
-                                <Typography sx={{ mt: 2 }}>Uploading... {uploadProgress}%</Typography>
+                                <Typography sx={{ mt: 2 }}>{t.uploading} {uploadProgress}%</Typography>
                                 <LinearProgress variant="determinate" value={uploadProgress} />
                             </>
                         )}
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={() => setOpen(false)} color="secondary">
-                            Cancel
+                            {t.cancel}
                         </Button>
                         <Button onClick={handleUpload} color="primary" disabled={loading}>
-                           {loading? <img src="img/spinner.gif" alt="spinnre" width={24} /> : 'Upload' } 
+                           {loading? <img src="img/spinner.gif" alt="spinnre" width={24} /> : t.upload } 
                         </Button>
                     </DialogActions>
                 </Dialog>

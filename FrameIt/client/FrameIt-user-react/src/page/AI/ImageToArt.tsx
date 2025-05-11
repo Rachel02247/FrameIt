@@ -109,7 +109,7 @@ function ImageToArt() {
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
-        <IconButton onClick={() => navigate("/ai-features")} sx={{ mr: 1 }}>
+        <IconButton onClick={() => navigate("/myWorkspace/aiFeatures")} sx={{ mr: 1 }}>
           <ArrowBack />
         </IconButton>
         <Typography variant="h4" component="h1" fontWeight="bold">

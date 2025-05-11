@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Grid, Box, Typography, useTheme } from "@mui/material";
 import { motion } from "framer-motion";
+import { useLanguage } from "../../context/LanguageContext";
 
 const imageUrls = [
   "https://images.pexels.com/photos/459972/pexels-photo-459972.jpeg",
@@ -21,6 +22,18 @@ const shuffleArray = (array: string[]) => {
 const PhotoGrid: React.FC = () => {
   const [images, setImages] = useState<string[]>(imageUrls);
   const theme = useTheme();
+  const { language } = useLanguage();
+
+  const translations = {
+    en: {
+      title: "Recent Photos",
+    },
+    he: {
+      title: "תמונות אחרונות",
+    },
+  };
+
+  const t = translations[language];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -38,7 +51,7 @@ const PhotoGrid: React.FC = () => {
         gutterBottom
         sx={{ fontWeight: "bold", color: theme.palette.text.primary }}
       >
-        Recent Photos
+        {t.title}
       </Typography>
 
       <Grid container spacing={2} justifyContent="center">
