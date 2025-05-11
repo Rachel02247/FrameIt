@@ -74,7 +74,7 @@ const ViewGallery = () => {
                   color="primary"
                   component={Link}
                   to={sessionStorage.getItem("id") ? "myWorkspace/gallery" : "/login"}
-                  sx={{ px: 4, borderRadius: 3 }}
+                  sx={{ px: 4, borderRadius: 3}}
                 >
                   View Gallery
                 </Button>
