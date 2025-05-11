@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
 import { Search, Image as ImageIcon, FilterList, Brush } from "@mui/icons-material"
 import { Container, Typography, Grid, Card, CardContent, CardActions, Button, Box } from "@mui/material"
+import PopupAI from "../../hooks/popup/popupAI"
 
 function AIFeaturesDashboard() {
   const navigate = useNavigate()
@@ -42,6 +43,8 @@ function AIFeaturesDashboard() {
   ]
 
   return (
+    <>
+    <PopupAI/>
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Typography variant="h3" component="h1" align="center" gutterBottom sx={{ mb: 4, fontWeight: "bold" }}>
         AI Image Features
@@ -92,6 +95,7 @@ function AIFeaturesDashboard() {
         ))}
       </Grid>
     </Container>
+    </>
   )
 }
 

@@ -8,7 +8,7 @@ import { Favorite } from '@mui/icons-material';
 import ViewGallery from './viewGallery';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
-import PopupNotice from '../popupNotice';
+import PopupNotice from '../../hooks/popup/popupNotice';
 
 const HomePage = () => {
     const { language } = useLanguage();

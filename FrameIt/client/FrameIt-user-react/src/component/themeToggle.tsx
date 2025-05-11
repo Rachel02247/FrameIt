@@ -58,6 +58,10 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ children }) => {
   const [mode, setMode] = useState<"light" | "dark">("light");
   const { language } = useLanguage();
 
+  const isSidebarVisible = window.location.pathname.startsWith("/myWorkspace");
+
+  if (isSidebarVisible) return null;
+  
   const toggleTheme = () => {
     setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
   };

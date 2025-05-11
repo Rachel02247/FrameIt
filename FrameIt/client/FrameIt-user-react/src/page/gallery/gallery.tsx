@@ -90,7 +90,6 @@ export default function Gallery() {
     setSelectedFileIndex((prevIndex) => (prevIndex !== null && prevIndex > 0 ? prevIndex - 1 : prevIndex))
   }
 
-  // Filter items based on search term
   const filteredFolders = folders.filter((folder) => folder.name.toLowerCase().includes(searchTerm.toLowerCase()))
 
   const filteredFiles = files.filter((file) => file.fileName.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -102,7 +101,7 @@ export default function Gallery() {
   }
 
   return (
-    <Container maxWidth="lg">
+    <Container width="100%" maxWidth="lg" sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
       <Paper
         elevation={3}
         sx={{
