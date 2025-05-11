@@ -1,7 +1,6 @@
 ﻿
 using FrameItAPI.Entities;
 using FrameItAPI.Services.interfaces;
-using Microsoft.AspNetCore.Mvc;
 
 
 
@@ -58,7 +57,7 @@ namespace FrameItAPI.Endpoints
             });
 
 
-            routes.MapPost("/auth/register", async ([FromBody] RegisterModel model, AuthService authService, IUserService userService) =>
+            routes.MapPost("/auth/register", async ( RegisterModel model, AuthService authService, IUserService userService) =>
                 {
                     if (model == null)
                     {
