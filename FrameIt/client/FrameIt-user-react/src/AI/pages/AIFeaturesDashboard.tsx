@@ -16,28 +16,28 @@ function AIFeaturesDashboard() {
       title: "Smart Filtering",
       description: "Filter images by categories or custom criteria",
       icon: <FilterList sx={{ fontSize: 40, mb: 1 }} />,
-      path: "/ai-features/smart-filtering",
+      path: "/aiFeatures/smartFiltering",
     },
     {
       id: "image-analysis",
       title: "Image Analysis",
       description: "Analyze images to identify objects and content",
       icon: <ImageIcon sx={{ fontSize: 40, mb: 1 }} />,
-      path: "/ai-features/image-analysis",
+      path: "/aiFeatures/imageAnalysis",
     },
     {
       id: "free-search",
       title: "Free Search",
       description: "Search images using natural language descriptions",
       icon: <Search sx={{ fontSize: 40, mb: 1 }} />,
-      path: "/ai-features/free-search",
+      path: "/aiFeatures/freeSearch",
     },
     {
       id: "image-to-art",
       title: "Image to Art",
       description: "Transform your photos into artistic styles",
       icon: <Brush sx={{ fontSize: 40, mb: 1 }} />,
-      path: "/ai-features/image-to-art",
+      path: "/aIiFeatures/imageToArt",
     },
   ]
 

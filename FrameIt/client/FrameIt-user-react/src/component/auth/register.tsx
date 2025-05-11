@@ -94,7 +94,7 @@ const Register = () => {
                             <TextField fullWidth name="Password" type="password" placeholder="*password" variant="outlined" margin="normal" value={newUser.Password} onChange={handleChange} sx={{ bgcolor: 'white', borderRadius: 1, mb: 2 }} error={!!formError} />
                             {(formError || error) && (
                                <FormHelperText error sx={{ mb: 2 }}>
-                               {formError || error?.response?.data?.message || 'An unexpected error occurred'}
+                               {formError || error/*?.response?.data?.message*/ || 'An unexpected error occurred'}
                            </FormHelperText>
                            
                             )}

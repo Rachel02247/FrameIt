@@ -33,8 +33,8 @@ const Sidebar = () => {
                 backgroundColor: 'rgba(255, 255, 255, 0.75)', // שקיפות
                 zIndex: 0,
                 button: 0,
-                paddingLeft: 4, // תזוזה ימינה
-                width: open ? 240 : 80, // אם הסיידבר פתוח או סגור
+                paddingLeft: 4,
+                width: open ? 240 : 80, 
                 position: 'relative'
                
             }}

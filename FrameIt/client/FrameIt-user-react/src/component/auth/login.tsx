@@ -56,9 +56,10 @@ const Login = () => {
 
         try {
             const resultAction = await dispatch(login(credentials));
-            sessionStorage.setItem('token', resultAction.payload?.token);
-            sessionStorage.setItem('name', resultAction.payload?.user.name);
-            sessionStorage.setItem('id', resultAction.payload?.user.id);
+            sessionStorage.setItem('token', (resultAction.payload as { token: string }).token);
+            const payload = resultAction.payload as { token: string; user: { name: string; id: string } };
+            sessionStorage.setItem('name', payload.user.name);
+            sessionStorage.setItem('id', payload.user.id);
 
             if (login.fulfilled.match(resultAction)) {
                 navigate("/myWorkspace");
@@ -89,7 +90,7 @@ const Login = () => {
                             <TextField fullWidth name="password" type="password" placeholder="*Password" variant="outlined" margin="normal" value={credentials.password} onChange={handleChange} sx={{ bgcolor: 'white', borderRadius: 1, mb: 2 }} error={!!formError} />
                             {(formError || error) && (
                                 <FormHelperText error sx={{ mb: 2 }}>
-                                    {formError || error?.response?.data?.message || 'An unexpected error occurred'}
+                                    {formError || error/*?.response?.data?.message*/ || 'An unexpected error occurred'}
                                 </FormHelperText>
                             )}
                             <Button type="submit" fullWidth variant="outlined" disabled={loading} sx={{ py: 1.5, '&:hover': { bgcolor: '#666699', color: 'white' } }}>

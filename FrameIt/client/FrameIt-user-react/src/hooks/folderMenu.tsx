@@ -5,7 +5,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 export default () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [sortOption, setSortOption] = useState<string | null>(null);
+  const [, setSortOption] = useState<string | null>(null);
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
