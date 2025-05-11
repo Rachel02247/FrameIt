@@ -101,7 +101,7 @@ export default function Gallery() {
   }
 
   return (
-    <Container sx={{ width: "70%", mx: "auto" }}> {/* Fixed width to 70% */}
+    <Container sx={{ width: "70%", position: 'relative'}}> {/* Fixed width to 70% */}
       <Paper
         elevation={3}
         sx={{
