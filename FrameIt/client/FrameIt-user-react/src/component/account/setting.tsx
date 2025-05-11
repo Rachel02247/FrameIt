@@ -13,6 +13,31 @@ const Settings = () => {
   const [tabValue, setTabValue] = useState(0);
   const navigate = useNavigate();
 
+  const translations = {
+    en: {
+      profile: 'Profile Settings',
+      appearance: 'Appearance Settings',
+      darkMode: 'Dark Mode',
+      username: 'Username',
+      email: 'Email',
+      save: 'Save Changes',
+      switchToHebrew: 'Switch to Hebrew',
+      switchToEnglish: 'Switch to English',
+    },
+    he: {
+      profile: 'הגדרות פרופיל',
+      appearance: 'הגדרות מראה',
+      darkMode: 'מצב כהה',
+      username: 'שם משתמש',
+      email: 'אימייל',
+      save: 'שמור שינויים',
+      switchToHebrew: 'עבור לעברית',
+      switchToEnglish: 'עבור לאנגלית',
+    },
+  };
+
+  const t = translations[language];
+
   const handleDarkModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDarkMode(event.target.checked);
   };
@@ -41,20 +66,27 @@ const Settings = () => {
   return (
     <ThemeProvider theme={getTheme(darkMode ? 'dark' : 'light')}>
       <CssBaseline />
-      <Box sx={{ padding: 2 }}>
-        <Typography variant="h4">Settings</Typography>
+      <Box sx={{ padding: 2, direction: language === 'he' ? 'rtl' : 'ltr' }}>
+        <Typography variant="h4">{language === 'he' ? 'הגדרות' : 'Settings'}</Typography>
 
-        <Tabs value={tabValue} onChange={handleTabChange} aria-label="Settings Tabs">
-          <Tab label="Profile" />
-          <Tab label="Settings" />
+        <Tabs
+          value={tabValue}
+          onChange={handleTabChange}
+          aria-label="Settings Tabs"
+          sx={{ mb: 3 }}
+          textColor="primary"
+          indicatorColor="primary"
+        >
+          <Tab label={t.profile} />
+          <Tab label={t.appearance} />
         </Tabs>
 
-        <Box sx={{ marginTop: 3 }}>
+        <Box>
           {tabValue === 0 && (
             <div>
-              <Typography variant="h6">Profile Settings</Typography>
+              <Typography variant="h6">{t.profile}</Typography>
               <TextField
-                label="Username"
+                label={t.username}
                 variant="outlined"
                 value={userName}
                 onChange={handleUserNameChange}
@@ -62,7 +94,7 @@ const Settings = () => {
                 sx={{ marginBottom: 2 }}
               />
               <TextField
-                label="Email"
+                label={t.email}
                 variant="outlined"
                 value={email}
                 onChange={handleEmailChange}
@@ -74,7 +106,7 @@ const Settings = () => {
 
           {tabValue === 1 && (
             <div>
-              <Typography variant="h6">Appearance Settings</Typography>
+              <Typography variant="h6">{t.appearance}</Typography>
               <FormControlLabel
                 control={
                   <Switch
@@ -83,7 +115,7 @@ const Settings = () => {
                     name="darkMode"
                   />
                 }
-                label="Dark Mode"
+                label={t.darkMode}
               />
               <FormControlLabel
                 control={
@@ -93,14 +125,14 @@ const Settings = () => {
                     name="language"
                   />
                 }
-                label={language === 'en' ? 'Switch to Hebrew' : 'Switch to English'}
+                label={language === 'en' ? t.switchToHebrew : t.switchToEnglish}
               />
             </div>
           )}
 
           <Box sx={{ marginTop: 3 }}>
             <Button variant="contained" color="primary" onClick={handleSave}>
-              Save Changes
+              {t.save}
             </Button>
           </Box>
         </Box>

@@ -18,8 +18,8 @@ const LanguageToggle: React.FC = () => {
       transition={{ duration: 0.3 }}
       style={{
         position: "absolute",
-        top: 20,
-        [language === "he" ? "right" : "left"]: 100,
+        top: 30,
+        [language === "he" ? "right" : "left"]: 190,
       }}
     >
       <IconButton
