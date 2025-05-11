@@ -14,6 +14,7 @@ const HomePage = () => {
     return (
 
         <>
+        
             <motion.div whileHover={{}} >
                 <Button
                     component={Link}
@@ -21,7 +22,7 @@ const HomePage = () => {
                     variant="contained"
                     color="primary"
                     size="large"
-                    sx={{ position: 'absolute', top: 30, right: 110 }}>
+                    sx={{ position: 'absolute', top: 30, right: 110, zIndex: 3 }}>
                     <Favorite />
                     my photos
                 </Button>

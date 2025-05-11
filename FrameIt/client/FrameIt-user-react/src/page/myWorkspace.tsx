@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Typography, Grid, Card, CardContent, Button } from "@mui/material";
 import { CloudUpload, Collections, Filter, Edit } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
 const MyWorkspace: React.FC = () => {
 
@@ -24,7 +25,7 @@ const MyWorkspace: React.FC = () => {
                         <CardContent>
                             <CloudUpload fontSize="large" />
                             <Typography variant="h6">Upload Images</Typography>
-                            <Button variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+                            <Button component={Link} to="/myWorkspace/upload" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
                                 Upload
                             </Button>
                         </CardContent>
@@ -35,7 +36,7 @@ const MyWorkspace: React.FC = () => {
                         <CardContent>
                             <Edit fontSize="large" />
                             <Typography variant="h6">Create Collage</Typography>
-                            <Button variant="contained" color="secondary" fullWidth sx={{ mt: 2 }}>
+                            <Button component={Link} to="/myWorkspace/design" variant="contained" color="secondary" fullWidth sx={{ mt: 2 }}>
                                 Create
                             </Button>
                         </CardContent>
@@ -46,7 +47,7 @@ const MyWorkspace: React.FC = () => {
                         <CardContent>
                             <Filter fontSize="large" />
                             <Typography variant="h6">AI <br /> Filtering</Typography>
-                            <Button variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+                            <Button component={Link} to="/myWorkspace/AiFeuteres" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
                                 Apply
                             </Button>
                         </CardContent>
@@ -57,7 +58,7 @@ const MyWorkspace: React.FC = () => {
                         <CardContent>
                             <Collections fontSize="large" />
                             <Typography variant="h6">My Collections</Typography>
-                            <Button variant="contained" color="secondary" fullWidth sx={{ mt: 2 }}>
+                            <Button component={Link} to="/myWorkspace/collections" variant="contained" color="secondary" fullWidth sx={{ mt: 2 }}>
                                 Manage
                             </Button>
                         </CardContent>

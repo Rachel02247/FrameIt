@@ -9,7 +9,7 @@ import {
     FormHelperText,
     Paper
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { Link, useNavigate } from 'react-router-dom';
 import { AppDispatch, RootState } from '../global-states/store';
 import { register } from '../global-states/userSlice';
@@ -29,6 +29,7 @@ const LogoRing = styled(Box)(({ theme }) => ({
 }));
 
 const Register = () => {
+    const theme = useTheme();
     const dispatch = useDispatch<AppDispatch>();
     const { loading, error } = useSelector((state: RootState) => state.user);
     const navigate = useNavigate();
@@ -73,12 +74,33 @@ const Register = () => {
     };
 
     return (
-        <Paper sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', bgcolor: 'rgb(255, 255, 255)' }}>
+        <Paper
+            sx={{
+                minHeight: '100vh',
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                bgcolor: theme.palette.background.default, // Use theme background
+            }}
+        >
             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', p: 3 }}>
                 <Container maxWidth="sm">
-                    <LogoRing sx={{ border: '25px solid #666699'! }}>
-                        <Typography variant="h4" component="div" align="center" color='primary' sx={{ position: 'absolute', width: '100%', fontWeight: 'bold', textShadow: '1px 1px 3px rgba(0,0,0,0.5)' }}>
-                            welcome <br />Geust
+                    <LogoRing sx={{ border: `25px solid ${theme.palette.primary.main}` }}>
+                        <Typography
+                            variant="h4"
+                            component="div"
+                            align="center"
+                            color="primary"
+                            sx={{
+                                position: 'absolute',
+                                width: '100%',
+                                fontWeight: 'bold',
+                                textShadow: '1px 1px 3px rgba(0,0,0,0.5)',
+                            }}
+                        >
+                            welcome <br />
+                            Guest
                         </Typography>
                     </LogoRing>
                     <Typography variant="h4" component="h1" mb={4}>
@@ -86,12 +108,61 @@ const Register = () => {
                     </Typography>
                 </Container>
                 <Container maxWidth="sm">
-
-                    <Paper elevation={0} sx={{ width: '100%', bgcolor: 'transparent', p: 2 }}>
+                    <Paper
+                        elevation={0}
+                        sx={{
+                            width: '100%',
+                            bgcolor: 'transparent',
+                            p: 2,
+                        }}
+                    >
                         <form onSubmit={handleRegister}>
-                            <TextField fullWidth name="Name" placeholder="*name" variant="outlined" margin="normal" value={newUser.Name} onChange={handleChange} sx={{ bgcolor: 'white', borderRadius: 1, mb: 2 }} error={!!formError} />
-                            <TextField fullWidth name="Email" placeholder="*email" variant="outlined" margin="normal" value={newUser.Email} onChange={handleChange} sx={{ bgcolor: 'white', borderRadius: 1, mb: 2 }} error={!!formError} />
-                            <TextField fullWidth name="Password" type="password" placeholder="*password" variant="outlined" margin="normal" value={newUser.Password} onChange={handleChange} sx={{ bgcolor: 'white', borderRadius: 1, mb: 2 }} error={!!formError} />
+                            <TextField
+                                fullWidth
+                                name="Name"
+                                placeholder="*name"
+                                variant="outlined"
+                                margin="normal"
+                                value={newUser.Name}
+                                onChange={handleChange}
+                                sx={{
+                                    bgcolor: theme.palette.background.paper, // Use theme background
+                                    borderRadius: 1,
+                                    mb: 2,
+                                }}
+                                error={!!formError}
+                            />
+                            <TextField
+                                fullWidth
+                                name="Email"
+                                placeholder="*email"
+                                variant="outlined"
+                                margin="normal"
+                                value={newUser.Email}
+                                onChange={handleChange}
+                                sx={{
+                                    bgcolor: theme.palette.background.paper, // Use theme background
+                                    borderRadius: 1,
+                                    mb: 2,
+                                }}
+                                error={!!formError}
+                            />
+                            <TextField
+                                fullWidth
+                                name="Password"
+                                type="password"
+                                placeholder="*password"
+                                variant="outlined"
+                                margin="normal"
+                                value={newUser.Password}
+                                onChange={handleChange}
+                                sx={{
+                                    bgcolor: theme.palette.background.paper, // Use theme background
+                                    borderRadius: 1,
+                                    mb: 2,
+                                }}
+                                error={!!formError}
+                            />
                             {(formError || error) && (
                                <FormHelperText error sx={{ mb: 2 }}>
                                {formError || error/*?.response?.data?.message*/ || 'An unexpected error occurred'}
