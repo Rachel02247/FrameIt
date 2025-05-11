@@ -7,13 +7,13 @@ import { RootState } from "../../component/global-states/store";
 import { MyFile } from "../../types";
 
 const Upload = () => {
-  const url = "http://localhost:5282/files";
   const user = useSelector((state: RootState) => state.user.user);
 
   const handleUpload = async (files: MyFile[], folderId: string) => {
     const formData = new FormData();
 
     for (let i = 0; i < files.length; i++) {
+
       const file = files[i];
       // formData.append("file", file.file);
       formData.append("FileName", file.fileName);
@@ -25,11 +25,9 @@ const Upload = () => {
       formData.append("OwnerId", user?.id ?? "0");
 
       try {
-        const response = await axios.post(url, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+
+        const response =  uploadFiles(formData);
+
         console.log("File uploaded successfully:", response.data);
       } catch (error) {
         if (axios.isAxiosError(error)) {

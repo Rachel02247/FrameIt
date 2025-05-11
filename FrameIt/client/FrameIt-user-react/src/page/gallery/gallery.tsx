@@ -20,7 +20,6 @@ import {
 import HomeIcon from "@mui/icons-material/Home"
 import ChevronRightIcon from "@mui/icons-material/ChevronRight"
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder"
-import axios from "axios"
 import FolderItem from "./folderItem"
 import FileItem from "./fileItem"
 import Search from "./search"
@@ -32,7 +31,6 @@ import type { RootState } from "../../component/global-states/store"
 import { useSelector } from "react-redux"
 import ImagePreviewModal from "../../hooks/imagePreviewModal"
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function Gallery() {
   const [files, setFiles] = useState<MyFile[]>([])
@@ -52,13 +50,13 @@ export default function Gallery() {
     setLoading(true)
     setError(null)
     try {
-      const url = `${API_BASE_URL}/folders/${folderId}/contents/${userId || 0}`
-      const { data } = await axios.get(url)
+      const { data } = await fetchFolderByCurrentFolder(folderId, userId || 0);
       setFolders(data.folders)
       setFiles(data.files)
 
-      const breadcrumbRes = await axios.get(`${API_BASE_URL}/folders/${folderId}/breadcrumb`)
+      const breadcrumbRes = await fetchFoldersBreadcrumbs(folderId);
       setBreadcrumb(breadcrumbRes.data)
+
     } catch (error) {
       console.error("Error fetching data:", error)
       setError("Failed to load gallery content. Please try again later.")

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import { Box, Typography, CircularProgress } from "@mui/material"
-import axios from "axios"
 import type { MyFile } from "../../types"
 
 // This component will fetch and provide images from your gallery
@@ -11,7 +10,6 @@ export function useGalleryImages() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const API_BASE_URL = "http://localhost:5282"
 
   const userId = localStorage.getItem("userId") || "0" 
 
@@ -20,15 +18,7 @@ export function useGalleryImages() {
       setLoading(true)
       try {
 
-        const url = `${API_BASE_URL}/files/myfiles/${userId}`
-        const { data } = await axios.get(url)
-        console.log("Fetched images:", data) //
-      
-      
-        // const imageFiles = data.filter((file: MyFile) =>
-        //   // ["jpg", "jpeg", "png", "gif", "webp"].includes(file.fileType.toLowerCase()),
-        // );
-
+        const { data } = fetchFilesByUserId(userId);
         setFiles(data)
       } catch (error) {
         console.error("Error fetching gallery images:", error)
@@ -41,31 +31,11 @@ export function useGalleryImages() {
     fetchImages()
   }, [userId])
 
-  const getImageUrl = async (s3Key: string): Promise<string> => {
-    try {
-      const encodedKey = encodeURIComponent(s3Key)
-      
-      const response = await fetch(`${API_BASE_URL}/files/generate-url?s3Key=${encodedKey}`)
-
-      const url = `https://001687204140frameit.s3.us-east-1.amazonaws.com/${encodedKey}`
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch presigned URL")
-      }
-
-      //const data = await response.json()
-      return url
-    }
-     catch (error) {
-      console.error("Error getting image URL:", error)
-      return ""
-    }
-  }
+ 
 
   return { files, loading, error, getImageUrl }
 }
 
-// Component to display a loading state while fetching gallery images
 export function GalleryLoading() {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", py: 8 }}>
