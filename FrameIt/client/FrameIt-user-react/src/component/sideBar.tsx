@@ -44,63 +44,75 @@ const Sidebar = () => {
     ];
 
     return (
-        <>
-            <Drawer
-                variant="permanent"
-                anchor="left"
+        <Drawer
+            variant="permanent"
+            anchor={language === "he" ? "right" : "left"}
+            sx={{
+                height: "calc(90% - 96px)",
+                zIndex: 1,
+                button: 0,
+                paddingLeft: 4,
+                width: open ? 240 : 80,
+                position: "relative",
+            }}
+        >
+            <AccountMenu />
+            <Box
                 sx={{
-                    height: "calc(90% - 96px)",
-                    zIndex: 1,
-                    button: 0,
-                    paddingLeft: 4,
-                    width: open ? 240 : 80,
-                    position: "relative",
+                    mt: 8,
+                    display: "flex",
+                    alignItems: "center",
+                    pl: 2,
+                    pr: 2,
+                    pt: 1,
+                    pb: 1,
+                    flexDirection: language === "he" ? "row-reverse" : "row",
                 }}
             >
-                <AccountMenu />
-                <Box sx={{ mt: 8, display: "flex", alignItems: "center", pl: 2, pr: 2, pt: 1, pb: 1 }}>
-                    <IconButton
-                        onClick={() => setOpen(!open)}
+                <IconButton
+                    onClick={() => setOpen(!open)}
+                    sx={{
+                        borderRadius: "50%",
+                        padding: 1,
+                        "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.2)" },
+                        alignSelf: "center",
+                    }}
+                >
+                    <MenuIcon />
+                </IconButton>
+            </Box>
+            <List sx={{ zIndex: 2 }}>
+                {NAVIGATION.map((item) => (
+                    <ListItemButton
+                        key={item.path}
+                        component={Link}
+                        to={item.path}
+                        selected={location.pathname === item.path}
                         sx={{
-                            borderRadius: "50%",
-                            padding: 1,
-                            "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.2)" },
-                            alignSelf: "center",
+                            "&.Mui-selected": { backgroundColor: "rgba(0, 0, 0, 0.1)" },
+                            flexDirection: language === "he" ? "row-reverse" : "row",
                         }}
                     >
-                        <MenuIcon />
-                    </IconButton>
-                </Box>
-                <List sx={{ zIndex: 2 }}>
-                    {NAVIGATION.map((item) => (
-                        <ListItemButton
-                            key={item.path}
-                            component={Link}
-                            to={item.path}
-                            selected={location.pathname === item.path}
-                            sx={{ "&.Mui-selected": { backgroundColor: "rgba(0, 0, 0, 0.1)" } }}
+                        <ListItemIcon
+                            sx={{
+                                color: location.pathname === item.path ? "primary.main" : "secondary.main",
+                            }}
                         >
-                            <ListItemIcon
-                                sx={{
+                            {item.icon}
+                        </ListItemIcon>
+                        {open && (
+                            <ListItemText
+                                primaryTypographyProps={{
                                     color: location.pathname === item.path ? "primary.main" : "secondary.main",
                                 }}
-                            >
-                                {item.icon}
-                            </ListItemIcon>
-                            {open && (
-                                <ListItemText
-                                    primaryTypographyProps={{
-                                        color: location.pathname === item.path ? "primary.main" : "secondary.main",
-                                    }}
-                                    primary={item.title}
-                                />
-                            )}
-                        </ListItemButton>
-                    ))}
-                </List>
-                <AI />
-            </Drawer>
-        </>
+                                primary={item.title}
+                            />
+                        )}
+                    </ListItemButton>
+                ))}
+            </List>
+            <AI />
+        </Drawer>
     );
 };
 

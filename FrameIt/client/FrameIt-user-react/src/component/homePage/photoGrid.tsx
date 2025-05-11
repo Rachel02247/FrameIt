@@ -44,7 +44,13 @@ const PhotoGrid: React.FC = () => {
   }, []);
 
   return (
-    <Box sx={{ px: 3, py: 5 }}>
+    <Box
+      sx={{
+        px: 3,
+        py: 5,
+        direction: language === "he" ? "rtl" : "ltr",
+      }}
+    >
       <Typography
         variant="h5"
         align="center"

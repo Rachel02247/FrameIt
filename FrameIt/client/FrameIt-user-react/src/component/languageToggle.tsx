@@ -16,7 +16,11 @@ const LanguageToggle: React.FC = () => {
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3 }}
-      style={{ position: "absolute", top: 20, left: 80 }}
+      style={{
+        position: "absolute",
+        top: 20,
+        [language === "he" ? "right" : "left"]: 100,
+      }}
     >
       <IconButton
         onClick={toggleLanguage}

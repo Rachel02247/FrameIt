@@ -24,7 +24,11 @@ const HomePage = () => {
     const t = translations[language];
 
     return (
-        <>
+        <div
+            style={{
+                direction: language === "he" ? "rtl" : "ltr",
+            }}
+        >
             <motion.div whileHover={{}}>
                 <Button
                     component={Link}
@@ -32,7 +36,12 @@ const HomePage = () => {
                     variant="contained"
                     color="primary"
                     size="large"
-                    sx={{ position: 'absolute', top: 30, right: 110, zIndex: 3 }}
+                    sx={{
+                        position: "absolute",
+                        top: 30,
+                        [language === "he" ? "left" : "right"]: 110,
+                        zIndex: 3,
+                    }}
                 >
                     <Favorite />
                     {t.myPhotos}
@@ -43,7 +52,7 @@ const HomePage = () => {
             <Features />
             <PhotoGrid />
             <Footer />
-        </>
+        </div>
     );
 };
 

@@ -12,6 +12,7 @@ export default () => {
     <Box
       className="footer"
       sx={{
+        zIndex: 0.5,
         width: '100%',
         left: 0,
         height: 60,
