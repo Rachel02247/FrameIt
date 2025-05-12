@@ -61,7 +61,8 @@ namespace FrameItAPI.Services.services
                 throw new Exception($"Error uploading file to S3: {ex.Message}");
             }
 
-            file.S3Url = $"https://{_bucketName}.s3.amazonaws.com/{fileKey}"; 
+            //file.S3Url = $"https://{_bucketName}.s3.amazonaws.com/{fileKey}"; 
+            file.S3Url = "";
             _context.Files.Add(file);
             await _context.SaveChangesAsync();
 
