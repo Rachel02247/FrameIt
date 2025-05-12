@@ -58,6 +58,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
   const [isLoading, setIsLoading] = useState(true)
   const [imageError, setImageError] = useState(false)
   const [urlTrick,] = useState('');
+  const [openMenu, setOpenMenu] = useState(false)
 
   const dispatch = useDispatch<AppDispatch>()
   const userId = useSelector((state: RootState) => state.user.user?.id)
@@ -90,13 +91,14 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
   }, [userId, dispatch])
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
     event.stopPropagation()
     setAnchorEl(event.currentTarget)
+    setOpenMenu(true)
   }
 
   const handleCloseMenu = () => {
     setAnchorEl(null)
+    setOpenMenu(false)
   }
 
   const handleOpenTagMenu = () => {
@@ -116,7 +118,8 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
 
   const handleFileClick = (e: React.MouseEvent) => {
     e.stopPropagation()
-    onOpenPreview(file.id)
+    if(!openMenu)
+      onOpenPreview(file.id)
   }
 
   const handleDownload = (e: React.MouseEvent) => {
