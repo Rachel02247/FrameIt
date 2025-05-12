@@ -56,7 +56,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
   const [showTagMenu, setShowTagMenu] = useState(false)
   const [openCreateCollection, setOpenCreateCollection] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [imageError, setImageError] = useState(false)
+  const [, setImageError] = useState(false)
   const [urlTrick,] = useState('');
 
   const dispatch = useDispatch<AppDispatch>()
@@ -68,10 +68,11 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
   useEffect(() => {
     const loadFileUrl = async () => {
 
-      const getFilePreviewUrl = await getImageUrl(file.s3Key);
-
       setIsLoading(true)
+
       try {
+      const getFilePreviewUrl = await getImageUrl(file.s3Key);
+        console.log("getFilePreviewUrl", getFilePreviewUrl)
         setPresignedUrl(getFilePreviewUrl);
       } catch (error) {
         console.error("Error loading file URL:", error)
