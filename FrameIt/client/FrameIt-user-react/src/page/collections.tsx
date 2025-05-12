@@ -37,6 +37,7 @@ import RefreshIcon from "@mui/icons-material/Refresh"
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchUserCollections, fetchCollectionFiles, setSelectedTag, sortFiles } from "../component/global-states/tagSlice"
+import { fetchFilesByUserId } from "../component/global-states/fileSlice"
 import type { AppDispatch, RootState } from "../component/global-states/store"
 import CreateCollection from "../hooks/createCollection"
 import ImagePreviewModal from "../hooks/imagePreviewModal"
@@ -44,13 +45,15 @@ import LoadingIndicator from "../hooks/loadingIndicator"
 import FileItem from "./gallery/fileItem"
 
 const Collections: React.FC = () => {
+
   const dispatch = useDispatch<AppDispatch>()
-  const userId = useSelector((state: RootState) => state.user.user?.id)
+  const userId = sessionStorage.getItem("id") ?? 0;
   const { collections, files, selectedTagId, loading } = useSelector((state: RootState) => state.tags)
 
   const [selectedFileIndex, setSelectedFileIndex] = useState<number | null>(null)
   const [openCreateCollection, setOpenCreateCollection] = useState(false)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
   const isMedium = useMediaQuery(theme.breakpoints.down("md"))
@@ -58,6 +61,10 @@ const Collections: React.FC = () => {
   useEffect(() => {
     if (userId) dispatch(fetchUserCollections(userId))
   }, [userId, dispatch])
+
+  useEffect(() => {
+    if (userId) dispatch(fetchFilesByUserId(parseInt(userId)));
+  }, [userId, dispatch]);
 
   useEffect(() => {
     if (selectedTagId !== 0) dispatch(fetchCollectionFiles(selectedTagId))
