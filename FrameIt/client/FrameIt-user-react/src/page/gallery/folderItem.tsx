@@ -78,6 +78,7 @@ const FolderItem: React.FC<FolderItemProps> = ({ folder, onClick, onDelete }) =>
           fontSize: 60,
           opacity: 0.8,
           mb: 1,
+          zIndex: 3,
         }}
 
       />
@@ -109,13 +110,13 @@ const FolderItem: React.FC<FolderItemProps> = ({ folder, onClick, onDelete }) =>
         }}
       >
         <Tooltip title={t.download}>
-          <IconButton onClick={handleDownload} size="small" sx={{ color: "primary.main" }}>
+          <IconButton onClick={handleDownload} size="small" sx={{ color: "primary.main" , zIndex: 4}}>
             <DownloadIcon fontSize="small" />
           </IconButton>
         </Tooltip>
 
         <Tooltip title={t.share}>
-          <IconButton size="small" sx={{ color: "primary.main" }}>
+          <IconButton size="small" sx={{ color: "primary.main", zIndex: 4 }}>
             <ShareIcon fontSize="small" />
           </IconButton>
         </Tooltip>
@@ -126,6 +127,7 @@ const FolderItem: React.FC<FolderItemProps> = ({ folder, onClick, onDelete }) =>
             onClick={handleDeleteClick}
             sx={{
               color: "error.main",
+              zIndex: 4,
               "&:hover": {
                 backgroundColor: "error.light",
                 color: "error.dark",

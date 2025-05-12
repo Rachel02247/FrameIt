@@ -58,6 +58,7 @@ export default function Gallery() {
     setError(null)
     try {
       const { data } = await fetchFolderByCurrentFolder(folderId ?? "0", +userId)
+      console.log("Fetched data:", data)
       setFolders(data.folders)
       setFiles(data.files)
 
@@ -198,15 +199,7 @@ export default function Gallery() {
             ))}
           </Breadcrumbs>
 
-          {/* Button to create a new folder */}
-          <Button
-            variant="contained"
-            startIcon={<CreateNewFolderIcon />}
-            size="small"
-            onClick={handleCreateFolderOpen}
-          >
-            New Folder
-          </Button>
+       
         </Box>
 
         {error && (
@@ -297,14 +290,13 @@ export default function Gallery() {
           </>
         )}
 
-        {/* Create Folder Dialog */}
-        {openCreateFolder && (
+         
           <CreateFolder
             folderId={currentFolder ?? '0'}
             fetchData={fetchData}
             // onClose={handleCreateFolderClose} // Passing onClose function to close the dialog
           />
-        )}
+        
 
         {/* Image preview modal */}
         {selectedFileIndex !== null && (
