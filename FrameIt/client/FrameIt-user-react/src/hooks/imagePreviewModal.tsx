@@ -26,10 +26,11 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({ file, onClose, on
   const [s3ImgUrl, setS3ImgUrl] = React.useState<string | null>(null);
 
   React.useEffect(() => {
+
     const loadFileUrl = async () => {
       try {
         const url = await getFileDownloadUrl(file.id);
-         const s3Url = await getFileDownloadUrl(file.s3Key) || getS3Url(file.s3Key);
+        const s3Url = await getS3Url(file.s3Key);
         setPresignedUrl(url);
         setS3ImgUrl(s3Url);
       } catch (error) {

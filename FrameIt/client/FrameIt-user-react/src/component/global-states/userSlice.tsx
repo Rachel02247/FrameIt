@@ -67,6 +67,27 @@ export const register = createAsyncThunk(
   }
 );
 
+// Async Thunk for Changing Password
+export const changePassword = createAsyncThunk(
+  "auth/changePassword",
+  async (
+    { currentPassword, newPassword }: { currentPassword: string; newPassword: string },
+    thunkAPI
+  ) => {
+    try {
+      const response = await axios.post(`${url}change-password`, {
+        currentPassword,
+        newPassword,
+      });
+      return response.data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response) {
+        return thunkAPI.rejectWithValue(error.response.data.message || "Failed to change password");
+      }
+      return thunkAPI.rejectWithValue("Failed to change password");
+    }
+  }
+);
 
 const authSlice = createSlice({
   name: "auth",
@@ -94,7 +115,6 @@ const authSlice = createSlice({
         state.loading = false;
 
         if (action.payload) {
-          // אם השגיאה כוללת מידע
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const errorPayload = action.payload as any;  // אם השגיאה מכילה מידע, כמו תשובת ה־HTTP
           const status = errorPayload.response?.status;
@@ -122,6 +142,17 @@ const authSlice = createSlice({
       .addCase(register.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string || "Registration failed";
+      })
+      .addCase(changePassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(changePassword.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(changePassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string || "Failed to change password";
       });
   },
 });
