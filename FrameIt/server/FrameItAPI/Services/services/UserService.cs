@@ -31,9 +31,7 @@ namespace FrameItAPI.Services.services
 
         public async Task<User> CreateUser(RegisterModel model)
         {
-            // ודא שהסיסמה נשמרת בצורה מאובטחת
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.Password);
-            // יצירת המשתמש החדש
             var user = new User
             {
                 Name = model.UserName,
@@ -46,20 +44,18 @@ namespace FrameItAPI.Services.services
             await _context.SaveChangesAsync();
 
 
-            // מציאת התפקיד הרצוי
             var role = await _context.Roles.FirstOrDefaultAsync(r => r.RoleName == user.Role);
             Console.WriteLine($"find role:  {user.Role}");
 
             if (role == null)
             {
                 Console.WriteLine("not found");
-                return null; // אם התפקיד לא נמצא, מחזיר null
+                return null; 
             }
-            // אם התפקיד קיים, יוצרים את הקשר בטבלת UserRoles
 
             await _userRoleService.AddUserRole(user.Id, role.Id);
-            await _context.SaveChangesAsync();  // שמירה של הקשר בטבלה UserRoles
-            return user; // מחזיר את המשתמש החדש שנוצר
+            await _context.SaveChangesAsync();  
+            return user; 
         }
 
 

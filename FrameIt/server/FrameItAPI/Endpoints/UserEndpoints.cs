@@ -30,7 +30,7 @@ public static class UserEndpoints
 
         routes.MapPut("/users/{id}", async (IUserService userService, int id, User user) =>
         {
-            user.Id = id; // עדכון ה-ID של המשתמש
+            user.Id = id; 
             var updatedUser = await userService.UpdateUser(user);
             return Results.Ok(updatedUser);
         }).RequireAuthorization("EditorOrAdmin");
