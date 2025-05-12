@@ -18,11 +18,10 @@ import {
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { Folder, MyFile } from "../../types";
-import axios from "axios";
 import CreateFolder from "../../hooks/createFolder";
 import { useDropzone, Accept } from "react-dropzone";
 import { useLanguage } from "../../context/LanguageContext";
-import { fetchFilesByUserIdAndFolderId } from "../../services/folderService";
+import { fetchFilesByUserIdAndFolderId, fetchFoldersByUserId } from "../../services/folderService";
 
 interface FileUploadProps {
     onUpload: (files: MyFile[], folderId: string) => Promise<void>;
@@ -54,14 +53,13 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload }) => {
     const [selectedFolder, setSelectedFolder] = useState<string>("");
     const [folders, setFolders] = useState<Folder[]>([]);
     const [subFolders, setSubFolders] = useState<Folder[]>([]);
-    const url = `${process.env.REACT_APP_API_URL}/`;
     const userId = sessionStorage.getItem("userId") || "0";
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`${url}folders/myFiles/${userId}`);
-                setFolders(res.data);
+                const res = await fetchFoldersByUserId(+userId);
+                setFolders(res);
             } catch (error) {
                 console.error("Error fetching folders:", error);
             }
