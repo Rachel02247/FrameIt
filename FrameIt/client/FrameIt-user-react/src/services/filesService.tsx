@@ -29,3 +29,13 @@ export const getFileDownloadUrl = async (fileId: string) => {
     throw error;
   }
 };
+
+export const fetchFilesByUserId = async (userId: number) => {
+  try {
+    const response = await axios.get(`${API_URL_BASE}/myfiles/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching files by user ID:", error);
+    throw error;
+  }
+};
