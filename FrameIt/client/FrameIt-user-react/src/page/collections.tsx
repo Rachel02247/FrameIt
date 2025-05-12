@@ -94,7 +94,7 @@ const Collections: React.FC = () => {
       sx={{
         width: "1000px",
         maxWidth: "90%",
-        position: "absolute",
+        position: "relative",
       }}
     >
       <Paper
