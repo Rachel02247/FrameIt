@@ -88,11 +88,13 @@ public static class FileEndpoints
         });//.RequireAuthorization("admin", "editor");
 
 
-        routes.MapGet("/files/{fileName}/download", async (string fileName, IFileService fileService) =>
+        routes.MapGet("/files/{s3Key}/download", async (string s3Key, IFileService fileService) =>
         {
             try
             {
-                var fileUrl = await fileService.Download(fileName); // מקבל את ה-URL
+                Console.WriteLine($" in mapget download");
+                Console.WriteLine($" in mapget file name: {s3Key}");
+                var fileUrl = await fileService.Download(s3Key); // מקבל את ה-URL
 
                 if (string.IsNullOrEmpty(fileUrl))
                     return Results.NotFound("File not found.");

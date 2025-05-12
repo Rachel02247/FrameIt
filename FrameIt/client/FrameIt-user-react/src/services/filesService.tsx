@@ -26,9 +26,15 @@ export const uploadFiles = async (formData: FormData) => {
 
 
 
-export const getFileDownloadUrl = async (fileId: string) => {
+export const getFileDownloadUrl = async (s3Key: string) => {
+    console.log("in getFileDownloadUrl", s3Key);
+    
   try {
-    const response = await axios.get(`${API_URL_BASE}/download/${fileId}`);
+    console.log("in getFileDownloadUrl before server", s3Key);
+    
+    const response = await axios.get(`${API_URL_BASE}/download/${s3Key}`);
+    console.log("res after server", response);
+    
     return response.data.url; // Assuming the API returns a `url` field
   } catch (error) {
     console.error("Error fetching file download URL:", error);
