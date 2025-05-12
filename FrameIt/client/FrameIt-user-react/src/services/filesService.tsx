@@ -32,7 +32,7 @@ export const getFileDownloadUrl = async (s3Key: string) => {
   try {
     console.log("in getFileDownloadUrl before server", s3Key);
     
-    const response = await axios.get(`${API_URL_BASE}/download/${s3Key}`);
+    const response = await axios.get(`${API_URL_BASE}/${s3Key}/download`);
     console.log("res after server", response);
     
     return response.data.url; // Assuming the API returns a `url` field
