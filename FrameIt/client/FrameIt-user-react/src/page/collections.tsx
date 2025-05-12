@@ -94,8 +94,8 @@ const Collections: React.FC = () => {
       sx={{
         width: "1000px",
         maxWidth: "90%",
-        top: 120,
-        right: 20,
+        top: 20,
+        right: 0,
         position: "relative",
       }}
     >
