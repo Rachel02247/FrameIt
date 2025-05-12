@@ -198,7 +198,7 @@ const Collections: React.FC = () => {
             >
               New Collection
             </Button>
-     
+
             <Tooltip title="Options">
               <IconButton
                 onClick={handleMenuOpen}
@@ -263,7 +263,7 @@ const Collections: React.FC = () => {
           onClose={() => setOpenCreateCollection(false)}
           fetchData={() => userId && dispatch(fetchUserCollections(userId))}
         />
-       
+
 
         {loading ? (
           <LoadingIndicator />
