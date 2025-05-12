@@ -89,7 +89,9 @@ const MyWorkspace: React.FC = () => {
           <Card>
             <CardContent>
               <Filter fontSize="large" />
-              <Typography variant="h6">{t.aiFiltering}</Typography>
+              <Typography variant="h6" sx={{ whiteSpace: "pre-line" }}>
+                {t.aiFiltering}
+              </Typography>
               <Button
                 component={Link}
                 to="/myWorkspace/AiFeuteres"
