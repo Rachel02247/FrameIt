@@ -105,6 +105,16 @@ export default function Gallery() {
     return 4
   }
 
+  // New function to handle opening the CreateFolder dialog
+  const handleCreateFolderOpen = () => {
+    setOpenCreateFolder(true)
+  }
+
+  // New function to handle closing the CreateFolder dialog
+  const handleCreateFolderClose = () => {
+    setOpenCreateFolder(false)
+  }
+
   return (
     <Container
       sx={{
@@ -188,11 +198,15 @@ export default function Gallery() {
             ))}
           </Breadcrumbs>
 
-          
-        </Box>
-
-        <Box sx={{ display: "none" }}>
-          <FolderMenu />
+          {/* Button to create a new folder */}
+          <Button
+            variant="contained"
+            startIcon={<CreateNewFolderIcon />}
+            size="small"
+            onClick={handleCreateFolderOpen}
+          >
+            New Folder
+          </Button>
         </Box>
 
         {error && (
@@ -283,11 +297,12 @@ export default function Gallery() {
           </>
         )}
 
-        {/* CreateFolder Dialog */}
+        {/* Create Folder Dialog */}
         {openCreateFolder && (
           <CreateFolder
-            folderId={currentFolder ?? "0"}
+            folderId={currentFolder ?? '0'}
             fetchData={fetchData}
+            onClose={handleCreateFolderClose} // Passing onClose function to close the dialog
           />
         )}
 
