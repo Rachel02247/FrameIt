@@ -112,13 +112,14 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
   }
 
   const handleCreateNewCollection = () => {
+    setOpenMenu(true)
     setOpenCreateCollection(true)
     setShowTagMenu(false)
   }
 
   const handleFileClick = (e: React.MouseEvent) => {
     e.stopPropagation()
-    if(!openMenu)
+    if (!openMenu)
       onOpenPreview(file.id)
   }
 
@@ -267,7 +268,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
       <Menu
         anchorEl={anchorEl}
         open={showTagMenu}
-        onClose={() => setShowTagMenu(false)}
+        onClose={() => {setShowTagMenu(false); setOpenMenu(false)}}
         TransitionComponent={Fade}
         PaperProps={{
           elevation: 3,
