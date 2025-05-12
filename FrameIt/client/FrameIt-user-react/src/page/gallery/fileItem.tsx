@@ -90,6 +90,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
   }, [userId, dispatch])
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
     event.stopPropagation()
     setAnchorEl(event.currentTarget)
   }
