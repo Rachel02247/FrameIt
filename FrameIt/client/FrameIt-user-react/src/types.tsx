@@ -25,11 +25,12 @@ export type Tag ={
 }
 
 export type MyFile = {
+  file: File | null;
   id: string;
-  fileName: string; // שם הקובץ כפי שמגיע מהשרת
-  fileType: string; // סוג הקובץ
-  size: number; // גודל הקובץ
-  s3Key: string; // מפתח ה-S3
+  fileName: string; 
+  fileType: string; 
+  size: number; 
+  s3Key: string; 
   isDeleted: boolean, 
   folderId: string,
   ownerId: string

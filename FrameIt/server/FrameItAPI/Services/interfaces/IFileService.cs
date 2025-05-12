@@ -20,6 +20,8 @@ namespace FrameItAPI.Services.interfaces
         Task<IEnumerable<FrameItAPI.Entities.File>> GetFilesByTag(int tagId);
         Task<byte[]> GetFileContent(int fileId);
         Task<List<Entities.File>> GetFilesByaUserId(int userId);
+        Task<Entities.File> CreateImageFileWithResize(Entities.File file, Stream originalImageStream);
+
 
 
 
