@@ -90,6 +90,8 @@ namespace FrameItAPI.Services.services
 
         public async Task<string> Download(string s3Key)
         {
+            Console.WriteLine("in Download 1");
+            Console.WriteLine("in Download 2",s3Key);
             var request = new GetPreSignedUrlRequest
             {
                 BucketName = _bucketName,
@@ -97,6 +99,7 @@ namespace FrameItAPI.Services.services
                 Verb = HttpVerb.GET,
                 Expires = DateTime.UtcNow.AddDays(300),
             };
+            Console.WriteLine("in Download 3", request);
 
             return _s3Client.GetPreSignedURL(request);
         }

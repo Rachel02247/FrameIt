@@ -95,7 +95,8 @@ public static class FileEndpoints
                 Console.WriteLine($" in mapget download");
                 Console.WriteLine($" in mapget file name: {s3Key}");
                 var fileUrl = await fileService.Download(s3Key); // מקבל את ה-URL
-
+                Console.WriteLine($" in mapget file url after download: {fileUrl}");
+                Console.WriteLine($" ------------------------"); Console.WriteLine();
                 if (string.IsNullOrEmpty(fileUrl))
                     return Results.NotFound("File not found.");
 
