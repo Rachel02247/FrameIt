@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Box, Typography } from "@mui/material"
 import type { MyFile } from "../../types"
-import { fetchFilesByUserId } from "../../services/folderService"
+import { fetchFilesByUserId } from "../../services/filesService"
 import LoadingIndicator from "../../hooks/loadingIndicator"
 
 // This component will fetch and provide images from your gallery

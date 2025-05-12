@@ -28,8 +28,8 @@ import LoadingIndicator from "../../hooks/loadingIndicator"
 import type { Folder, MyFile } from "../../types"
 import CreateFolder from "../../hooks/createFolder"
 import ImagePreviewModal from "../../hooks/imagePreviewModal"
-import { fetchFolderByCurrentFolder, fetchFoldersBreadcrumbs } from "../../services/folderService"
-import { fetchFilesByUserId } from "../../services/folderService"
+import { fetchFolderByCurrentFolder, fetchFoldersBreadcrumbs, fetchFoldersByUserId } from "../../services/folderService"
+import { fetchFilesByUserId } from "../../services/filesService"
 
 type CreateFolderProps = {
   folderId: string;
@@ -57,10 +57,11 @@ export default function Gallery() {
     setLoading(true)
     setError(null)
     try {
-      const data = await fetchFilesByUserId(parseInt(userId))
-      console.log("Fetched data:", data)
-      setFolders(data.folders)
-      setFiles(data.files)
+      const FolderData = await fetchFoldersByUserId(parseInt(userId))
+      setFolders(FolderData)
+
+      const FilesData = await fetchFilesByUserId(parseInt(userId))
+      setFiles(FilesData)
 
       const breadcrumbRes = await fetchFoldersBreadcrumbs(folderId ?? "0")
       setBreadcrumb(breadcrumbRes.data)
