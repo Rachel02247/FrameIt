@@ -11,13 +11,10 @@ export default () => {
       sx={{
         zIndex: 0.5,
         width: '100%',
-        left: 0,
         height: 60,
-        position: 'relative', // Changed to relative
+        position: 'relative', // Ensure it's part of the document flow
         mt: 'auto', // Pushes the footer to the bottom of the content
-        p: 2,
-        backgroundColor: 'rgba(255, 255, 255, 0.9)', // Background color for visibility
-        boxShadow: '0 -2px 5px rgba(0, 0, 0, 0.1)', // Shadow for separation
+        p: 8,
       }}
       id="contact"
     >

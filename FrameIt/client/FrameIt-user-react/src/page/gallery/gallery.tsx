@@ -57,20 +57,21 @@ export default function Gallery() {
     setLoading(true)
     setError(null)
     try {
+
       const FolderData = await fetchFoldersByUserId(parseInt(userId))
-      setFolders(FolderData)
-      console.log(FolderData)
-    
+      setFolders(FolderData.filter((curfolder: Folder) => curfolder.parentFolderId === folderId || (!curfolder.parentFolderId && folderId === "0")))
+
       const FilesData = await fetchFilesByUserId(parseInt(userId))
-      setFiles(FilesData.length == 0 ?  [{id: '0', fileName: "try", fileType: 'image/png', size: 5000,  s3Key: 'a', isDeleted: false, ownerId: '12', folderId: '2'}] as MyFile[] : FilesData)
-      console.log(files)
+      setFiles(FilesData.filter((curfile: MyFile) => curfile.folderId === folderId || (!curfile.folderId && folderId === "0")))
 
       const breadcrumbRes = await fetchFoldersBreadcrumbs(folderId ?? "0")
-      console.log(breadcrumbRes)
-      setBreadcrumb(breadcrumbRes)
+      setBreadcrumb(breadcrumbRes);
+
     } catch (error) {
+
       console.error("Error fetching data:", error)
       setError("Failed to load gallery content. Please try again later.")
+
     } finally {
       setLoading(false)
     }
@@ -110,12 +111,10 @@ export default function Gallery() {
     return 4
   }
 
-  // New function to handle opening the CreateFolder dialog
   const handleCreateFolderOpen = () => {
     setOpenCreateFolder(true)
   }
 
-  // New function to handle closing the CreateFolder dialog
   const handleCreateFolderClose = () => {
     setOpenCreateFolder(false)
   }
@@ -299,11 +298,9 @@ export default function Gallery() {
           <CreateFolder
             folderId={currentFolder ?? '0'}
             fetchData={fetchData}
-            // onClose={handleCreateFolderClose} // Passing onClose function to close the dialog
           />
         
 
-        {/* Image preview modal */}
         {selectedFileIndex !== null && (
           <ImagePreviewModal
             file={files[selectedFileIndex]}
