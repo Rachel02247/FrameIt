@@ -57,7 +57,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
   const [openCreateCollection, setOpenCreateCollection] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [imageError, setImageError] = useState(false)
-const [urlTrick, ] = useState('');
+  const [urlTrick,] = useState('');
 
   const dispatch = useDispatch<AppDispatch>()
   const userId = useSelector((state: RootState) => state.user.user?.id)
@@ -65,12 +65,14 @@ const [urlTrick, ] = useState('');
 
   const isVideo = file.fileType.toLowerCase() === "mp4" || file.fileType.toLowerCase() === "mov"
 
-  const getFilePreviewUrl =  getImageUrl(file.s3Key);
   useEffect(() => {
     const loadFileUrl = async () => {
+
+      const getFilePreviewUrl = await getImageUrl(file.s3Key);
+
       setIsLoading(true)
       try {
-        setPresignedUrl(await getFilePreviewUrl);
+        setPresignedUrl(getFilePreviewUrl);
       } catch (error) {
         console.error("Error loading file URL:", error)
         setImageError(true)
@@ -175,7 +177,7 @@ const [urlTrick, ] = useState('');
       ) : (
         <Box
           component="img"
-          src={imageError ? "img/logo.png" : presignedUrl}
+          src={presignedUrl}
           alt={file.fileName}
           loading="lazy"
           sx={{
