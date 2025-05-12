@@ -40,7 +40,7 @@ public static class FileEndpoints
                     FileName = file.FileName,
                     FolderId = int.TryParse(form["FolderId"], out var folderId) ? folderId : (int?)null,
                     IsDeleted = false,
-                    S3Key = file.FileName + '_' + DateTime.Now,
+                    S3Key = file.FileName,
                     OwnerId = int.Parse(form["OwnerId"]),
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
