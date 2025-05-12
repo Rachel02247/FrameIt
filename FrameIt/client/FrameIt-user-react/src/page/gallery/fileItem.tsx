@@ -58,7 +58,6 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
   const [isLoading, setIsLoading] = useState(true)
   const [imageError, setImageError] = useState(false)
   const [urlTrick,] = useState('');
-  const [openMenu, setOpenMenu] = useState(false)
 
   const dispatch = useDispatch<AppDispatch>()
   const userId = useSelector((state: RootState) => state.user.user?.id)
@@ -93,34 +92,33 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation()
     setAnchorEl(event.currentTarget)
-    setOpenMenu(true)
   }
 
   const handleCloseMenu = () => {
     setAnchorEl(null)
-    setOpenMenu(false)
   }
 
-  const handleOpenTagMenu = () => {
-    setShowTagMenu(true)
-    handleCloseMenu()
-  }
+  const handleOpenTagMenu = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setShowTagMenu(true);
+    handleCloseMenu();
+  };
 
-  const handleSelectTag = async (tagId: number) => {
-    setShowTagMenu(false)
-    dispatch(addFileToCollection({ fileId: file.id, tagId }))
-  }
+  const handleSelectTag = async (event: React.MouseEvent, tagId: number) => {
+    event.stopPropagation();
+    setShowTagMenu(false);
+    dispatch(addFileToCollection({ fileId: file.id, tagId }));
+  };
 
-  const handleCreateNewCollection = () => {
-    setOpenMenu(true)
-    setOpenCreateCollection(true)
-    setShowTagMenu(false)
-  }
+  const handleCreateNewCollection = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setOpenCreateCollection(true);
+    setShowTagMenu(false);
+  };
 
   const handleFileClick = (e: React.MouseEvent) => {
     e.stopPropagation()
-    if (!openMenu)
-      onOpenPreview(file.id)
+    onOpenPreview(file.id)
   }
 
   const handleDownload = (e: React.MouseEvent) => {
@@ -257,7 +255,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
           <ListItemText primary={t.delete} primaryTypographyProps={{ color: "error" }} />
         </MenuItem>
 
-        <MenuItem onClick={handleOpenTagMenu}>
+        <MenuItem onClick={(event) => handleOpenTagMenu(event)}>
           <ListItemIcon>
             <CollectionsIcon fontSize="small" color="primary" />
           </ListItemIcon>
@@ -268,7 +266,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
       <Menu
         anchorEl={anchorEl}
         open={showTagMenu}
-        onClose={() => {setShowTagMenu(false); setOpenMenu(false)}}
+        onClose={() => setShowTagMenu(false)}
         TransitionComponent={Fade}
         PaperProps={{
           elevation: 3,
@@ -279,7 +277,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
         }}
       >
         {tags.map((tag) => (
-          <MenuItem key={tag.id} onClick={() => handleSelectTag(tag.id)}>
+          <MenuItem key={tag.id} onClick={(event) => handleSelectTag(event, tag.id)}>
             <ListItemIcon>
               <CollectionsIcon fontSize="small" color="primary" />
             </ListItemIcon>
@@ -287,7 +285,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
           </MenuItem>
         ))}
         <Divider />
-        <MenuItem onClick={handleCreateNewCollection}>
+        <MenuItem onClick={(event) => handleCreateNewCollection(event)}>
           <ListItemIcon>
             <AddCircleIcon fontSize="small" color="primary" />
           </ListItemIcon>
