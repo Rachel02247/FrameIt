@@ -34,7 +34,6 @@ namespace FrameItAPI.Services.services
                 throw new Exception("Bucket name is not configured.");
             }
 
-            string fileKey = $"{Guid.NewGuid()}_{file.FileName}";
 
             try
             {
@@ -48,10 +47,11 @@ namespace FrameItAPI.Services.services
                 };
 
                 Console.WriteLine("File upload request created.");
-                Console.WriteLine($"File Key: {fileKey}");
+                
+                
 
                 Console.WriteLine($"Uploading file: Bucket={putRequest.BucketName}, Key={putRequest.Key}, ContentType={putRequest.ContentType}");
-
+                Console.WriteLine($"Fillllllllllllllllllle size: {putRequest.Key} bytes");
                 Console.WriteLine("📤 Trying to upload file to S3...");
                 await _s3Client.PutObjectAsync(putRequest);
                 Console.WriteLine("✅ Upload successful!");
@@ -61,8 +61,7 @@ namespace FrameItAPI.Services.services
                 throw new Exception($"Error uploading file to S3: {ex.Message}");
             }
 
-            file.S3Key = fileKey;
-            file.S3Url = $"https://{_bucketName}.s3.amazonaws.com/{fileKey}"; 
+           // file.S3Url = $"https://{_bucketName}.s3.amazonaws.com/{fileKey}"; 
             _context.Files.Add(file);
             await _context.SaveChangesAsync();
 
