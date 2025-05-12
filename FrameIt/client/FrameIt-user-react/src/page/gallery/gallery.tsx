@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 
@@ -20,7 +21,6 @@ import {
 } from "@mui/material"
 import HomeIcon from "@mui/icons-material/Home"
 import ChevronRightIcon from "@mui/icons-material/ChevronRight"
-import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder"
 import FolderItem from "./folderItem"
 import FileItem from "./fileItem"
 import Search from "./search"
@@ -29,15 +29,11 @@ import type { Folder, MyFile } from "../../types"
 import CreateFolder from "../../hooks/createFolder"
 import ImagePreviewModal from "../../hooks/imagePreviewModal"
 import { deleteFolder, fetchDataByUserIdAndFolderId, fetchFolderByCurrentFolder, fetchFoldersBreadcrumbs, fetchFoldersByUserId } from "../../services/folderService"
-import { deleteFile, fetchFilesByUserId } from "../../services/filesService"
+import { deleteFile } from "../../services/filesService"
 
-type CreateFolderProps = {
-  folderId: string;
-  fetchData: (_folderId: string) => void;
-  onClose: () => void; // Added onClose prop
-};
 
-export default function Gallery() {
+const Gallery = () => {
+
   const [files, setFiles] = useState<MyFile[]>([])
   const [folders, setFolders] = useState<Folder[]>([])
   const [breadcrumb, setBreadcrumb] = useState<{ id: string; name: string }[]>([])
@@ -98,244 +94,245 @@ export default function Gallery() {
         fetchData(currentFolder)
 
       } catch (error) {
-        console.error("Error deleting folder:", error)
-        setError("Failed to delete folder. Please try again.")
+        console.error(`Error deleting ${what}:`, error)
+        setError(`Failed to delete ${what}. Please try again.`)
       }
     }
+  }
 
-    
-    const handleOpenPreview = (fileId: string) => {
-      const index = files.findIndex((file) => file.id === fileId)
-      if (index !== -1) {
-        setSelectedFileIndex(index)
-      }
+  const handleOpenPreview = (fileId: string) => {
+    const index = files.findIndex((file) => file.id === fileId)
+    if (index !== -1) {
+      setSelectedFileIndex(index)
     }
+  }
 
-    const handleClosePreview = () => {
-      setSelectedFileIndex(null)
-    }
+  const handleClosePreview = () => {
+    setSelectedFileIndex(null)
+  }
 
-    const handleNext = () => {
-      setSelectedFileIndex((prevIndex) =>
-        prevIndex !== null && prevIndex < files.length - 1 ? prevIndex + 1 : prevIndex
-      )
-    }
+  const handleNext = () => {
+    setSelectedFileIndex((prevIndex) =>
+      prevIndex !== null && prevIndex < files.length - 1 ? prevIndex + 1 : prevIndex
+    )
+  }
 
-    const handlePrev = () => {
-      setSelectedFileIndex((prevIndex) => (prevIndex !== null && prevIndex > 0 ? prevIndex - 1 : prevIndex))
-    }
+  const handlePrev = () => {
+    setSelectedFileIndex((prevIndex) => (prevIndex !== null && prevIndex > 0 ? prevIndex - 1 : prevIndex))
+  }
 
-    const filteredFolders = folders.filter((folder) => folder.name.toLowerCase().includes(searchTerm.toLowerCase()))
-    const filteredFiles = files.filter((file) => file.fileName.toLowerCase().includes(searchTerm.toLowerCase()))
+  const filteredFolders = folders.filter((folder) => folder.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  const filteredFiles = files.filter((file) => file.fileName.toLowerCase().includes(searchTerm.toLowerCase()))
 
-    const getColumnCount = () => {
-      if (isMobile) return 2
-      if (isMedium) return 3
-      return 4
-    }
+  const getColumnCount = () => {
+    if (isMobile) return 2
+    if (isMedium) return 3
+    return 4
+  }
 
-    const handleCreateFolderOpen = () => {
-      setOpenCreateFolder(true)
-    }
+  const handleCreateFolderOpen = () => {
+    setOpenCreateFolder(true)
+  }
 
-    const handleCreateFolderClose = () => {
-      setOpenCreateFolder(false)
-    }
+  const handleCreateFolderClose = () => {
+    setOpenCreateFolder(false)
+  }
 
-    return (
-      <Container
+  return (
+    <Container
+      sx={{
+        width: "1000px",
+        maxWidth: "95%",
+        top: 20,
+        right: 0,
+        position: "relative",
+      }}
+    >
+      <Paper
+        elevation={3}
         sx={{
-          width: "1000px",
-          maxWidth: "95%",
-          top: 20,
-          right: 0,
+          padding: { xs: 2, sm: 3, md: 4 },
+          borderRadius: 3,
+          backgroundColor: theme.palette.background.default,
+          minHeight: "80vh",
+          mt: 4,
+          mb: 4,
           position: "relative",
+          overflow: "hidden",
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: "4px",
+            background: "linear-gradient(90deg, #1976d2, #42a5f5)",
+          },
         }}
       >
-        <Paper
-          elevation={3}
+        <Typography
+          variant="h4"
+          gutterBottom
           sx={{
-            padding: { xs: 2, sm: 3, md: 4 },
-            borderRadius: 3,
-            backgroundColor: theme.palette.background.default,
-            minHeight: "80vh",
-            mt: 4,
-            mb: 4,
-            position: "relative",
-            overflow: "hidden",
-            "&::before": {
-              content: '""',
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              height: "4px",
-              background: "linear-gradient(90deg, #1976d2, #42a5f5)",
-            },
+            fontWeight: "bold",
+            color: "#333",
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
           }}
         >
-          <Typography
-            variant="h4"
-            gutterBottom
-            sx={{
-              fontWeight: "bold",
-              color: "#333",
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-            }}
-          >
-            My Gallery
-          </Typography>
+          My Gallery
+        </Typography>
 
-          <Search searchTerm={searchTerm} onSearch={setSearchTerm} />
+        <Search searchTerm={searchTerm} onSearch={setSearchTerm} />
 
-          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
-            <Breadcrumbs separator={<ChevronRightIcon fontSize="small" />} aria-label="breadcrumb">
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
+          <Breadcrumbs separator={<ChevronRightIcon fontSize="small" />} aria-label="breadcrumb">
+            <Link
+              color={currentFolder === "0" ? "primary" : "inherit"}
+              onClick={() => setCurrentFolder("0")}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+                textDecoration: "none",
+                "&:hover": {
+                  textDecoration: "underline",
+                },
+              }}
+            >
+              <HomeIcon sx={{ mr: 0.5 }} fontSize="small" />
+              Gallery
+            </Link>
+            {breadcrumb.map((folder) => (
               <Link
-                color={currentFolder === "0" ? "primary" : "inherit"}
-                onClick={() => setCurrentFolder("0")}
+                key={folder.id}
+                onClick={() => setCurrentFolder(folder.id)}
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
                   cursor: "pointer",
                   textDecoration: "none",
                   "&:hover": {
                     textDecoration: "underline",
                   },
                 }}
+                color="inherit"
               >
-                <HomeIcon sx={{ mr: 0.5 }} fontSize="small" />
-                Gallery
+                {folder.name}
               </Link>
-              {breadcrumb.map((folder) => (
-                <Link
-                  key={folder.id}
-                  onClick={() => setCurrentFolder(folder.id)}
-                  sx={{
-                    cursor: "pointer",
-                    textDecoration: "none",
-                    "&:hover": {
-                      textDecoration: "underline",
-                    },
-                  }}
-                  color="inherit"
-                >
-                  {folder.name}
-                </Link>
-              ))}
-            </Breadcrumbs>
+            ))}
+          </Breadcrumbs>
 
 
-          </Box>
+        </Box>
 
-          {error && (
-            <Alert severity="error" sx={{ mb: 3 }}>
-              {error}
-            </Alert>
-          )}
+        {error && (
+          <Alert severity="error" sx={{ mb: 3 }}>
+            {error}
+          </Alert>
+        )}
 
-          {loading ? (
-            <LoadingIndicator />
-          ) : (
-            <>
-              {filteredFolders.length === 0 && filteredFiles.length === 0 ? (
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    py: 8,
-                  }}
-                >
-                  <Typography variant="h6" color="text.secondary" gutterBottom>
-                    {searchTerm ? "No results found" : "This folder is empty"}
+        {loading ? (
+          <LoadingIndicator />
+        ) : (
+          <>
+            {filteredFolders.length === 0 && filteredFiles.length === 0 ? (
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  py: 8,
+                }}
+              >
+                <Typography variant="h6" color="text.secondary" gutterBottom>
+                  {searchTerm ? "No results found" : "This folder is empty"}
+                </Typography>
+                {searchTerm && (
+                  <Typography variant="body2" color="text.secondary">
+                    Try a different search term or browse through folders
                   </Typography>
-                  {searchTerm && (
-                    <Typography variant="body2" color="text.secondary">
-                      Try a different search term or browse through folders
-                    </Typography>
+                )}
+                {!searchTerm && (
+                  <Typography variant="body2" color="text.secondary">
+                    Create a new folder or upload files to get started
+                  </Typography>
+                )}
+              </Box>
+            ) : (
+              <Fade in={!loading}>
+                <Box>
+                  {filteredFolders.length > 0 && (
+                    <>
+                      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                        <Typography variant="h6" component="h2">
+                          Folders
+                        </Typography>
+                        <Chip label={filteredFolders.length} size="small" sx={{ ml: 1 }} color="primary" />
+                      </Box>
+
+                      <ImageList variant="standard" cols={getColumnCount()} gap={16} sx={{ mb: 4 }}>
+                        {filteredFolders.map((folder) => (
+                          <ImageListItem key={folder.id} component="div">
+                            <FolderItem
+                              folder={folder}
+                              onClick={() => setCurrentFolder(folder.id)}
+                              onDelete={() => handleDelete(folder.id, "folder")}
+                            />
+                          </ImageListItem>
+                        ))}
+                      </ImageList>
+                    </>
                   )}
-                  {!searchTerm && (
-                    <Typography variant="body2" color="text.secondary">
-                      Create a new folder or upload files to get started
-                    </Typography>
+
+                  {filteredFiles.length > 0 && (
+                    <>
+                      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                        <Typography variant="h6" component="h2">
+                          Files
+                        </Typography>
+                        <Chip label={filteredFiles.length} size="small" sx={{ ml: 1 }} color="primary" />
+                      </Box>
+
+                      <ImageList variant="standard" cols={getColumnCount()} gap={16}>
+                        {filteredFiles.map((file) => (
+                          <ImageListItem key={file.id} component="div">
+                            <FileItem
+                              file={file}
+                              onDelete={() => handleDelete(file.id, 'file')}
+                              onOpenPreview={handleOpenPreview}
+                            />
+                          </ImageListItem>
+                        ))}
+                      </ImageList>
+                    </>
                   )}
                 </Box>
-              ) : (
-                <Fade in={!loading}>
-                  <Box>
-                    {filteredFolders.length > 0 && (
-                      <>
-                        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                          <Typography variant="h6" component="h2">
-                            Folders
-                          </Typography>
-                          <Chip label={filteredFolders.length} size="small" sx={{ ml: 1 }} color="primary" />
-                        </Box>
-
-                        <ImageList variant="standard" cols={getColumnCount()} gap={16} sx={{ mb: 4 }}>
-                          {filteredFolders.map((folder) => (
-                            <ImageListItem key={folder.id} component="div">
-                              <FolderItem
-                                folder={folder}
-                                onClick={() => setCurrentFolder(folder.id)}
-                                onDelete={() => handleDelete(folder.id, "folder")}
-                              />
-                            </ImageListItem>
-                          ))}
-                        </ImageList>
-                      </>
-                    )}
-
-                    {filteredFiles.length > 0 && (
-                      <>
-                        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                          <Typography variant="h6" component="h2">
-                            Files
-                          </Typography>
-                          <Chip label={filteredFiles.length} size="small" sx={{ ml: 1 }} color="primary" />
-                        </Box>
-
-                        <ImageList variant="standard" cols={getColumnCount()} gap={16}>
-                          {filteredFiles.map((file) => (
-                            <ImageListItem key={file.id} component="div">
-                              <FileItem
-                                file={file}
-                                onDelete={() => handleDelete(file.id, 'file')}
-                                onOpenPreview={handleOpenPreview}
-                              />
-                            </ImageListItem>
-                          ))}
-                        </ImageList>
-                      </>
-                    )}
-                  </Box>
-                </Fade>
-              )}
-            </>
-          )}
+              </Fade>
+            )}
+          </>
+        )}
 
 
-          <CreateFolder
-            folderId={currentFolder ?? '0'}
-            fetchData={fetchData}
+        <CreateFolder
+          folderId={currentFolder ?? '0'}
+          fetchData={fetchData}
+        />
+
+
+        {selectedFileIndex !== null && (
+          <ImagePreviewModal
+            file={files[selectedFileIndex]}
+            onClose={handleClosePreview}
+            onNext={handleNext}
+            onPrev={handlePrev}
+            hasNext={selectedFileIndex < files.length - 1}
+            hasPrev={selectedFileIndex > 0}
           />
-
-
-          {selectedFileIndex !== null && (
-            <ImagePreviewModal
-              file={files[selectedFileIndex]}
-              onClose={handleClosePreview}
-              onNext={handleNext}
-              onPrev={handlePrev}
-              hasNext={selectedFileIndex < files.length - 1}
-              hasPrev={selectedFileIndex > 0}
-            />
-          )}
-        </Paper>
-      </Container>
-    )
-  }
+        )}
+      </Paper>
+    </Container>
+  )
 }
+
+export default Gallery
