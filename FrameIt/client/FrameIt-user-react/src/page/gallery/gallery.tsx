@@ -123,9 +123,10 @@ export default function Gallery() {
   return (
     <Container
       sx={{
-        maxWidth: "1200px",
-        width: "95%",
-        mx: "auto",
+        width: "1000px",
+        maxWidth: "95%",
+        top: 20,
+        right: 0,
         position: "relative",
       }}
     >

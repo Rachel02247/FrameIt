@@ -2,12 +2,9 @@
 /* eslint-disable react-refresh/only-export-components */
 import React from 'react';
 import { Box, Container, Typography, Link } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import './homePage/style.css';
 
 export default () => {
-  //const theme = useTheme();
-
   return (
     <Box
       className="footer"
@@ -16,11 +13,11 @@ export default () => {
         width: '100%',
         left: 0,
         height: 60,
-        position: 'relative',
-        p: 6,
-        // mb: 10,
-        bottom: 0,
-      //  backgroundColor: theme.palette.background.default, 
+        position: 'fixed', // Changed to fixed
+        bottom: 0, // Ensure it sticks to the bottom
+        p: 2,
+        backgroundColor: 'rgba(255, 255, 255, 0.9)', // Added a background color for visibility
+        boxShadow: '0 -2px 5px rgba(0, 0, 0, 0.1)', // Added shadow for better separation
       }}
       id="contact"
     >
