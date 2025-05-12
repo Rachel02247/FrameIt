@@ -56,7 +56,10 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
   const [showTagMenu, setShowTagMenu] = useState(false)
   const [openCreateCollection, setOpenCreateCollection] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+
+
   const [imageError, setImageError] = useState(false)
+
   const [urlTrick,] = useState('');
 
   const dispatch = useDispatch<AppDispatch>()
@@ -66,13 +69,21 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
   const isVideo = file.fileType.toLowerCase() === "mp4" || file.fileType.toLowerCase() === "mov"
 
   useEffect(() => {
+
     const loadFileUrl = async () => {
+
 
       const getFilePreviewUrl = await getImageUrl(file.s3Key);
 
       setIsLoading(true)
+
       try {
-        setPresignedUrl(getFilePreviewUrl);
+
+        const getFilePreviewUrl = await getImageUrl(file.s3Key);
+        console.log("getFilePreviewUrl", getFilePreviewUrl)
+        setPresignedUrl( getFilePreviewUrl);
+
+
       } catch (error) {
         console.error("Error loading file URL:", error)
         setImageError(true)
