@@ -53,7 +53,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload }) => {
     const [selectedFolder, setSelectedFolder] = useState<string>("");
     const [folders, setFolders] = useState<Folder[]>([]);
     const [subFolders, setSubFolders] = useState<Folder[]>([]);
-    const userId = sessionStorage.getItem("userId") || "0";
+    const userId = sessionStorage.getItem("id") || "0";
 
     useEffect(() => {
         const fetchData = async () => {
