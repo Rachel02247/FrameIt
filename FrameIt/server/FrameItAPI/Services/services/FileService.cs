@@ -88,12 +88,12 @@ namespace FrameItAPI.Services.services
             return await CreateFile(file, resizedStream);
         }
 
-        public async Task<string> Download(string fileName)
+        public async Task<string> Download(string s3Key)
         {
             var request = new GetPreSignedUrlRequest
             {
                 BucketName = _bucketName,
-                Key = fileName,
+                Key = s3Key,
                 Verb = HttpVerb.GET,
                 Expires = DateTime.UtcNow.AddDays(300),
             };
