@@ -59,6 +59,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload }) => {
         const fetchData = async () => {
             try {
                 const res = await fetchFoldersByUserId(+userId);
+                console.log("Fetched folders:", res);
                 setFolders(res);
             } catch (error) {
                 console.error("Error fetching folders:", error);
@@ -73,7 +74,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload }) => {
 
             try {
                 const res = await fetchFilesByUserIdAndFolderId(+selectedFolder, +userId );
-                setSubFolders(res.data.folders); 
+                console.log("Fetched subfolders:", res);
+                setSubFolders(res.folders); 
             } catch (error) {
                 console.error("Error fetching subfolders:", error);
             }
