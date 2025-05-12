@@ -3,6 +3,7 @@ using Amazon.S3;
 using FrameItAPI.Services.interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.AspNetCore.Mvc;
 
 public static class FileEndpoints
 {
@@ -21,7 +22,7 @@ public static class FileEndpoints
         }).RequireAuthorization();
 
 
-        routes.MapPost("/files", async (IFileService fileService, HttpContext httpContext) =>
+        routes.MapPost("/files", async ([FromBody] IFileService fileService, HttpContext httpContext) =>
         {
             try
             {

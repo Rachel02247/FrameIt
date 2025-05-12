@@ -6,7 +6,7 @@ const API_URL_BASE = `${import.meta.env.VITE_API_URL}/files`;
 
 export const uploadFiles = async (formData: FormData) => {
   try {
-    const response = await axios.post(`${API_URL_BASE}/upload`, formData, {
+    const response = await axios.post(`${API_URL_BASE}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

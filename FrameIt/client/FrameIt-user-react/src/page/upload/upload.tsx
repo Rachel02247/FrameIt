@@ -28,7 +28,7 @@ const Upload = () => {
       try {
 
         const response =  uploadFiles(formData);
-
+        
         console.log("File uploaded successfully:", response);
       } catch (error) {
         if (axios.isAxiosError(error)) {
