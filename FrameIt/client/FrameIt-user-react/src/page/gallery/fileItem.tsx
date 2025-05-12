@@ -27,7 +27,7 @@ import CreateCollection from "../../hooks/createCollection"
 import { downloadByUrl, downloadFile } from "../../hooks/download"
 import type { FileItemProps } from "../../types"
 import { useLanguage } from "../../context/LanguageContext"
-import { getFileDownloadUrl } from "../../services/filesService"
+import { getFileDownloadUrl } from "../../component/global-states/fileSlice"
 
 // Function to get file preview URL from server
 
@@ -72,17 +72,12 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
 
     const loadFileUrl = async () => {
 
-
-
       setIsLoading(true)
 
       try {
 
-        
-        const getFilePreviewUrl = await getFileDownloadUrl(file.s3Key);
-
-        setPresignedUrl( getFilePreviewUrl);
-
+        const result = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap();
+        setPresignedUrl(result);
 
       } catch (error) {
         
@@ -94,7 +89,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
       }
     }
     loadFileUrl()
-  }, [file.s3Key])
+  }, [file.s3Key, dispatch])
 
   useEffect(() => {
     if (userId) {
@@ -103,9 +98,9 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
   }, [userId, dispatch])
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation()
-    setAnchorEl(event.currentTarget)
-  }
+    event.stopPropagation(); 
+    setAnchorEl(event.currentTarget);
+  };
 
   const handleCloseMenu = () => {
     setAnchorEl(null);
@@ -118,7 +113,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
   };
 
   const handleSelectTag = async (event: React.MouseEvent, tagId: number) => {
-    event.stopPropagation();
+    event.stopPropagation(); 
     setShowTagMenu(false);
     dispatch(addFileToCollection({ fileId: file.id, tagId }));
   };
@@ -130,19 +125,22 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
   };
 
   const handleFileClick = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    onOpenPreview(file.id)
-  }
+    if ((e.target as HTMLElement).closest(".file-actions")) {
+      e.stopPropagation();
+      return;
+    }
+    onOpenPreview(file.id);
+  };
 
   const handleDownload = (e: React.MouseEvent) => {
-    e.stopPropagation()
+    e.stopPropagation();
     downloadFile(file.id, file.fileName)
     downloadByUrl(urlTrick, file.fileName);
     handleCloseMenu()
   }
 
   const handleDeleteFile = (e: React.MouseEvent) => {
-    e.stopPropagation()
+    e.stopPropagation(); 
     onDelete()
     handleCloseMenu()
   }
