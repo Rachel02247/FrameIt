@@ -60,10 +60,10 @@ export default function Gallery() {
       const FolderData = await fetchFoldersByUserId(parseInt(userId))
       setFolders(FolderData)
 
-      console.log(FolderData)
+      console.log('folders' +FolderData)
       const FilesData = await fetchFilesByUserId(parseInt(userId))
       setFiles(FilesData)
-      console.log(FilesData)
+      console.log('files' + FilesData)
 
       const breadcrumbRes = await fetchFoldersBreadcrumbs(folderId ?? "0")
       setBreadcrumb(breadcrumbRes.data)
