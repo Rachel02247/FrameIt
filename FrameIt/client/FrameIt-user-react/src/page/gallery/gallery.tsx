@@ -42,7 +42,8 @@ const Gallery = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [error, setError] = useState<string | null>(null)
   const [selectedFileIndex, setSelectedFileIndex] = useState<number | null>(null)
-  const [openCreateFolder, setOpenCreateFolder] = useState<boolean>(false) // Added state for CreateFolder dialog
+  const [openCreateFolder, setOpenCreateFolder] = useState<boolean>(false)
+
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
   const isMedium = useMediaQuery(theme.breakpoints.down("md"))
@@ -56,6 +57,7 @@ const Gallery = () => {
     try {
 
       const data = await fetchDataByUserIdAndFolderId(folderId ? parseInt(folderId) : 0, parseInt(userId))
+
       setFiles(data.files);
       setFolders(data.folders);
       // const FolderData = await fetchFoldersByUserId(parseInt(userId))

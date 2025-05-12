@@ -175,3 +175,4 @@ C:\Users\USER\Documents\רחלי\תכנות ו\practikum\FrameIt\server\FrameItA
 C:\Users\USER\Documents\רחלי\תכנות ו\practikum\FrameIt\server\FrameItAPI\obj\Debug\net9.0\FrameItAPI.genruntimeconfig.cache
 C:\Users\USER\Documents\רחלי\תכנות ו\practikum\FrameIt\server\FrameItAPI\obj\Debug\net9.0\ref\FrameItAPI.dll
 C:\Users\USER\Documents\רחלי\תכנות ו\practikum\FrameIt\server\FrameItAPI\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
+C:\Users\USER\Documents\רחלי\תכנות ו\practikum\FrameIt\server\FrameItAPI\bin\Debug\net9.0\SixLabors.ImageSharp.dll

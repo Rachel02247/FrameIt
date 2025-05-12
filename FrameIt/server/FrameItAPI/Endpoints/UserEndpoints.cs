@@ -1,6 +1,7 @@
 ﻿using FrameItAPI.Endpoints;
 using FrameItAPI.Entities;
 using FrameItAPI.Services.interfaces;
+using FrameItAPI.Services.services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
@@ -13,7 +14,7 @@ public static class UserEndpoints
             var users = await userService.GetAllUsers();
             return Results.Ok(users);
         });
-            //.RequireAuthorization("all");
+        //.RequireAuthorization("all");
 
         routes.MapGet("/users/{id}", async (IUserService userService, int id) =>
         {
@@ -26,11 +27,11 @@ public static class UserEndpoints
             var createdUser = await userService.CreateUser(user);
             return Results.Created($"/users/{createdUser.Id}", createdUser);
         });
-            //.RequireAuthorization("EditorOrAdmin");
+        //.RequireAuthorization("EditorOrAdmin");
 
         routes.MapPut("/users/{id}", async (IUserService userService, int id, User user) =>
         {
-            user.Id = id; 
+            user.Id = id;
             var updatedUser = await userService.UpdateUser(user);
             return Results.Ok(updatedUser);
         }).RequireAuthorization("EditorOrAdmin");
@@ -40,5 +41,8 @@ public static class UserEndpoints
             var result = await userService.DeleteUser(id);
             return result ? Results.NoContent() : Results.NotFound();
         }).RequireAuthorization("EditorOrAdmin");
+
+    
+
     }
 }
