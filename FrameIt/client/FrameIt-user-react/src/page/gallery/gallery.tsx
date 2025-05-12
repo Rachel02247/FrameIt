@@ -51,7 +51,7 @@ export default function Gallery() {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
   const isMedium = useMediaQuery(theme.breakpoints.down("md"))
 
-  const userId = sessionStorage.getItem("id") || "0" // Ensure userId is a string
+  const userId = sessionStorage.getItem("id") || "0" 
 
   const fetchData = async (folderId: string | null = "0") => {
     setLoading(true)
@@ -63,10 +63,11 @@ export default function Gallery() {
     
       const FilesData = await fetchFilesByUserId(parseInt(userId))
       setFiles(FilesData.length == 0 ?  [{id: '0', fileName: "try", fileType: 'image/png', size: 5000,  s3Key: 'a', isDeleted: false, ownerId: '12', folderId: '2'}] as MyFile[] : FilesData)
-      console.log(FilesData)
+      console.log(files)
 
       const breadcrumbRes = await fetchFoldersBreadcrumbs(folderId ?? "0")
-      setBreadcrumb(breadcrumbRes.data)
+      console.log(breadcrumbRes)
+      setBreadcrumb(breadcrumbRes)
     } catch (error) {
       console.error("Error fetching data:", error)
       setError("Failed to load gallery content. Please try again later.")
