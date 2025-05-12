@@ -60,7 +60,8 @@ export default function Gallery() {
     try {
 
       const data = await fetchDataByUserIdAndFolderId(folderId ? parseInt(folderId) : 0, parseInt(userId))
-
+      setFiles(data.files);
+      setFolders(data.folders);
       // const FolderData = await fetchFoldersByUserId(parseInt(userId))
       // setFolders(FolderData.filter((curfolder: Folder) => curfolder.parentFolderId === folderId || (!curfolder.parentFolderId && folderId === "0")))
 
