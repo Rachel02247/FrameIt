@@ -108,7 +108,7 @@ public static class FileEndpoints
                 var fileBytes = await response.Content.ReadAsByteArrayAsync();
                 var contentType = response.Content.Headers.ContentType?.ToString() ?? "application/octet-stream";
 
-                return Results.File(fileBytes, contentType, fileName);
+                return Results.File(fileBytes, contentType, s3Key);
             }
             catch (Exception ex)
             {
