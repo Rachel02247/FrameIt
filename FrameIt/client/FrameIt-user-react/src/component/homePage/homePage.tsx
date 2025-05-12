@@ -9,6 +9,7 @@ import ViewGallery from './viewGallery';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import PopupNotice from '../../hooks/popup/popupNotice';
+import CustomersSay from './customersSay';
 
 const HomePage = () => {
     const { language } = useLanguage();
@@ -53,6 +54,7 @@ const HomePage = () => {
             <ViewGallery />
             <Hero />
             <Features />
+            <CustomersSay />
             <PhotoGrid />
         </div>
     );
