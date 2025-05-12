@@ -7,6 +7,9 @@ using Amazon.S3.Model;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 namespace FrameItAPI.Services.services
 {
@@ -38,7 +41,7 @@ namespace FrameItAPI.Services.services
                 var putRequest = new PutObjectRequest
                 {
                     BucketName = _bucketName,
-                    Key = fileKey,
+                    Key = file.S3Key,
                     InputStream = fileStream,
                     ContentType = file.FileType,
                     AutoCloseStream = true
@@ -54,15 +57,32 @@ namespace FrameItAPI.Services.services
                 throw new Exception($"Error uploading file to S3: {ex.Message}");
             }
 
-            // שמירת הנתונים בבסיס הנתונים
             file.S3Key = fileKey;
-            file.S3Url = $"https://{_bucketName}.s3.amazonaws.com/{fileKey}"; // URL תקין
+            file.S3Url = $"https://{_bucketName}.s3.amazonaws.com/{fileKey}"; 
             _context.Files.Add(file);
             await _context.SaveChangesAsync();
 
             return file;
         }
 
+        public async Task<Entities.File> CreateImageFileWithResize(Entities.File file, Stream originalImageStream)
+        {
+            using var image = await SixLabors.ImageSharp.Image.LoadAsync(originalImageStream);
+            image.Mutate(x => x.Resize(new ResizeOptions
+            {
+                Mode = ResizeMode.Max,
+                Size = new Size(1024, 1024)
+            }));
+
+            using var resizedStream = new MemoryStream();
+            await image.SaveAsJpegAsync(resizedStream);
+            resizedStream.Seek(0, SeekOrigin.Begin);
+
+            file.FileType = "image/jpeg";
+            file.Size = resizedStream.Length;
+
+            return await CreateFile(file, resizedStream);
+        }
 
         public async Task<string> Download(string fileName)
         {
@@ -76,23 +96,6 @@ namespace FrameItAPI.Services.services
 
             return _s3Client.GetPreSignedURL(request);
         }
-
-        //public async Task<Stream> DownloadFile(int id)
-        //{
-        //    var file = await _context.Files.FindAsync(id);
-        //    if (file == null || file.IsDeleted) return null;
-
-        //    var request = new GetObjectRequest
-        //    {
-        //        BucketName = _bucketName,
-        //        Key = file.S3Key
-        //    };
-
-        //    var response = await _s3Client.GetObjectAsync(request);
-
-        //    return response.ResponseStream; // זהו ה-Stream שחוזר מהבקשה
-        //}
-
 
         public async Task<string> GetPresignedUrl(string s3Key)
         {

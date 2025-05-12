@@ -13,11 +13,11 @@ export default () => {
         width: '100%',
         left: 0,
         height: 60,
-        position: 'fixed', // Changed to fixed
-        bottom: 0, // Ensure it sticks to the bottom
+        position: 'relative', // Changed to relative
+        mt: 'auto', // Pushes the footer to the bottom of the content
         p: 2,
-        backgroundColor: 'rgba(255, 255, 255, 0.9)', // Added a background color for visibility
-        boxShadow: '0 -2px 5px rgba(0, 0, 0, 0.1)', // Added shadow for better separation
+        backgroundColor: 'rgba(255, 255, 255, 0.9)', // Background color for visibility
+        boxShadow: '0 -2px 5px rgba(0, 0, 0, 0.1)', // Shadow for separation
       }}
       id="contact"
     >

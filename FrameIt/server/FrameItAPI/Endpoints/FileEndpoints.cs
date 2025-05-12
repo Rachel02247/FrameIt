@@ -4,6 +4,7 @@ using FrameItAPI.Services.interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.AspNetCore.Mvc;
+using FrameItAPI.Entities.mapping;
 
 public static class FileEndpoints
 {
@@ -22,42 +23,53 @@ public static class FileEndpoints
         }).RequireAuthorization();
 
 
-        routes.MapPost("/files", async ([FromBody] IFileService fileService, HttpContext httpContext) =>
+        routes.MapPost("/files", async (HttpContext httpContext, IFileService fileService) =>
         {
             try
             {
                 var form = await httpContext.Request.ReadFormAsync();
-                var file = form.Files.GetFile("file"); // קבלת הקובץ מהבקשה
+                var file = form.Files.GetFile("file");
 
                 if (file == null)
                     return Results.BadRequest("No file uploaded.");
 
-                if (file.Length > 5 * 1024 * 1024)
-                    return Results.BadRequest("The file size exceeds the maximum limit of 5MB.");
+                var fileType = file.ContentType.ToLower();
 
-                // יצירת אובייקט FrameItAPI.Entities.File מהנתונים שהתקבלו
                 var newFile = new FrameItAPI.Entities.File
                 {
                     FileName = file.FileName,
-                    FileType = file.ContentType,
                     FolderId = int.TryParse(form["FolderId"], out var folderId) ? folderId : (int?)null,
                     IsDeleted = false,
-                    Size = file.Length,
-                    S3Key = $"{form["FolderId"]}/{file.FileName}", // יצירת נתיב לקובץ
-                    OwnerId = int.Parse(form["OwnerId"])
+                    S3Key = $"{form["FolderId"]}/{file.FileName}",
+                    OwnerId = int.Parse(form["OwnerId"]),
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
                 };
 
-                using var fileStream = file.OpenReadStream();
-                var createdFile = await fileService.CreateFile(newFile, fileStream);
+                using var stream = file.OpenReadStream();
+
+                FrameItAPI.Entities.File createdFile;
+
+                if (fileType.StartsWith("image/"))
+                {
+                    createdFile = await fileService.CreateImageFileWithResize(newFile, stream);
+                }
+                else
+                {
+                    newFile.FileType = file.ContentType;
+                    newFile.Size = file.Length;
+                    createdFile = await fileService.CreateFile(newFile, stream);
+                }
 
                 return Results.Created($"/files/{createdFile.Id}", createdFile);
             }
             catch (Exception ex)
             {
-                // החזרת תשובה עם פרטי השגיאה
                 return Results.BadRequest(ex.Message);
             }
         });
+
+
 
 
 

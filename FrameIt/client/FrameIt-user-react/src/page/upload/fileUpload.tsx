@@ -85,13 +85,13 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload }) => {
     }, [selectedFolder, userId]);
 
     const onDrop = (acceptedFiles: File[]) => {
-        const newFiles: MyFile[] = acceptedFiles.map((file) => ({
-            id: crypto.randomUUID(),
-            fileName: file.name,
-            fileType: file.type,
-            size: file.size,
+        const newFiles: MyFile[] = acceptedFiles.map((curfile) => ({
+            file: curfile,
+            id: '',
+            fileName: curfile.name,
+            fileType: curfile.type,
+            size: curfile.size,
             s3Key: "",
-            file,
             isDeleted: false,
             folderId: selectedFolder,
             ownerId: userId,

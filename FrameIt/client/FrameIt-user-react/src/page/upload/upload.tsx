@@ -16,7 +16,7 @@ const Upload = () => {
     for (let i = 0; i < files.length; i++) {
 
       const file = files[i];
-      // formData.append("file", file.file);
+      formData.append("file", file.file ?? new Blob());
       formData.append("FileName", file.fileName);
       formData.append("FileType", file.fileType);
       formData.append("FolderId", folderId);
@@ -27,7 +27,7 @@ const Upload = () => {
 
       try {
 
-        const response =  uploadFiles(formData);
+        const response = await uploadFiles(formData);
         
         console.log("File uploaded successfully:", response);
       } catch (error) {
@@ -47,16 +47,17 @@ const Upload = () => {
       </Typography>
       <FileUpload
         onUpload={(selectedFiles, folderId) => {
-          const myFiles: MyFile[] = Array.from(selectedFiles).map((file) => ({
+          const myFiles: MyFile[] = Array.from(selectedFiles).map((curFile) => ({
+            file: curFile.file,
             id: crypto.randomUUID(),
-            fileName: file.fileName,
-            fileType: file.fileType,
-            size: file.size,
+            fileName: curFile.fileName,
+            fileType: curFile.fileType,
+            size: curFile.size,
             s3Key: "",
-            file,
             isDeleted: false,
             folderId: folderId,
             ownerId: user?.id ?? "0",
+          
           }));
           return handleUpload(myFiles, folderId);
         }}
