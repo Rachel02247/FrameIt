@@ -59,11 +59,11 @@ export default function Gallery() {
     try {
       const FolderData = await fetchFoldersByUserId(parseInt(userId))
       setFolders(FolderData)
-
-      console.log('folders' +FolderData)
+      console.log(FolderData)
+    
       const FilesData = await fetchFilesByUserId(parseInt(userId))
-      setFiles(FilesData || [{id: '0', fileName: "try", fileType: 'image/png', size: 5000,  s3Key: 'a', isDeleted: false, ownerId: '12', folderId: '2'}] as MyFile[])
-      console.log('files' + FilesData)
+      setFiles(FilesData.length == 0 ?  [{id: '0', fileName: "try", fileType: 'image/png', size: 5000,  s3Key: 'a', isDeleted: false, ownerId: '12', folderId: '2'}] as MyFile[] : FilesData)
+      console.log(FilesData)
 
       const breadcrumbRes = await fetchFoldersBreadcrumbs(folderId ?? "0")
       setBreadcrumb(breadcrumbRes.data)
