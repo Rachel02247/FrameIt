@@ -45,3 +45,13 @@ export const createFolder = async (folderData: { name: string; ownerId: number; 
     throw error;
   }
 };
+
+export const fetchFilesByUserId = async (userId: number) => {
+  try {
+    const response = await axios.get(`${API_URL_BASE}/myFiles/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching files by user ID:", error);
+    throw error;
+  }
+};

@@ -29,7 +29,7 @@ import type { Folder, MyFile } from "../../types"
 import CreateFolder from "../../hooks/createFolder"
 import ImagePreviewModal from "../../hooks/imagePreviewModal"
 import { fetchFolderByCurrentFolder, fetchFoldersBreadcrumbs } from "../../services/folderService"
-import { fetchFilesByUserId } from "../../services/filesService"
+import { fetchFilesByUserId } from "../../services/folderService"
 
 type CreateFolderProps = {
   folderId: string;
