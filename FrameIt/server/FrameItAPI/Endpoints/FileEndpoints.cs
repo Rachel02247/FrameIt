@@ -90,33 +90,48 @@ public static class FileEndpoints
 
         routes.MapGet("/files/{s3Key}/download", async (string s3Key, IFileService fileService) =>
         {
-            try
-            {
+           
                 Console.WriteLine($" in mapget download");
                 Console.WriteLine($" in mapget file name: {s3Key}");
                 var fileUrl = await fileService.Download(s3Key); // מקבל את ה-URL
                 Console.WriteLine($" in mapget file url after download: {fileUrl}");
                 Console.WriteLine($" ------------------------"); Console.WriteLine();
-                if (string.IsNullOrEmpty(fileUrl))
-                    return Results.NotFound("File not found.");
+                return fileUrl;
 
-                using var httpClient = new HttpClient();
-                var response = await httpClient.GetAsync(fileUrl);
-
-                if (!response.IsSuccessStatusCode)
-                    return Results.Problem("Failed to fetch file from S3.");
-
-                var fileBytes = await response.Content.ReadAsByteArrayAsync();
-                var contentType = response.Content.Headers.ContentType?.ToString() ?? "application/octet-stream";
-
-                return Results.File(fileBytes, contentType, s3Key);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-                return Results.Problem("An error occurred.");
-            }
+            
         });
+        //routes.MapGet("/files/{s3Key}/download", async (string s3Key, IFileService fileService) =>
+        //{
+        //    try
+        //    {
+        //        Console.WriteLine($" in mapget download");
+        //        Console.WriteLine($" in mapget file name: {s3Key}");
+        //        var fileUrl = await fileService.Download(s3Key); // מקבל את ה-URL
+        //        Console.WriteLine($" in mapget file url after download: {fileUrl}");
+        //        Console.WriteLine($" ------------------------"); Console.WriteLine();
+        //        return fileUrl;
+
+        //        if (string.IsNullOrEmpty(fileUrl))
+        //            return Results.NotFound("File not found.");
+
+        //        using var httpClient = new HttpClient();
+        //        var response = await httpClient.GetAsync(fileUrl);
+
+        //        if (!response.IsSuccessStatusCode)
+        //            return Results.Problem("Failed to fetch file from S3.");
+
+        //        var fileBytes = await response.Content.ReadAsByteArrayAsync();
+        //        var contentType = response.Content.Headers.ContentType?.ToString() ?? "application/octet-stream";
+
+        //        return Results.File(fileBytes, contentType, s3Key);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"Error: {ex.Message}");
+        //        return Results.Problem("An error occurred.");
+        //    }
+        //    return ;
+        //});
 
 
 
