@@ -38,7 +38,7 @@ function AIFeaturesDashboard() {
       title: "Image to Art",
       description: "Transform your photos into artistic styles",
       icon: <Brush sx={{ fontSize: 40, mb: 1 }} />,
-      path: "/myWorkspace/aIiFeatures/imageToArt",
+      path: "/myWorkspace/aiFeatures/imageToArt",
     },
   ]
 
