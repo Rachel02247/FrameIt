@@ -4,6 +4,7 @@ using FrameItAPI.Services.interfaces;
 using FrameItAPI.DataAccess;
 using FrameItAPI.Endpoints;
 using Org.BouncyCastle.Crypto.Generators;
+using Sprache;
 
 namespace FrameItAPI.Services.services
 {
@@ -96,6 +97,8 @@ namespace FrameItAPI.Services.services
 
             return roles.Length > 0 ? string.Join(",", roles) : user.Role;
         }
+
+  
     }
 }
 
