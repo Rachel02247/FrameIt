@@ -46,6 +46,10 @@ namespace FrameItAPI.Services.services
                     ContentType = file.FileType,
                     AutoCloseStream = true
                 };
+
+                Console.WriteLine("File upload request created.");
+                Console.WriteLine($"File Key: {fileKey}");
+
                 Console.WriteLine($"Uploading file: Bucket={putRequest.BucketName}, Key={putRequest.Key}, ContentType={putRequest.ContentType}");
 
                 Console.WriteLine("📤 Trying to upload file to S3...");
@@ -167,14 +171,7 @@ namespace FrameItAPI.Services.services
             return await _context.Files.Where(f => !f.IsDeleted).ToListAsync();
         }
 
-        //public async Task<FrameItAPI.Entities.File> CreateFile(FrameItAPI.Entities.File file)
-        //{
-
-        //    _context.Files.Add(file);
-        //    await _context.SaveChangesAsync();
-        //    return file;
-        //}
-
+       
 
         public async Task<FrameItAPI.Entities.File> UpdateFile(FrameItAPI.Entities.File file)
         {

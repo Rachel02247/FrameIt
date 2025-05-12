@@ -6,11 +6,17 @@ const API_URL_BASE = `${import.meta.env.VITE_API_URL}/files`;
 
 export const uploadFiles = async (formData: FormData) => {
   try {
+    console.log("in upload files service", formData);
+
+    
     const response = await axios.post(`${API_URL_BASE}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
+    console.log("response from upload files", response);
+    
+    
     return response.data;
   } catch (error) {
     console.error("Error uploading files:", error);

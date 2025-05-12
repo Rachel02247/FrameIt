@@ -8,9 +8,16 @@ import { MyFile } from "../../types";
 import { uploadFiles } from "../../services/filesService";
 
 const Upload = () => {
+  
+  console.log("in upload");
+  console.log("in upload");
+  
   const user = useSelector((state: RootState) => state.user.user);
 
   const handleUpload = async (files: MyFile[], folderId: string) => {
+    console.log("Uploading files:", files);
+    console.log("Folder ID:", folderId);
+    
     const formData = new FormData();
 
     for (let i = 0; i < files.length; i++) {
@@ -26,8 +33,10 @@ const Upload = () => {
       formData.append("OwnerId", user?.id ?? "0");
 
       try {
+        console.log("Uploading file:", file.fileName);
 
         const response = await uploadFiles(formData);
+        console.log("after upload", response);
         
         console.log("File uploaded successfully:", response);
       } catch (error) {

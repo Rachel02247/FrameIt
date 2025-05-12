@@ -40,18 +40,19 @@ public static class FileEndpoints
                     FileName = file.FileName,
                     FolderId = int.TryParse(form["FolderId"], out var folderId) ? folderId : (int?)null,
                     IsDeleted = false,
-                    S3Key = $"{form["FolderId"]}/{file.FileName}",
+                    S3Key = file.FileName + '_' + DateTime.Now,
                     OwnerId = int.Parse(form["OwnerId"]),
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 };
-
+                Console.WriteLine($" in mapost file name: {newFile.FileName}");
                 using var stream = file.OpenReadStream();
 
                 FrameItAPI.Entities.File createdFile;
 
                 if (fileType.StartsWith("image/"))
                 {
+                    Console.WriteLine($" in mapost before CreateImageFileWithResize file name: {newFile.FileName}");
                     createdFile = await fileService.CreateImageFileWithResize(newFile, stream);
                 }
                 else
