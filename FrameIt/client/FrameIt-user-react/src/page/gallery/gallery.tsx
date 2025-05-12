@@ -57,7 +57,7 @@ export default function Gallery() {
     setLoading(true)
     setError(null)
     try {
-      const data = await fetchFilesByUserId(+userId)
+      const data = await fetchFilesByUserId(parseInt(userId))
       console.log("Fetched data:", data)
       setFolders(data.folders)
       setFiles(data.files)
