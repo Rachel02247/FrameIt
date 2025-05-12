@@ -4,8 +4,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { getFileDownloadUrl } from '../services/filesService';
-import { getS3Url } from './aws';
-import { getImageUrl } from '../services/awsService';
 
 interface ImagePreviewModalProps {
   file: {
@@ -24,22 +22,14 @@ interface ImagePreviewModalProps {
 const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({ file, onClose, onNext, onPrev, hasNext, hasPrev }) => {
   const isVideo = file.fileType.toLowerCase() === 'mp4' || file.fileType.toLowerCase() === 'mov';
   const [presignedUrl, setPresignedUrl] = React.useState<string | null>(null);
-  const [s3ImgUrl, setS3ImgUrl] = React.useState<string | null>(null);
-  const [urlTrick, setUrlTrick] = React.useState<string>('');
 
   React.useEffect(() => {
 
     const loadFileUrl = async () => {
       try {
         const url = await getFileDownloadUrl(file.id);
-        const s3Url = await getS3Url(file.s3Key);
-        const trikUrl = await getImageUrl(file.s3Key);
-
-        console.log('trikUrl', trikUrl);
-
+        
         setPresignedUrl(url);
-        setS3ImgUrl(s3Url);
-        setUrlTrick(trikUrl);
 
       } catch (error) {
         console.error('Error loading file URL:', error);
@@ -70,9 +60,9 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({ file, onClose, on
         )}
 
         {isVideo ? (
-          <video controls src={urlTrick ?? s3ImgUrl ?? presignedUrl ?? "img/frameItLogo.png"} style={{ maxHeight: '80vh' }} />
+          <video controls src={presignedUrl ?? "img/frameItLogo.png"} style={{ maxHeight: '80vh' }} />
         ) : (
-          <img src={urlTrick ?? s3ImgUrl ?? presignedUrl ?? "img/frameItLogo.png"} alt={file.fileName} style={{ maxHeight: '80vh' }} />
+          <img src={ presignedUrl ?? "img/frameItLogo.png"} alt={file.fileName} style={{ maxHeight: '80vh' }} />
         )}
 
         {hasNext && (
