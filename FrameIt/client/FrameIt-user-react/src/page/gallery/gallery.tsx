@@ -302,7 +302,7 @@ export default function Gallery() {
           <CreateFolder
             folderId={currentFolder ?? '0'}
             fetchData={fetchData}
-            onClose={handleCreateFolderClose} // Passing onClose function to close the dialog
+            // onClose={handleCreateFolderClose} // Passing onClose function to close the dialog
           />
         )}
 
