@@ -84,7 +84,7 @@ public static class FileEndpoints
         {
             var result = await fileService.DeleteFile(id);
             return result ? Results.NoContent() : Results.NotFound();
-        }).RequireAuthorization("admin", "editor");
+        });//.RequireAuthorization("admin", "editor");
 
 
         routes.MapGet("/files/{fileName}/download", async (string fileName, IFileService fileService) =>
