@@ -22,7 +22,7 @@ export const fetchFoldersBreadcrumbs = async (folderId: string) => {
   }
 };
 
-export const fetchFilesByUserIdAndFolderId = async (folderId: number, userId: number) => {
+export const fetchDataByUserIdAndFolderId = async (folderId: number, userId: number) => {
   try {
     const response = await axios.get(`${API_URL_BASE}/${folderId}/contents/${userId}`);
     return response.data;
@@ -32,7 +32,7 @@ export const fetchFilesByUserIdAndFolderId = async (folderId: number, userId: nu
   }
 };
 
-export const createFolder = async (folderData: { name: string; ownerId: number; isDeleted: boolean }) => {
+export const createFolder = async (folderData: { name: string; ownerId: number; isDeleted: boolean, parentFolderId: string }) => {
   try {
     const response = await axios.post(API_URL_BASE, folderData, {
       headers: {
@@ -52,6 +52,16 @@ export const fetchFoldersByUserId = async (userId: number) => {
     return response.data;
   } catch (error) {
     console.error("Error fetching files by user ID:", error);
+    throw error;
+  }
+};
+
+export const deleteFolder = async (folderId: string) => {
+  try {
+    const response = await axios.delete(`${API_URL_BASE}/${folderId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting folder:", error);
     throw error;
   }
 };

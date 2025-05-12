@@ -39,3 +39,13 @@ export const fetchFilesByUserId = async (userId: number) => {
     throw error;
   }
 };
+
+export const deleteFile = async (fileId: string) => {
+  try {
+    const response = await axios.delete(`${API_URL_BASE}/${fileId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting file:", error);
+    throw error;
+  }
+};

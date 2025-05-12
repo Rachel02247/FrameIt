@@ -5,6 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { createFolder } from '../services/folderService';
 
 const CreateFolder = ({ folderId = '0', fetchData }: { folderId: string; fetchData: (_folderId: string) => void; }) => {
+ 
   const [folderName, setFolderName] = useState<string>('');
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const userId = sessionStorage.getItem('id');
@@ -31,7 +32,7 @@ const CreateFolder = ({ folderId = '0', fetchData }: { folderId: string; fetchDa
         isDeleted: false,
       };
 
-      const response = await createFolder({ name: folderName, ownerId: userId? +userId : 0, isDeleted: false }); 
+      const response = await createFolder({ name: folderName, ownerId: userId? +userId : 0, isDeleted: false, parentFolderId: folderId }); 
       console.log(response);
       handleClose();
 

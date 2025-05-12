@@ -21,7 +21,7 @@ import { Folder, MyFile } from "../../types";
 import CreateFolder from "../../hooks/createFolder";
 import { useDropzone, Accept } from "react-dropzone";
 import { useLanguage } from "../../context/LanguageContext";
-import { fetchFilesByUserIdAndFolderId, fetchFoldersByUserId } from "../../services/folderService";
+import {  fetchDataByUserIdAndFolderId, fetchFoldersByUserId } from "../../services/folderService";
 
 interface FileUploadProps {
     onUpload: (files: MyFile[], folderId: string) => Promise<void>;
@@ -73,7 +73,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload }) => {
             if (!selectedFolder) return;
 
             try {
-                const res = await fetchFilesByUserIdAndFolderId(+selectedFolder, +userId );
+                const res = await fetchDataByUserIdAndFolderId(+selectedFolder, +userId );
                 console.log("Fetched subfolders:", res);
                 setSubFolders(res.folders); 
             } catch (error) {
