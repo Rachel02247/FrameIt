@@ -92,10 +92,9 @@ const Collections: React.FC = () => {
   return (
     <Container
       sx={{
-        maxWidth: "1200px",
-        width: "95%", 
-        mx: "auto", 
-        position: "relative",
+        width: "1000px",
+        maxWidth: "90%",
+        position: "absolute",
       }}
     >
       <Paper
