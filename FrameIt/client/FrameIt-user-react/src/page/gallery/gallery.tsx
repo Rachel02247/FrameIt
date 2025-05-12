@@ -27,9 +27,9 @@ import Search from "./search"
 import LoadingIndicator from "../../hooks/loadingIndicator"
 import type { Folder, MyFile } from "../../types"
 import CreateFolder from "../../hooks/createFolder"
-import FolderMenu from "../../hooks/folderMenu"
 import ImagePreviewModal from "../../hooks/imagePreviewModal"
 import { fetchFolderByCurrentFolder, fetchFoldersBreadcrumbs } from "../../services/folderService"
+import { fetchFilesByUserId } from "../../services/filesService"
 
 type CreateFolderProps = {
   folderId: string;
@@ -57,7 +57,7 @@ export default function Gallery() {
     setLoading(true)
     setError(null)
     try {
-      const { data } = await fetchFolderByCurrentFolder(folderId ?? "0", +userId)
+      const data = await fetchFilesByUserId(+userId)
       console.log("Fetched data:", data)
       setFolders(data.folders)
       setFiles(data.files)
