@@ -26,13 +26,9 @@ const CreateFolder = ({ folderId = '0', fetchData }: { folderId: string; fetchDa
     }
 
     try {
-      const newFolder = {
-        name: folderName,
-        ownerId: userId || '0',
-        isDeleted: false,
-      };
+      
 
-      const response = await createFolder({ name: folderName, ownerId: userId? +userId : 0, isDeleted: false, parentFolderId: folderId }); 
+      const response = await createFolder({ name: folderName, ownerId: userId? +userId : 0, isDeleted: false, parentFolderId: parseInt(folderId) }); 
       console.log(response);
       handleClose();
 
