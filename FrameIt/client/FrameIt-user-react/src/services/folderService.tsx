@@ -32,7 +32,7 @@ export const fetchDataByUserIdAndFolderId = async (folderId: number, userId: num
   }
 };
 
-export const createFolder = async (folderData: { name: string; ownerId: number; isDeleted: boolean, parentFolderId: string }) => {
+export const createFolder = async (folderData: { name: string; ownerId: number; isDeleted: boolean, parentFolderId: number }) => {
   try {
     const response = await axios.post(API_URL_BASE, folderData, {
       headers: {
