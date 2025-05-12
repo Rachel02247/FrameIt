@@ -28,8 +28,8 @@ import LoadingIndicator from "../../hooks/loadingIndicator"
 import type { Folder, MyFile } from "../../types"
 import CreateFolder from "../../hooks/createFolder"
 import ImagePreviewModal from "../../hooks/imagePreviewModal"
-import { fetchFolderByCurrentFolder, fetchFoldersBreadcrumbs, fetchFoldersByUserId } from "../../services/folderService"
-import { fetchFilesByUserId } from "../../services/filesService"
+import { deleteFolder, fetchDataByUserIdAndFolderId, fetchFolderByCurrentFolder, fetchFoldersBreadcrumbs, fetchFoldersByUserId } from "../../services/folderService"
+import { deleteFile, fetchFilesByUserId } from "../../services/filesService"
 
 type CreateFolderProps = {
   folderId: string;
@@ -51,18 +51,21 @@ export default function Gallery() {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
   const isMedium = useMediaQuery(theme.breakpoints.down("md"))
 
-  const userId = sessionStorage.getItem("id") || "0" 
+  const userId = sessionStorage.getItem("id") || "0"
 
   const fetchData = async (folderId: string | null = "0") => {
+
     setLoading(true)
     setError(null)
     try {
 
-      const FolderData = await fetchFoldersByUserId(parseInt(userId))
-      setFolders(FolderData.filter((curfolder: Folder) => curfolder.parentFolderId === folderId || (!curfolder.parentFolderId && folderId === "0")))
+      const data = await fetchDataByUserIdAndFolderId(folderId ? parseInt(folderId) : 0, parseInt(userId))
 
-      const FilesData = await fetchFilesByUserId(parseInt(userId))
-      setFiles(FilesData.filter((curfile: MyFile) => curfile.folderId === folderId || (!curfile.folderId && folderId === "0")))
+      // const FolderData = await fetchFoldersByUserId(parseInt(userId))
+      // setFolders(FolderData.filter((curfolder: Folder) => curfolder.parentFolderId === folderId || (!curfolder.parentFolderId && folderId === "0")))
+
+      // const FilesData = await fetchFilesByUserId(parseInt(userId))
+      // setFiles(FilesData.filter((curfile: MyFile) => curfile.folderId === folderId || (!curfile.folderId && folderId === "0")))
 
       const breadcrumbRes = await fetchFoldersBreadcrumbs(folderId ?? "0")
       setBreadcrumb(breadcrumbRes);
@@ -81,237 +84,257 @@ export default function Gallery() {
     fetchData(currentFolder)
   }, [currentFolder])
 
-  const handleOpenPreview = (fileId: string) => {
-    const index = files.findIndex((file) => file.id === fileId)
-    if (index !== -1) {
-      setSelectedFileIndex(index)
+  const handleDelete = async (fId: string, what: string) => {
+    if (window.confirm(`Are you sure you want to delete this ${what}?`)) {
+      try {
+
+        if(what === 'folder') 
+          await deleteFolder(fId);
+
+        else if (what === 'file')
+           await deleteFile(fId);
+
+        fetchData(currentFolder)
+
+      } catch (error) {
+        console.error("Error deleting folder:", error)
+        setError("Failed to delete folder. Please try again.")
+      }
     }
-  }
 
-  const handleClosePreview = () => {
-    setSelectedFileIndex(null)
-  }
+    
+    const handleOpenPreview = (fileId: string) => {
+      const index = files.findIndex((file) => file.id === fileId)
+      if (index !== -1) {
+        setSelectedFileIndex(index)
+      }
+    }
 
-  const handleNext = () => {
-    setSelectedFileIndex((prevIndex) =>
-      prevIndex !== null && prevIndex < files.length - 1 ? prevIndex + 1 : prevIndex
-    )
-  }
+    const handleClosePreview = () => {
+      setSelectedFileIndex(null)
+    }
 
-  const handlePrev = () => {
-    setSelectedFileIndex((prevIndex) => (prevIndex !== null && prevIndex > 0 ? prevIndex - 1 : prevIndex))
-  }
+    const handleNext = () => {
+      setSelectedFileIndex((prevIndex) =>
+        prevIndex !== null && prevIndex < files.length - 1 ? prevIndex + 1 : prevIndex
+      )
+    }
 
-  const filteredFolders = folders.filter((folder) => folder.name.toLowerCase().includes(searchTerm.toLowerCase()))
-  const filteredFiles = files.filter((file) => file.fileName.toLowerCase().includes(searchTerm.toLowerCase()))
+    const handlePrev = () => {
+      setSelectedFileIndex((prevIndex) => (prevIndex !== null && prevIndex > 0 ? prevIndex - 1 : prevIndex))
+    }
 
-  const getColumnCount = () => {
-    if (isMobile) return 2
-    if (isMedium) return 3
-    return 4
-  }
+    const filteredFolders = folders.filter((folder) => folder.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    const filteredFiles = files.filter((file) => file.fileName.toLowerCase().includes(searchTerm.toLowerCase()))
 
-  const handleCreateFolderOpen = () => {
-    setOpenCreateFolder(true)
-  }
+    const getColumnCount = () => {
+      if (isMobile) return 2
+      if (isMedium) return 3
+      return 4
+    }
 
-  const handleCreateFolderClose = () => {
-    setOpenCreateFolder(false)
-  }
+    const handleCreateFolderOpen = () => {
+      setOpenCreateFolder(true)
+    }
 
-  return (
-    <Container
-      sx={{
-        width: "1000px",
-        maxWidth: "95%",
-        top: 20,
-        right: 0,
-        position: "relative",
-      }}
-    >
-      <Paper
-        elevation={3}
+    const handleCreateFolderClose = () => {
+      setOpenCreateFolder(false)
+    }
+
+    return (
+      <Container
         sx={{
-          padding: { xs: 2, sm: 3, md: 4 },
-          borderRadius: 3,
-          backgroundColor: theme.palette.background.default,
-          minHeight: "80vh",
-          mt: 4,
-          mb: 4,
+          width: "1000px",
+          maxWidth: "95%",
+          top: 20,
+          right: 0,
           position: "relative",
-          overflow: "hidden",
-          "&::before": {
-            content: '""',
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            height: "4px",
-            background: "linear-gradient(90deg, #1976d2, #42a5f5)",
-          },
         }}
       >
-        <Typography
-          variant="h4"
-          gutterBottom
+        <Paper
+          elevation={3}
           sx={{
-            fontWeight: "bold",
-            color: "#333",
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
+            padding: { xs: 2, sm: 3, md: 4 },
+            borderRadius: 3,
+            backgroundColor: theme.palette.background.default,
+            minHeight: "80vh",
+            mt: 4,
+            mb: 4,
+            position: "relative",
+            overflow: "hidden",
+            "&::before": {
+              content: '""',
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: "4px",
+              background: "linear-gradient(90deg, #1976d2, #42a5f5)",
+            },
           }}
         >
-          My Gallery
-        </Typography>
+          <Typography
+            variant="h4"
+            gutterBottom
+            sx={{
+              fontWeight: "bold",
+              color: "#333",
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+            }}
+          >
+            My Gallery
+          </Typography>
 
-        <Search searchTerm={searchTerm} onSearch={setSearchTerm} />
+          <Search searchTerm={searchTerm} onSearch={setSearchTerm} />
 
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
-          <Breadcrumbs separator={<ChevronRightIcon fontSize="small" />} aria-label="breadcrumb">
-            <Link
-              color={currentFolder === "0" ? "primary" : "inherit"}
-              onClick={() => setCurrentFolder("0")}
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                cursor: "pointer",
-                textDecoration: "none",
-                "&:hover": {
-                  textDecoration: "underline",
-                },
-              }}
-            >
-              <HomeIcon sx={{ mr: 0.5 }} fontSize="small" />
-              Gallery
-            </Link>
-            {breadcrumb.map((folder) => (
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
+            <Breadcrumbs separator={<ChevronRightIcon fontSize="small" />} aria-label="breadcrumb">
               <Link
-                key={folder.id}
-                onClick={() => setCurrentFolder(folder.id)}
+                color={currentFolder === "0" ? "primary" : "inherit"}
+                onClick={() => setCurrentFolder("0")}
                 sx={{
+                  display: "flex",
+                  alignItems: "center",
                   cursor: "pointer",
                   textDecoration: "none",
                   "&:hover": {
                     textDecoration: "underline",
                   },
                 }}
-                color="inherit"
               >
-                {folder.name}
+                <HomeIcon sx={{ mr: 0.5 }} fontSize="small" />
+                Gallery
               </Link>
-            ))}
-          </Breadcrumbs>
+              {breadcrumb.map((folder) => (
+                <Link
+                  key={folder.id}
+                  onClick={() => setCurrentFolder(folder.id)}
+                  sx={{
+                    cursor: "pointer",
+                    textDecoration: "none",
+                    "&:hover": {
+                      textDecoration: "underline",
+                    },
+                  }}
+                  color="inherit"
+                >
+                  {folder.name}
+                </Link>
+              ))}
+            </Breadcrumbs>
 
-       
-        </Box>
 
-        {error && (
-          <Alert severity="error" sx={{ mb: 3 }}>
-            {error}
-          </Alert>
-        )}
+          </Box>
 
-        {loading ? (
-          <LoadingIndicator />
-        ) : (
-          <>
-            {filteredFolders.length === 0 && filteredFiles.length === 0 ? (
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  py: 8,
-                }}
-              >
-                <Typography variant="h6" color="text.secondary" gutterBottom>
-                  {searchTerm ? "No results found" : "This folder is empty"}
-                </Typography>
-                {searchTerm && (
-                  <Typography variant="body2" color="text.secondary">
-                    Try a different search term or browse through folders
+          {error && (
+            <Alert severity="error" sx={{ mb: 3 }}>
+              {error}
+            </Alert>
+          )}
+
+          {loading ? (
+            <LoadingIndicator />
+          ) : (
+            <>
+              {filteredFolders.length === 0 && filteredFiles.length === 0 ? (
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    py: 8,
+                  }}
+                >
+                  <Typography variant="h6" color="text.secondary" gutterBottom>
+                    {searchTerm ? "No results found" : "This folder is empty"}
                   </Typography>
-                )}
-                {!searchTerm && (
-                  <Typography variant="body2" color="text.secondary">
-                    Create a new folder or upload files to get started
-                  </Typography>
-                )}
-              </Box>
-            ) : (
-              <Fade in={!loading}>
-                <Box>
-                  {filteredFolders.length > 0 && (
-                    <>
-                      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                        <Typography variant="h6" component="h2">
-                          Folders
-                        </Typography>
-                        <Chip label={filteredFolders.length} size="small" sx={{ ml: 1 }} color="primary" />
-                      </Box>
-
-                      <ImageList variant="standard" cols={getColumnCount()} gap={16} sx={{ mb: 4 }}>
-                        {filteredFolders.map((folder) => (
-                          <ImageListItem key={folder.id} component="div">
-                            <FolderItem
-                              folder={folder}
-                              onClick={() => setCurrentFolder(folder.id)}
-                              onDelete={() => fetchData(currentFolder)}
-                            />
-                          </ImageListItem>
-                        ))}
-                      </ImageList>
-                    </>
+                  {searchTerm && (
+                    <Typography variant="body2" color="text.secondary">
+                      Try a different search term or browse through folders
+                    </Typography>
                   )}
-
-                  {filteredFiles.length > 0 && (
-                    <>
-                      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                        <Typography variant="h6" component="h2">
-                          Files
-                        </Typography>
-                        <Chip label={filteredFiles.length} size="small" sx={{ ml: 1 }} color="primary" />
-                      </Box>
-
-                      <ImageList variant="standard" cols={getColumnCount()} gap={16}>
-                        {filteredFiles.map((file) => (
-                          <ImageListItem key={file.id} component="div">
-                            <FileItem
-                              file={file}
-                              onDelete={() => fetchData(currentFolder)}
-                              onOpenPreview={handleOpenPreview}
-                            />
-                          </ImageListItem>
-                        ))}
-                      </ImageList>
-                    </>
+                  {!searchTerm && (
+                    <Typography variant="body2" color="text.secondary">
+                      Create a new folder or upload files to get started
+                    </Typography>
                   )}
                 </Box>
-              </Fade>
-            )}
-          </>
-        )}
+              ) : (
+                <Fade in={!loading}>
+                  <Box>
+                    {filteredFolders.length > 0 && (
+                      <>
+                        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                          <Typography variant="h6" component="h2">
+                            Folders
+                          </Typography>
+                          <Chip label={filteredFolders.length} size="small" sx={{ ml: 1 }} color="primary" />
+                        </Box>
 
-         
+                        <ImageList variant="standard" cols={getColumnCount()} gap={16} sx={{ mb: 4 }}>
+                          {filteredFolders.map((folder) => (
+                            <ImageListItem key={folder.id} component="div">
+                              <FolderItem
+                                folder={folder}
+                                onClick={() => setCurrentFolder(folder.id)}
+                                onDelete={() => handleDelete(folder.id, "folder")}
+                              />
+                            </ImageListItem>
+                          ))}
+                        </ImageList>
+                      </>
+                    )}
+
+                    {filteredFiles.length > 0 && (
+                      <>
+                        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                          <Typography variant="h6" component="h2">
+                            Files
+                          </Typography>
+                          <Chip label={filteredFiles.length} size="small" sx={{ ml: 1 }} color="primary" />
+                        </Box>
+
+                        <ImageList variant="standard" cols={getColumnCount()} gap={16}>
+                          {filteredFiles.map((file) => (
+                            <ImageListItem key={file.id} component="div">
+                              <FileItem
+                                file={file}
+                                onDelete={() => handleDelete(file.id, 'file')}
+                                onOpenPreview={handleOpenPreview}
+                              />
+                            </ImageListItem>
+                          ))}
+                        </ImageList>
+                      </>
+                    )}
+                  </Box>
+                </Fade>
+              )}
+            </>
+          )}
+
+
           <CreateFolder
             folderId={currentFolder ?? '0'}
             fetchData={fetchData}
           />
-        
 
-        {selectedFileIndex !== null && (
-          <ImagePreviewModal
-            file={files[selectedFileIndex]}
-            onClose={handleClosePreview}
-            onNext={handleNext}
-            onPrev={handlePrev}
-            hasNext={selectedFileIndex < files.length - 1}
-            hasPrev={selectedFileIndex > 0}
-          />
-        )}
-      </Paper>
-    </Container>
-  )
+
+          {selectedFileIndex !== null && (
+            <ImagePreviewModal
+              file={files[selectedFileIndex]}
+              onClose={handleClosePreview}
+              onNext={handleNext}
+              onPrev={handlePrev}
+              hasNext={selectedFileIndex < files.length - 1}
+              hasPrev={selectedFileIndex > 0}
+            />
+          )}
+        </Paper>
+      </Container>
+    )
+  }
 }
