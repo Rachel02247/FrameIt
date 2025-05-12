@@ -1,35 +1,53 @@
 import React, { useState } from 'react';
-import { Box, Typography, Switch, FormControlLabel, TextField, Button, Tabs, Tab } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Switch,
+  FormControlLabel,
+  TextField,
+  Button,
+  Tabs,
+  Tab,
+} from '@mui/material';
 import { useLanguage } from '../../context/LanguageContext';
 import getTheme from '../../theme';
 import { ThemeProvider, CssBaseline } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../global-states/store";
+import { changePassword } from "../global-states/userSlice";
 
 const Settings = () => {
   const { language, toggleLanguage } = useLanguage();
   const [darkMode, setDarkMode] = useState(false);
-  const [userName, setUserName] = useState('John Doe');
-  const [email, setEmail] = useState('john.doe@example.com');
   const [tabValue, setTabValue] = useState(0);
-  const navigate = useNavigate();
+
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  const dispatch = useDispatch<AppDispatch>();
 
   const translations = {
     en: {
-      profile: 'Profile Settings',
+      profile: 'Change Password',
       appearance: 'Appearance Settings',
       darkMode: 'Dark Mode',
-      username: 'Username',
-      email: 'Email',
+      currentPassword: 'Current Password',
+      newPassword: 'New Password',
+      confirmPassword: 'Confirm New Password',
       save: 'Save Changes',
       switchToHebrew: 'Switch to Hebrew',
       switchToEnglish: 'Switch to English',
     },
     he: {
-      profile: 'הגדרות פרופיל',
+      profile: 'שינוי סיסמה',
       appearance: 'הגדרות מראה',
       darkMode: 'מצב כהה',
-      username: 'שם משתמש',
-      email: 'אימייל',
+      currentPassword: 'סיסמה נוכחית',
+      newPassword: 'סיסמה חדשה',
+      confirmPassword: 'אישור סיסמה חדשה',
       save: 'שמור שינויים',
       switchToHebrew: 'עבור לעברית',
       switchToEnglish: 'עבור לאנגלית',
@@ -42,21 +60,28 @@ const Settings = () => {
     setDarkMode(event.target.checked);
   };
 
-  const handleUserNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUserName(event.target.value);
-  };
+  const handleSave = async () => {
+    setError('');
+    setSuccess('');
 
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  };
-
-  const handleSave = () => {
-    const themeToggleButton = document.getElementById('theme-toggle-button');
-    if (themeToggleButton) {
-      themeToggleButton.click();
+    if (newPassword !== confirmPassword) {
+      setError(language === 'he' ? 'הסיסמאות אינן תואמות' : 'Passwords do not match');
+      return;
     }
-    toggleLanguage();
-    navigate(-1);
+
+    try {
+      const resultAction = await dispatch(changePassword({ currentPassword, newPassword }));
+      if (changePassword.fulfilled.match(resultAction)) {
+        setSuccess(language === 'he' ? 'הסיסמה עודכנה בהצלחה' : 'Password updated successfully');
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+      } else {
+        setError(resultAction.payload as string || 'Error changing password');
+      }
+    } catch (err: unknown) {
+      setError('Server error');
+    }
   };
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -86,21 +111,34 @@ const Settings = () => {
             <div>
               <Typography variant="h6">{t.profile}</Typography>
               <TextField
-                label={t.username}
+                label={t.currentPassword}
                 variant="outlined"
-                value={userName}
-                onChange={handleUserNameChange}
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
                 fullWidth
                 sx={{ marginBottom: 2 }}
               />
               <TextField
-                label={t.email}
+                label={t.newPassword}
                 variant="outlined"
-                value={email}
-                onChange={handleEmailChange}
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
                 fullWidth
                 sx={{ marginBottom: 2 }}
               />
+              <TextField
+                label={t.confirmPassword}
+                variant="outlined"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                fullWidth
+                sx={{ marginBottom: 2 }}
+              />
+              {error && <Typography color="error">{error}</Typography>}
+              {success && <Typography color="primary">{success}</Typography>}
             </div>
           )}
 
