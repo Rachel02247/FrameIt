@@ -16,7 +16,7 @@ const MyWorkspace: React.FC = () => {
       upload: "Upload",
       createCollage: "Create Collage",
       create: "Create",
-      aiFiltering: "AI    Filtering",
+      aiFiltering: "AI  \n  Filtering",
       apply: "Apply",
       myCollections: "My Collections",
       manage: "Manage",
@@ -89,7 +89,9 @@ const MyWorkspace: React.FC = () => {
           <Card>
             <CardContent>
               <Filter fontSize="large" />
-              <Typography variant="h6">{t.aiFiltering}</Typography>
+              <Typography variant="h6" sx={{ whiteSpace: "pre-line" }}>
+                {t.aiFiltering}
+              </Typography>
               <Button
                 component={Link}
                 to="/myWorkspace/AiFeuteres"

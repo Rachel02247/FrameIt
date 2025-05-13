@@ -19,7 +19,7 @@ export function ImageSelector({ selectedImage, onSelect }: ImageSelectorProps) {
       const urls: Record<string, string> = {}
 
       for (const file of files) {
-        const url = await getImageUrl(file.s3Key)
+        const url = await getImageUrl({ s3Key: file.s3Key })
         if (url) {
           urls[file.id] = url
         }
@@ -31,7 +31,7 @@ export function ImageSelector({ selectedImage, onSelect }: ImageSelectorProps) {
     if (files.length > 0) {
       loadImageUrls()
     }
-  }, [files, getImageUrl])
+  }, [])
 
   if (loading) {
     return <GalleryLoading />
@@ -55,9 +55,9 @@ export function ImageSelector({ selectedImage, onSelect }: ImageSelectorProps) {
                 position: "relative",
                 paddingTop: "100%", // 1:1 Aspect Ratio
                 cursor: "pointer",
-                borderRadius: 1,
+                borderRadius: 8,
                 overflow: "hidden",
-                border: 2,
+                border: 8,
                 borderColor: selectedImage === file.id ? "primary.main" : "transparent",
                 "&:hover": {
                   borderColor: selectedImage === file.id ? "primary.main" : "grey.300",

@@ -145,7 +145,7 @@ const Gallery = () => {
       sx={{
         width: "1000px",
         maxWidth: "95%",
-        top: 20,
+        top: 30,
         right: 0,
         position: "relative",
       }}
@@ -168,7 +168,7 @@ const Gallery = () => {
             left: 0,
             right: 0,
             height: "4px",
-            background: "linear-gradient(90deg, #1976d2, #42a5f5)",
+            background: "linear-gradient(90deg,rgb(49, 48, 49),rgb(82, 82, 83))",
           },
         }}
       >

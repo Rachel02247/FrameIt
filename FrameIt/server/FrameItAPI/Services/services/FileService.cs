@@ -34,7 +34,6 @@ namespace FrameItAPI.Services.services
                 throw new Exception("Bucket name is not configured.");
             }
 
-            string fileKey = $"{Guid.NewGuid()}_{file.FileName}";
 
             try
             {
@@ -46,8 +45,13 @@ namespace FrameItAPI.Services.services
                     ContentType = file.FileType,
                     AutoCloseStream = true
                 };
-                Console.WriteLine($"Uploading file: Bucket={putRequest.BucketName}, Key={putRequest.Key}, ContentType={putRequest.ContentType}");
 
+                Console.WriteLine("File upload request created.");
+                
+                
+
+                Console.WriteLine($"Uploading file: Bucket={putRequest.BucketName}, Key={putRequest.Key}, ContentType={putRequest.ContentType}");
+                Console.WriteLine($"Fillllllllllllllllllle size: {putRequest.Key} bytes");
                 Console.WriteLine("📤 Trying to upload file to S3...");
                 await _s3Client.PutObjectAsync(putRequest);
                 Console.WriteLine("✅ Upload successful!");
@@ -57,8 +61,8 @@ namespace FrameItAPI.Services.services
                 throw new Exception($"Error uploading file to S3: {ex.Message}");
             }
 
-            file.S3Key = fileKey;
-            file.S3Url = $"https://{_bucketName}.s3.amazonaws.com/{fileKey}"; 
+            //file.S3Url = $"https://{_bucketName}.s3.amazonaws.com/{fileKey}"; 
+            file.S3Url = "";
             _context.Files.Add(file);
             await _context.SaveChangesAsync();
 
@@ -84,15 +88,18 @@ namespace FrameItAPI.Services.services
             return await CreateFile(file, resizedStream);
         }
 
-        public async Task<string> Download(string fileName)
+        public async Task<string> Download(string s3Key)
         {
+            Console.WriteLine("in Download 1");
+            Console.WriteLine("in Download 2",s3Key);
             var request = new GetPreSignedUrlRequest
             {
                 BucketName = _bucketName,
-                Key = fileName,
+                Key = s3Key,
                 Verb = HttpVerb.GET,
                 Expires = DateTime.UtcNow.AddDays(300),
             };
+            Console.WriteLine("in Download 3", request);
 
             return _s3Client.GetPreSignedURL(request);
         }
@@ -137,7 +144,7 @@ namespace FrameItAPI.Services.services
         public async Task<List<Entities.File>> GetFilesByFolderId(int folderId, int userId)
         {
             return await _context.Files
-                .Where(f => f.FolderId == folderId && f.OwnerId == userId)
+                .Where(f => !f.IsDeleted && f.FolderId == folderId && f.OwnerId == userId)
                 .ToListAsync();
         } 
         
@@ -167,14 +174,7 @@ namespace FrameItAPI.Services.services
             return await _context.Files.Where(f => !f.IsDeleted).ToListAsync();
         }
 
-        //public async Task<FrameItAPI.Entities.File> CreateFile(FrameItAPI.Entities.File file)
-        //{
-
-        //    _context.Files.Add(file);
-        //    await _context.SaveChangesAsync();
-        //    return file;
-        //}
-
+       
 
         public async Task<FrameItAPI.Entities.File> UpdateFile(FrameItAPI.Entities.File file)
         {

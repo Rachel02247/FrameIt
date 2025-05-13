@@ -40,18 +40,19 @@ public static class FileEndpoints
                     FileName = file.FileName,
                     FolderId = int.TryParse(form["FolderId"], out var folderId) ? folderId : (int?)null,
                     IsDeleted = false,
-                    S3Key = $"{form["FolderId"]}/{file.FileName}",
+                    S3Key = file.FileName,
                     OwnerId = int.Parse(form["OwnerId"]),
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 };
-
+                Console.WriteLine($" in mapost file name: {newFile.FileName}");
                 using var stream = file.OpenReadStream();
 
                 FrameItAPI.Entities.File createdFile;
 
                 if (fileType.StartsWith("image/"))
                 {
+                    Console.WriteLine($" in mapost before CreateImageFileWithResize file name: {newFile.FileName}");
                     createdFile = await fileService.CreateImageFileWithResize(newFile, stream);
                 }
                 else
@@ -87,32 +88,50 @@ public static class FileEndpoints
         });//.RequireAuthorization("admin", "editor");
 
 
-        routes.MapGet("/files/{fileName}/download", async (string fileName, IFileService fileService) =>
+        routes.MapGet("/files/{s3Key}/download", async (string s3Key, IFileService fileService) =>
         {
-            try
-            {
-                var fileUrl = await fileService.Download(fileName); // מקבל את ה-URL
+           
+                Console.WriteLine($" in mapget download");
+                Console.WriteLine($" in mapget file name: {s3Key}");
+                var fileUrl = await fileService.Download(s3Key); // מקבל את ה-URL
+                Console.WriteLine($" in mapget file url after download: {fileUrl}");
+                Console.WriteLine($" ------------------------"); Console.WriteLine();
+                return fileUrl;
 
-                if (string.IsNullOrEmpty(fileUrl))
-                    return Results.NotFound("File not found.");
-
-                using var httpClient = new HttpClient();
-                var response = await httpClient.GetAsync(fileUrl);
-
-                if (!response.IsSuccessStatusCode)
-                    return Results.Problem("Failed to fetch file from S3.");
-
-                var fileBytes = await response.Content.ReadAsByteArrayAsync();
-                var contentType = response.Content.Headers.ContentType?.ToString() ?? "application/octet-stream";
-
-                return Results.File(fileBytes, contentType, fileName);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-                return Results.Problem("An error occurred.");
-            }
+            
         });
+        //routes.MapGet("/files/{s3Key}/download", async (string s3Key, IFileService fileService) =>
+        //{
+        //    try
+        //    {
+        //        Console.WriteLine($" in mapget download");
+        //        Console.WriteLine($" in mapget file name: {s3Key}");
+        //        var fileUrl = await fileService.Download(s3Key); // מקבל את ה-URL
+        //        Console.WriteLine($" in mapget file url after download: {fileUrl}");
+        //        Console.WriteLine($" ------------------------"); Console.WriteLine();
+        //        return fileUrl;
+
+        //        if (string.IsNullOrEmpty(fileUrl))
+        //            return Results.NotFound("File not found.");
+
+        //        using var httpClient = new HttpClient();
+        //        var response = await httpClient.GetAsync(fileUrl);
+
+        //        if (!response.IsSuccessStatusCode)
+        //            return Results.Problem("Failed to fetch file from S3.");
+
+        //        var fileBytes = await response.Content.ReadAsByteArrayAsync();
+        //        var contentType = response.Content.Headers.ContentType?.ToString() ?? "application/octet-stream";
+
+        //        return Results.File(fileBytes, contentType, s3Key);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"Error: {ex.Message}");
+        //        return Results.Problem("An error occurred.");
+        //    }
+        //    return ;
+        //});
 
 
 

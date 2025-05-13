@@ -115,7 +115,6 @@ const authSlice = createSlice({
         state.loading = false;
 
         if (action.payload) {
-          // אם השגיאה כוללת מידע
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const errorPayload = action.payload as any;  // אם השגיאה מכילה מידע, כמו תשובת ה־HTTP
           const status = errorPayload.response?.status;

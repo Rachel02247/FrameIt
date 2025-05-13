@@ -58,34 +58,40 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ children }) => {
   const [mode, setMode] = useState<"light" | "dark">("light");
   const { language } = useLanguage();
 
-  const isSidebarVisible = window.location.pathname.startsWith("/myWorkspace");
+  const isSidebarVisible =
+    window.location.pathname.startsWith("/myWorkspace") ||
+    window.location.pathname === "/login" ||
+    window.location.pathname === "/register";
 
-  if (isSidebarVisible) return null;
-  
   const toggleTheme = () => {
     setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
   };
 
   return (
-    <ThemeProvider theme={getTheme(mode)}>
-      <CssBaseline />
-      <Box
-        sx={{
-          position: "absolute",
-          top: 30,
-          [language === "he" ? "right" : "left"]: 122,
-          zIndex: 0,
-        }}
-      >
-        <TinyIconSwitch
-          checked={mode === "dark"}
-          onChange={toggleTheme}
-          icon={<WbSunnyIcon />}
-          checkedIcon={<LightModeIcon />}
-        />
-      </Box>
-      {children}
-    </ThemeProvider>
+    <>
+      <ThemeProvider theme={getTheme(mode)}>
+        <CssBaseline />
+
+        {!isSidebarVisible && (
+          <Box
+            sx={{
+              position: "absolute",
+              top: 30,
+              [language === "he" ? "right" : "left"]: 122,
+              zIndex: 0,
+            }}
+          >
+            <TinyIconSwitch
+              checked={mode === "dark"}
+              onChange={toggleTheme}
+              icon={<WbSunnyIcon />}
+              checkedIcon={<LightModeIcon />}
+            />
+          </Box>
+
+        )}{children}
+      </ThemeProvider>
+    </>
   );
 };
 
