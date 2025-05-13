@@ -31,7 +31,7 @@ export function ImageSelector({ selectedImage, onSelect }: ImageSelectorProps) {
     if (files.length > 0) {
       loadImageUrls()
     }
-  }, [files, getImageUrl])
+  }, [])
 
   if (loading) {
     return <GalleryLoading />
