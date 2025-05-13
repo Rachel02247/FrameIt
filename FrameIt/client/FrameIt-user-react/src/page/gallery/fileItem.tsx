@@ -67,29 +67,23 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
 
   const isVideo = file.fileType.toLowerCase() === "mp4" || file.fileType.toLowerCase() === "mov"
 
-  // useEffect(() => {
+  useEffect(() => {
 
-  //   const loadFileUrl = async () => {
+    const loadFileUrl = async () => {
 
-  //     setIsLoading(true)
+      setIsLoading(true)
 
-  //     try {
+      try {
 
-<<<<<<< HEAD
         const result = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap();
         setPresignedUrl(result.payload);
 
-=======
-  //       const result = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap();
-  //       setPresignedUrl(result);
->>>>>>> fc726e920bbe7cb80ed81997765b58f571059b1f
 
-  //     } catch (error) {
+      } catch (error) {
         
-  //       console.error("Error loading file URL:", error)
-  //       setImageError(true)
+        console.error("Error loading file URL:", error)
+        setImageError(true)
       
-<<<<<<< HEAD
       } finally {
         setIsLoading(false)
       }
@@ -98,22 +92,12 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
       loadFileUrl();
     }
   }, [file.s3Key, dispatch])
-=======
-  //     } finally {
-  //       setIsLoading(false)
-  //     }
-  //   }
-  //   if (file.s3Key) {
-  //     loadFileUrl();
-  //   }
-  // }, [file.s3Key, dispatch])
->>>>>>> fc726e920bbe7cb80ed81997765b58f571059b1f
 
-  // useEffect(() => {
-  //   if (userId) {
-  //     dispatch(fetchUserCollections(userId))
-  //   }
-  // }, [userId, dispatch])
+  useEffect(() => {
+    if (userId) {
+      dispatch(fetchUserCollections(userId))
+    }
+  }, [userId, dispatch])
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation(); 

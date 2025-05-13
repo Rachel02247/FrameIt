@@ -55,7 +55,7 @@ export function ImageSelector({ selectedImage, onSelect }: ImageSelectorProps) {
                 position: "relative",
                 paddingTop: "100%", // 1:1 Aspect Ratio
                 cursor: "pointer",
-                borderRadius: 1,
+                borderRadius: 8,
                 overflow: "hidden",
                 border: 8,
                 borderColor: selectedImage === file.id ? "primary.main" : "transparent",
