@@ -53,6 +53,7 @@ export const getFileDownloadUrl = createAsyncThunk(
   async (s3Key: string, { rejectWithValue }) => {
     try {
       console.log("bfor gtFileDownloadUrl");
+      console.log("s3Key", s3Key);
       
       const response = await axios.get(`${API_URL_BASE}/${s3Key}/download`);
       console.log("in getFileDownloadUrl");
