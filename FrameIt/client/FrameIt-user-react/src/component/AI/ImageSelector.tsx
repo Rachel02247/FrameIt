@@ -19,7 +19,7 @@ export function ImageSelector({ selectedImage, onSelect }: ImageSelectorProps) {
       const urls: Record<string, string> = {}
 
       for (const file of files) {
-        const url = await getImageUrl(file.s3Key)
+        const url = await getImageUrl({ s3Key: file.s3Key })
         if (url) {
           urls[file.id] = url
         }
