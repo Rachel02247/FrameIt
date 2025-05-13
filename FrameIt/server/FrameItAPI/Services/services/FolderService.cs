@@ -56,7 +56,7 @@ namespace FrameItAPI.Services.services
         public async Task<List<Folder>> GetSubFoldersByFolderId(int folderId, int userId)
         {
             return await _context.Folders
-                .Where(f => (f.ParentFolderId == folderId || folderId == 0 && f.ParentFolderId == null) && f.OwnerId == userId)
+                .Where(f => !f.IsDeleted && (f.ParentFolderId == folderId || folderId == 0 && f.ParentFolderId == null) && f.OwnerId == userId)
                 .ToListAsync();
         }
 

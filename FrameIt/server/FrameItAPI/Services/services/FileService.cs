@@ -144,7 +144,7 @@ namespace FrameItAPI.Services.services
         public async Task<List<Entities.File>> GetFilesByFolderId(int folderId, int userId)
         {
             return await _context.Files
-                .Where(f => f.FolderId == folderId && f.OwnerId == userId)
+                .Where(f => !f.IsDeleted && f.FolderId == folderId && f.OwnerId == userId)
                 .ToListAsync();
         } 
         
