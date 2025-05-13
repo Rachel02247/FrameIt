@@ -22,6 +22,7 @@ import { useSnackbar } from "notistack"
 import { useGalleryImages } from "../../component/AI/GalleryIntegration"
 
 function FreeSearch() {
+  
   const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
   const [searchQuery, setSearchQuery] = useState("")
@@ -33,7 +34,7 @@ function FreeSearch() {
     score?: number
   }
 
-  const [searchResults, setSearchResults] = useState<ImageProps[]>([]) // Ensure the type matches ImageGrid
+  const [searchResults, setSearchResults] = useState<ImageProps[]>([])
   const [hasSearched, setHasSearched] = useState(false)
   const { files, loading, getImageUrl } = useGalleryImages()
   const [imageUrls, setImageUrls] = useState<Record<string, string>>({})
@@ -43,7 +44,7 @@ function FreeSearch() {
       const urls: Record<string, string> = {}
 
       for (const file of files) {
-        const url = await getImageUrl({ s3Key: file.s3Key }) // Fixed to use `s3Key` instead of `id`
+        const url = await getImageUrl({ s3Key: file.s3Key })
         if (url) {
           urls[file.id] = url
         }

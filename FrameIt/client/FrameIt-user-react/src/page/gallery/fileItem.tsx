@@ -76,7 +76,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
       try {
 
         const result = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap();
-        setPresignedUrl(result.payload);
+        setPresignedUrl(result);
 
 
       } catch (error) {
