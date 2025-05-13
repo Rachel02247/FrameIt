@@ -10,7 +10,6 @@ import LoadingIndicator from "../../hooks/loadingIndicator"
 // This component will fetch and provide images from your gallery
 export function useGalleryImages() {
 
-
   const dispatch = useDispatch<AppDispatch>()
   const files = useSelector((state: RootState) => state.files.files)
   const loading = useSelector((state: RootState) => state.files.loading)
@@ -21,6 +20,7 @@ export function useGalleryImages() {
     if (userId) {
         dispatch(fetchFilesByUserId(Number(userId)))
     }
+
   }, [userId, dispatch])
 
   const getImageUrl = async (file: { s3Key: string }) => {    
