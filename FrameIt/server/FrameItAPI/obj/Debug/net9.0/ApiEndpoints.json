@@ -1,6 +1,28 @@
 [
   {
     "ContainingType": "FrameItAPI.Endpoints.AuthEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapAuthEndpoints\u003Eb__0_2",
+    "RelativePath": "api/change-password",
+    "HttpMethod": "POST",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "req",
+        "Type": "FrameItAPI.Endpoints.ChangePasswordRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "FrameItAPI.Endpoints.AuthEndpoints\u002B\u003C\u003Ec",
     "Method": "\u003CMapAuthEndpoints\u003Eb__0_0",
     "RelativePath": "auth/login",
     "HttpMethod": "POST",
@@ -186,28 +208,6 @@
   },
   {
     "ContainingType": "FileEndpoints\u002B\u003C\u003Ec",
-    "Method": "\u003CMapFileEndpoints\u003Eb__0_5",
-    "RelativePath": "files/{fileName}/download",
-    "HttpMethod": "GET",
-    "IsController": false,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "fileName",
-        "Type": "System.String",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "FileEndpoints\u002B\u003C\u003Ec",
     "Method": "\u003CMapFileEndpoints\u003Eb__0_1",
     "RelativePath": "files/{id}",
     "HttpMethod": "GET",
@@ -295,6 +295,30 @@
       {
         "Type": "System.Void",
         "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "FileEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapFileEndpoints\u003Eb__0_5",
+    "RelativePath": "files/{s3Key}/download",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "s3Key",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.String",
+        "MediaTypes": [
+          "text/plain"
+        ],
         "StatusCode": 200
       }
     ]
