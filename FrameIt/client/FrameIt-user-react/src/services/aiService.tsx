@@ -1,6 +1,12 @@
 import { generateText, experimental_generateImage } from "ai";
 import { openai } from "@ai-sdk/openai";
 
+const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY; // Load API key from environment
+
+if (!OPENAI_API_KEY) {
+  // Warn once at module load if key is missing
+  console.error("OpenAI API key is missing. Please set VITE_OPENAI_API_KEY in your environment.");
+}
 
 type ImageAnalysisResult = {
   objects: string[];
@@ -15,9 +21,25 @@ type SearchResult = {
 };
 
 export async function analyzeImage(imageUrl: string): Promise<ImageAnalysisResult | null> {
+  console.log("Analyzing image with URL:", imageUrl); // Debugging log
+
+  if (!imageUrl) {
+    console.error("Invalid image URL provided for analysis.");
+    return null;
+  }
+
+  if (!OPENAI_API_KEY) {
+    return {
+      objects: ["Unknown"],
+      colors: ["Unknown"],
+      scene: "API key missing",
+      confidence: 0,
+    };
+  }
+
   try {
     const { text } = await generateText({
-      model: openai.chat("gpt-4o"),
+      model: openai.chat("gpt-4o"), // removed { apiKey: OPENAI_API_KEY }
       prompt: `Analyze this image in detail: ${imageUrl}
 
       Identify:
@@ -35,6 +57,8 @@ export async function analyzeImage(imageUrl: string): Promise<ImageAnalysisResul
       }`,
       system: "You are an expert image analyzer. Provide detailed, accurate analysis of images in JSON format only.",
     });
+
+    console.log("Response from AI:", text);
 
     try {
       return JSON.parse(text) as ImageAnalysisResult;
@@ -54,30 +78,49 @@ export async function analyzeImage(imageUrl: string): Promise<ImageAnalysisResul
 }
 
 export async function transformImageToArt(imageUrl: string, style: string) {
+  console.log("Transforming image:", imageUrl, "with style:", style); // Debugging log
+
+  if (!OPENAI_API_KEY) {
+    throw new Error("OpenAI API key is missing.");
+  }
+
   const styleDescriptions: Record<string, string> = {
     picasso: "in the style of Pablo Picasso, with cubist elements, geometric shapes, and bold lines",
     vangogh: "in the style of Vincent van Gogh, with swirling brushstrokes, vibrant colors, and expressive technique",
     watercolor: "as a delicate watercolor painting with soft edges, transparent washes, and gentle color blending",
-    "pop-art": "as pop art in the style of Roy Lichtenstein or Andy Warhol, with bold colors, comic-like outlines, and dot patterns",
+    "pop-art":
+      "as pop art in the style of Roy Lichtenstein or Andy Warhol, with bold colors, comic-like outlines, and dot patterns",
     realistic: "in a photorealistic style with fine details, accurate lighting, and true-to-life representation",
-    anime: "in Japanese anime style with characteristic large eyes, simplified facial features, and stylized expressions",
+    anime:
+      "in Japanese anime style with characteristic large eyes, simplified facial features, and stylized expressions",
   };
 
   const styleDescription =
     styleDescriptions[style as keyof typeof styleDescriptions] || styleDescriptions.picasso;
 
   try {
-    const result = await experimental_generateImage({
-      model: openai.image("dall-e-3"),
+    const { images } = await experimental_generateImage({
+      model: openai.image("dall-e-3"), // removed { apiKey: OPENAI_API_KEY }
       prompt: `Transform this image ${styleDescription}. Maintain the main subject and composition of the original image: ${imageUrl}`,
     });
 
-    const imageList = result.images as unknown as { url: string }[];
+    if (!images || images.length === 0) {
+      throw new Error("No images returned from AI service");
+    }
 
-    return Array.isArray(imageList) && imageList[0]?.url ? imageList[0].url : null;
+    const image = images[0];
+
+    if (image.base64) {
+      return `data:image/png;base64,${image.base64}`;
+    } else if (image.uint8Array && image.mimeType) {
+      const blob = new Blob([image.uint8Array], { type: image.mimeType });
+      return URL.createObjectURL(blob); 
+    } else {
+      throw new Error("Unsupported image format returned from AI service");
+    }
   } catch (error) {
     console.error("Error transforming image:", error);
-    return null;
+    throw error;
   }
 }
 
@@ -85,9 +128,13 @@ export async function searchImagesByDescription(
   description: string,
   imageUrls: string[]
 ): Promise<SearchResult[]> {
+  if (!OPENAI_API_KEY) {
+    return [];
+  }
+
   try {
     const { text } = await generateText({
-      model: openai.chat("gpt-4o"),
+      model: openai.chat("gpt-4o"), // removed { apiKey: OPENAI_API_KEY }
       prompt: `I have a collection of images and want to find ones that match this description: "${description}". 
       For each image URL in this list, rate its relevance to the description on a scale of 0-100:
       ${imageUrls.join("\n")}
