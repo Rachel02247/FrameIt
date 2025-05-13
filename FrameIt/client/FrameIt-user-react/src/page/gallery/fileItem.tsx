@@ -87,7 +87,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
         setIsLoading(false)
       }
     }
-    loadFileUrl()
+    //loadFileUrl()
   }, [file.s3Key, dispatch])
 
   useEffect(() => {
