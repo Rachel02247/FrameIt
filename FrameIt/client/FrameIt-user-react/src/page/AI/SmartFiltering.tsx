@@ -75,7 +75,7 @@ function SmartFiltering() {
     if (files.length > 0) {
       loadImageUrls()
     }
-  }, [files, getImageUrl])
+  }, [files])
 
   useEffect(() => {
     // Convert files to the format expected by ImageGrid
