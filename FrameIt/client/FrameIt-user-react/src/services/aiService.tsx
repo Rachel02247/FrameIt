@@ -1,6 +1,7 @@
 import { generateText, experimental_generateImage } from "ai";
 import { openai } from "@ai-sdk/openai";
 
+
 type ImageAnalysisResult = {
   objects: string[];
   colors: string[];
@@ -97,7 +98,7 @@ export async function searchImagesByDescription(
 
     try {
       const results = JSON.parse(text) as SearchResult[];
-      return results.filter((item) => item.relevanceScore > 50);
+      return results.filter((item) => item.relevanceScore > 70);
     } catch (e) {
       console.error("Failed to parse search results:", e);
       return [];
