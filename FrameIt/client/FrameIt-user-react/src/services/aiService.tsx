@@ -1,7 +1,7 @@
 import { generateText, experimental_generateImage } from "ai";
 import { openai } from "@ai-sdk/openai";
 
-const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY; // Load API key from environment
+const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
 if (!OPENAI_API_KEY) {
   // Warn once at module load if key is missing
@@ -39,7 +39,7 @@ export async function analyzeImage(imageUrl: string): Promise<ImageAnalysisResul
 
   try {
     const { text } = await generateText({
-      model: openai.chat("gpt-4o"), // removed { apiKey: OPENAI_API_KEY }
+      model: openai.chat("gpt-4o"),
       prompt: `Analyze this image in detail: ${imageUrl}
 
       Identify:
@@ -100,7 +100,7 @@ export async function transformImageToArt(imageUrl: string, style: string) {
 
   try {
     const { images } = await experimental_generateImage({
-      model: openai.image("dall-e-3"), // removed { apiKey: OPENAI_API_KEY }
+      model: openai.image("dall-e-3"),
       prompt: `Transform this image ${styleDescription}. Maintain the main subject and composition of the original image: ${imageUrl}`,
     });
 
@@ -136,7 +136,7 @@ export async function searchImagesByDescription(
 
   try {
     const { text } = await generateText({
-      model: openai.chat("gpt-4o"), // removed { apiKey: OPENAI_API_KEY }
+      model: openai.chat("gpt-4o"),
       prompt: `I have a collection of images and want to find ones that match this description: "${description}". 
       For each image URL in this list, rate its relevance to the description on a scale of 0-100:
       ${imageUrls.join("\n")}

@@ -47,23 +47,24 @@ const PhotoGrid: React.FC = () => {
     let isMounted = true;
     const fetchUserImages = async () => {
       if (user && files && files.length > 0) {
-
         const sortedFiles = [...files]
+          .filter(f => !!f.s3Key)
           .sort((a, b) => Number(b.id) - Number(a.id))
           .slice(0, 6);
 
-        // Fetch download URLs for each file
         const urls: string[] = [];
         for (const file of sortedFiles) {
           try {
             const res = await getFileDownloadUrl(file.s3Key);
+            console.log("getFileDownloadUrl result:", res);
             if (typeof res === "string") {
               urls.push(res);
             } else if (res && typeof res.url === "string") {
               urls.push(res.url);
             }
           } catch (e: any) {
-            console.error("Error fetching image URL:", e);}
+            console.error("Error fetching image URL:", e);
+          }
         }
         if (isMounted) setUserFilesImages(urls);
       } else {

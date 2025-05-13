@@ -49,7 +49,6 @@ function ImageToArt() {
         const selectedFile = files.find((file) => file.id === selectedImage);
         if (selectedFile) {
           const url = await getImageUrl({ s3Key: selectedFile.s3Key });
-          console.log("Loaded image URL:", url); // Debugging log
           setSelectedImageUrl(url);
         }
       } else {
@@ -58,7 +57,7 @@ function ImageToArt() {
     };
 
     loadSelectedImageUrl();
-  }, [selectedImage, files, getImageUrl]);
+  }, [selectedImage, getImageUrl]); // הסר את התלות ב-files
 
   const handleImageSelect = (imageId: string) => {
     setSelectedImage(imageId)
