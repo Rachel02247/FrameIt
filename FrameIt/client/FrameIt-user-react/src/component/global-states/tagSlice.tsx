@@ -38,7 +38,16 @@ export const fetchCollectionFiles = createAsyncThunk(
   'tags/fetchCollectionFiles',
   async (tagId: number, { rejectWithValue }) => {
     try {
+      console.log("Fetching collection files for tag ID:", tagId);
+      console.log("before fetching collection files");
+      
       const response = await axios.get(`${API_URL}/tags/${tagId}/collection`);
+      console.log("after fetch collection files");
+      console.log(response);
+      console.log(response.data);
+      
+      
+      
       return response.data;
     } catch (error) {
       console.error('Failed fetching collection:', error);

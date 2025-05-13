@@ -67,7 +67,13 @@ const Collections: React.FC = () => {
   }, [userId, dispatch]);
 
   useEffect(() => {
+    console.log("in useEffect in collections");
+
+    
     if (selectedTagId !== 0) dispatch(fetchCollectionFiles(selectedTagId))
+      console.log("in useEffect collections after dispatch");
+
+      
   }, [selectedTagId, dispatch])
 
   const handleTagSelect = (tagId: number) => dispatch(setSelectedTag(tagId))
