@@ -173,7 +173,7 @@ const Register = () => {
                            
                             )}
                             <Button type="submit" fullWidth variant="outlined" disabled={loading} sx={{ py: 1.5, '&:hover': { bgcolor: '#666699', color: 'white' } }}>
-                                {loading ? <img src="img/spinner.gif" alt="spinnre" width={24} /> : 'Register'}
+                                {loading ? <img src="/img/spinner.gif" alt="spinnre" width={24} /> : 'Register'}
                             </Button>
                             <p>Already have an account? <Link to="/login">Sign In</Link></p>
                         </form>

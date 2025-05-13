@@ -1,5 +1,3 @@
-"use client"
-
 import type React from "react"
 import { useEffect, useState } from "react"
 import {
@@ -27,12 +25,14 @@ import CreateCollection from "../../hooks/createCollection"
 import { downloadByUrl, downloadFile } from "../../hooks/download"
 import type { FileItemProps } from "../../types"
 import { useLanguage } from "../../context/LanguageContext"
+import { useTheme } from "@mui/material/styles"
 import { getFileDownloadUrl } from "../../component/global-states/fileSlice"
 
 // Function to get file preview URL from server
 
 
 const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) => {
+  const theme = useTheme(); // Access the current theme
   const { language } = useLanguage();
   const translations = {
     en: {
@@ -67,7 +67,31 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
 
   const isVideo = file.fileType.toLowerCase() === "mp4" || file.fileType.toLowerCase() === "mov"
 
-  // useEffect(() => {
+  useEffect(() => {
+
+    const loadFileUrl = async () => {
+
+      setIsLoading(true)
+
+      try {
+
+        const result = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap();
+        setPresignedUrl(result.payload);
+
+
+      } catch (error) {
+        
+        console.error("Error loading file URL:", error)
+        setImageError(true)
+      
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    if (file.s3Key) {
+      loadFileUrl();
+    }
+  }, [file.s3Key, dispatch])
 
   //   const loadFileUrl = async () => {
 
@@ -157,9 +181,12 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
         height: 200,
         position: "relative",
         transition: "all 0.3s ease",
+        backgroundColor: theme.palette.background.paper, // Dynamic background color
         "&:hover": {
           transform: "translateY(-4px)",
-          boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)",
+          boxShadow: theme.palette.mode === "dark" 
+            ? "0 8px 16px rgba(255, 255, 255, 0.1)" 
+            : "0 8px 16px rgba(0, 0, 0, 0.1)", // Adjust shadow for dark mode
         },
         cursor: "pointer",
         "&:hover .file-actions": {
@@ -175,7 +202,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            backgroundColor: "grey.100",
+            backgroundColor: theme.palette.grey[theme.palette.mode === "dark" ? 800 : 100], // Adjust for dark mode
           }}
         >
           <CircularProgress size={40} color="primary" />
