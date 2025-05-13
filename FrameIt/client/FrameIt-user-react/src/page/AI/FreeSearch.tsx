@@ -26,24 +26,18 @@ function FreeSearch() {
   const { enqueueSnackbar } = useSnackbar()
   const [searchQuery, setSearchQuery] = useState("")
   const [isSearching, setIsSearching] = useState(false)
-  interface ImageProps {
-    id: string
-    src: string
-    alt: string
-    score?: number
-  }
-
-  const [searchResults, setSearchResults] = useState<ImageProps[]>([]) // Ensure the type matches ImageGrid
+  const [searchResults, setSearchResults] = useState<any[]>([])
   const [hasSearched, setHasSearched] = useState(false)
   const { files, loading, getImageUrl } = useGalleryImages()
   const [imageUrls, setImageUrls] = useState<Record<string, string>>({})
 
   useEffect(() => {
+    // Load presigned URLs for all images
     const loadImageUrls = async () => {
       const urls: Record<string, string> = {}
 
       for (const file of files) {
-        const url = await getImageUrl({ s3Key: file.s3Key }) // Fixed to use `s3Key` instead of `id`
+        const url = getImageUrl(file.id)
         if (url) {
           urls[file.id] = url
         }
@@ -64,13 +58,17 @@ function FreeSearch() {
     setHasSearched(true)
 
     try {
+      // Get all image URLs
       const imageUrlsArray = Object.values(imageUrls)
 
+      // Call the AI service to search images
       const results = await searchImagesByDescription(searchQuery, imageUrlsArray)
 
       if (results && results.length > 0) {
+        // Map the results back to our files
         const matchedImages = results
           .map((result) => {
+            // Find the file ID that corresponds to this URL
             const fileId = Object.keys(imageUrls).find((id) => imageUrls[id] === result.imageUrl)
             if (!fileId) return null
 
@@ -86,7 +84,7 @@ function FreeSearch() {
           })
           .filter(Boolean)
 
-        setSearchResults(matchedImages as any[])
+        setSearchResults(matchedImages)
       } else {
         setSearchResults([])
       }
@@ -122,7 +120,7 @@ function FreeSearch() {
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
-        <IconButton onClick={() => navigate("/myWorkspace/aiFeatures")} sx={{ mr: 1 }}>
+        <IconButton onClick={() => navigate("/aiFeatures")} sx={{ mr: 1 }}>
           <ArrowBack />
         </IconButton>
         <Typography variant="h4" component="h1" fontWeight="bold">
@@ -176,7 +174,7 @@ function FreeSearch() {
                 </Typography>
 
                 {searchResults.length > 0 ? (
-                  <ImageGrid images={searchResults} /> // Pass the correctly typed `searchResults` to ImageGrid
+                  <ImageGrid images={searchResults} />
                 ) : (
                   <Alert severity="info" sx={{ mt: 2 }}>
                     No images found matching your description. Try a different search term.

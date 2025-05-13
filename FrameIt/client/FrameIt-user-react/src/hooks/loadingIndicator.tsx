@@ -5,7 +5,7 @@ import React from 'react';
 const LoadingIndicator: React.FC = () => {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
-    <img src="/img/spinner.gif" alt="spinner" width={50}/>
+    <img src="img/spinner.gif" alt="spinner" width={50}/>
     </Box>
   );
 };

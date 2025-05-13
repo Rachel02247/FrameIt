@@ -178,7 +178,7 @@ const Login = () => {
                                 </FormHelperText>
                             )}
                             <Button type="submit" fullWidth variant="outlined" disabled={loading} sx={{ py: 1.5, '&:hover': { bgcolor: '#666699', color: 'white' } }}>
-                                {loading ? <img src="/img/spinner.gif" alt="spinnre" width={24} /> : t.submit}
+                                {loading ? <img src="img/spinner.gif" alt="spinnre" width={24} /> : t.submit}
                             </Button>
 
                         </form>

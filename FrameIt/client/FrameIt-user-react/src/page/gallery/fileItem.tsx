@@ -1,3 +1,5 @@
+"use client"
+
 import type React from "react"
 import { useEffect, useState } from "react"
 import {
@@ -25,14 +27,12 @@ import CreateCollection from "../../hooks/createCollection"
 import { downloadByUrl, downloadFile } from "../../hooks/download"
 import type { FileItemProps } from "../../types"
 import { useLanguage } from "../../context/LanguageContext"
-import { useTheme } from "@mui/material/styles"
-import { getFileDownloadUrl } from "../../component/global-states/fileSlice"
+import { getImageUrl } from "../../services/awsService"
 
 // Function to get file preview URL from server
 
 
 const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) => {
-  const theme = useTheme(); // Access the current theme
   const { language } = useLanguage();
   const translations = {
     en: {
@@ -56,10 +56,8 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
   const [showTagMenu, setShowTagMenu] = useState(false)
   const [openCreateCollection, setOpenCreateCollection] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-
-
   const [, setImageError] = useState(false)
-
+  const [urlTrick,] = useState('');
 
   const dispatch = useDispatch<AppDispatch>()
   const userId = useSelector((state: RootState) => state.user.user?.id)
@@ -68,30 +66,23 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
   const isVideo = file.fileType.toLowerCase() === "mp4" || file.fileType.toLowerCase() === "mov"
 
   useEffect(() => {
-
     const loadFileUrl = async () => {
 
       setIsLoading(true)
 
       try {
-
-        const result = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap();
-        setPresignedUrl(result.payload);
-
-
+      const getFilePreviewUrl = await getImageUrl(file.s3Key);
+        console.log("getFilePreviewUrl", getFilePreviewUrl)
+        setPresignedUrl(getFilePreviewUrl);
       } catch (error) {
-        
         console.error("Error loading file URL:", error)
         setImageError(true)
-      
       } finally {
         setIsLoading(false)
       }
     }
-    if (file.s3Key) {
-      loadFileUrl();
-    }
-  }, [file.s3Key, dispatch])
+    loadFileUrl()
+  }, [file.s3Key])
 
   useEffect(() => {
     if (userId) {
@@ -100,49 +91,43 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
   }, [userId, dispatch])
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation(); 
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
+    event.stopPropagation()
+    setAnchorEl(event.currentTarget)
   }
 
-  const handleOpenTagMenu = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    setShowTagMenu(true);
-    handleCloseMenu();
-  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null)
+  }
 
-  const handleSelectTag = async (event: React.MouseEvent, tagId: number) => {
-    event.stopPropagation(); 
-    setShowTagMenu(false);
-    dispatch(addFileToCollection({ fileId: file.id, tagId }));
-  };
+  const handleOpenTagMenu = () => {
+    setShowTagMenu(true)
+    handleCloseMenu()
+  }
 
-  const handleCreateNewCollection = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    setOpenCreateCollection(true);
-    setShowTagMenu(false);
-  };
+  const handleSelectTag = async (tagId: number) => {
+    setShowTagMenu(false)
+    dispatch(addFileToCollection({ fileId: file.id, tagId }))
+  }
+
+  const handleCreateNewCollection = () => {
+    setOpenCreateCollection(true)
+    setShowTagMenu(false)
+  }
 
   const handleFileClick = (e: React.MouseEvent) => {
-    if ((e.target as HTMLElement).closest(".file-actions")) {
-      onOpenPreview(file.id);
-      return;
-    }
-    e.stopPropagation();
-  };
+    e.stopPropagation()
+    onOpenPreview(file.id)
+  }
 
   const handleDownload = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    downloadFile(file.id, file.fileName, presignedUrl);
-    downloadByUrl(presignedUrl, file.fileName);
+    e.stopPropagation()
+    downloadFile(file.id, file.fileName)
+    downloadByUrl(urlTrick, file.fileName);
     handleCloseMenu()
   }
 
   const handleDeleteFile = (e: React.MouseEvent) => {
-    e.stopPropagation(); 
+    e.stopPropagation()
     onDelete()
     handleCloseMenu()
   }
@@ -158,12 +143,9 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
         height: 200,
         position: "relative",
         transition: "all 0.3s ease",
-        backgroundColor: theme.palette.background.paper, // Dynamic background color
         "&:hover": {
           transform: "translateY(-4px)",
-          boxShadow: theme.palette.mode === "dark" 
-            ? "0 8px 16px rgba(255, 255, 255, 0.1)" 
-            : "0 8px 16px rgba(0, 0, 0, 0.1)", // Adjust shadow for dark mode
+          boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)",
         },
         cursor: "pointer",
         "&:hover .file-actions": {
@@ -179,7 +161,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            backgroundColor: theme.palette.grey[theme.palette.mode === "dark" ? 800 : 100], // Adjust for dark mode
+            backgroundColor: "grey.100",
           }}
         >
           <CircularProgress size={40} color="primary" />
@@ -191,7 +173,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
           onError={() => setImageError(true)}
         >
           <source src={presignedUrl} type={`video/${file.fileType}`} />
-          Your browser does not support the video tag.
+          הדפדפן שלך אינו תומך בניגון וידאו.
         </video>
       ) : (
         <Box
@@ -271,7 +253,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
           <ListItemText primary={t.delete} primaryTypographyProps={{ color: "error" }} />
         </MenuItem>
 
-        <MenuItem onClick={(event) => handleOpenTagMenu(event)}>
+        <MenuItem onClick={handleOpenTagMenu}>
           <ListItemIcon>
             <CollectionsIcon fontSize="small" color="primary" />
           </ListItemIcon>
@@ -293,7 +275,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
         }}
       >
         {tags.map((tag) => (
-          <MenuItem key={tag.id} onClick={(event) => handleSelectTag(event, tag.id)}>
+          <MenuItem key={tag.id} onClick={() => handleSelectTag(tag.id)}>
             <ListItemIcon>
               <CollectionsIcon fontSize="small" color="primary" />
             </ListItemIcon>
@@ -301,7 +283,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
           </MenuItem>
         ))}
         <Divider />
-        <MenuItem onClick={(event) => handleCreateNewCollection(event)}>
+        <MenuItem onClick={handleCreateNewCollection}>
           <ListItemIcon>
             <AddCircleIcon fontSize="small" color="primary" />
           </ListItemIcon>
