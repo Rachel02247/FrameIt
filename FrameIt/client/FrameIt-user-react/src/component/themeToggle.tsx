@@ -10,7 +10,6 @@ import WbSunnyIcon from "@mui/icons-material/WbSunny";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import getTheme from "../theme";
 import { useLanguage } from "../context/LanguageContext";
-import { useLocation } from "react-router-dom";
 
 interface ThemeToggleProps {
   children: React.ReactNode;
@@ -59,8 +58,10 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ children }) => {
   const [mode, setMode] = useState<"light" | "dark">("light");
   const { language } = useLanguage();
 
-  const location = useLocation()
-  const isSidebarVisible = location.pathname.startsWith("/myWorkspace") || location.pathname === "/login" || location.pathname === "/register";
+  const isSidebarVisible =
+    window.location.pathname.startsWith("/myWorkspace") ||
+    window.location.pathname === "/login" ||
+    window.location.pathname === "/register";
 
   const toggleTheme = () => {
     setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));

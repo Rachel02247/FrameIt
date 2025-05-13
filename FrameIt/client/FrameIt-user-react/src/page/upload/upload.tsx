@@ -17,34 +17,31 @@ const Upload = () => {
   const handleUpload = async (files: MyFile[], folderId: string) => {
     console.log("Uploading files:", files);
     console.log("Folder ID:", folderId);
-    
-    const formData = new FormData();
 
-    for (let i = 0; i < files.length; i++) {
+    try {
+      // Use Promise.all to upload all files concurrently
+      const uploadPromises = files.map((file) => {
+        const formData = new FormData();
+        formData.append("file", file.file ?? new Blob());
+        formData.append("FileName", file.fileName);
+        formData.append("FileType", file.fileType);
+        formData.append("FolderId", folderId);
+        formData.append("Size", file.size.toString());
+        formData.append("S3Key", `${folderId}/${file.fileName}`);
+        formData.append("IsDeleted", "false");
+        formData.append("OwnerId", user?.id ?? "0");
 
-      const file = files[i];
-      formData.append("file", file.file ?? new Blob());
-      formData.append("FileName", file.fileName);
-      formData.append("FileType", file.fileType);
-      formData.append("FolderId", folderId);
-      formData.append("Size", file.size.toString());
-      formData.append("S3Key", `${folderId}/${file.fileName}`);
-      formData.append("IsDeleted", "false");
-      formData.append("OwnerId", user?.id ?? "0");
-
-      try {
         console.log("Uploading file:", file.fileName);
+        return uploadFiles(formData); // Return the promise for each file upload
+      });
 
-        const response = await uploadFiles(formData);
-        console.log("after upload", response);
-        
-        console.log("File uploaded successfully:", response);
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          console.error("Error uploading file:", error.response?.data || error.message);
-        } else {
-          console.error("Unknown error:", error);
-        }
+      const responses = await Promise.all(uploadPromises); // Wait for all uploads to complete
+      console.log("All files uploaded successfully:", responses);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("Error uploading files:", error.response?.data || error.message);
+      } else {
+        console.error("Unknown error:", error);
       }
     }
   };

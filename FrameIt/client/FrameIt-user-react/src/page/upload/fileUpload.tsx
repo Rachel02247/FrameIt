@@ -243,7 +243,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload }) => {
                             {t.cancel}
                         </Button>
                         <Button onClick={handleUpload} color="primary" disabled={loading}>
-                           {loading? <img src="img/spinner.gif" alt="spinner" width={24} /> : t.upload } 
+                           {loading? <img src="/img/spinner.gif" alt="spinner" width={24} /> : t.upload } 
                         </Button>
                     </DialogActions>
                 </Dialog>

@@ -3,14 +3,12 @@ import { IconButton, Typography } from "@mui/material";
 import TranslateIcon from "@mui/icons-material/Translate";
 import { useLanguage } from "../context/LanguageContext";
 import { motion } from "framer-motion";
-import { useLocation } from "react-router-dom";
 
 const LanguageToggle: React.FC = () => {
 
   const { language, toggleLanguage } = useLanguage();
 
-  const location = useLocation()
-  const isSidebarVisible = location.pathname.startsWith("/myWorkspace") || location.pathname === "/login" || location.pathname === "/register";
+  const isSidebarVisible = window.location.pathname.startsWith("/myWorkspace") || window.location.pathname === "/login" || window.location.pathname === "/register";
 
   return (
 
