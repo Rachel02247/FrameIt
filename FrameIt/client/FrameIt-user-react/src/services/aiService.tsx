@@ -73,7 +73,8 @@ export async function transformImageToArt(imageUrl: string, style: string) {
     });
 
     const imageList = result.images as unknown as { url: string }[];
-
+    console.log("Generated image result:" );
+    console.log(result);
     return Array.isArray(imageList) && imageList[0]?.url ? imageList[0].url : null;
   } catch (error) {
     console.error("Error transforming image:", error);
