@@ -31,9 +31,9 @@ const FolderItem: React.FC<FolderItemProps> = ({ folder, onClick, onDelete }) =>
 
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.stopPropagation(); 
-    if (window.confirm(language === "he" ? "האם אתה בטוח שברצונך למחוק תקיה זו?" : "Are you sure you want to delete this folder?")) {
+    // if (window.confirm(language === "he" ? "האם אתה בטוח שברצונך למחוק תקיה זו?" : "Are you sure you want to delete this folder?")) {
       onDelete();
-    }
+    // }
   };
 
   const handleDownload = (e: React.MouseEvent) => {
