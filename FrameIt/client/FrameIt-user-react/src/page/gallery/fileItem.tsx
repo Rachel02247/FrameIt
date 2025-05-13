@@ -60,7 +60,6 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
 
   const [, setImageError] = useState(false)
 
-  const [urlTrick,] = useState('');
 
   const dispatch = useDispatch<AppDispatch>()
   const userId = useSelector((state: RootState) => state.user.user?.id)
@@ -134,8 +133,8 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
 
   const handleDownload = (e: React.MouseEvent) => {
     e.stopPropagation();
-    downloadFile(file.id, file.fileName)
-    downloadByUrl(urlTrick, file.fileName);
+    downloadFile(file.id, file.fileName, presignedUrl);
+    downloadByUrl(presignedUrl, file.fileName);
     handleCloseMenu()
   }
 
@@ -186,7 +185,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
           onError={() => setImageError(true)}
         >
           <source src={presignedUrl} type={`video/${file.fileType}`} />
-          הדפדפן שלך אינו תומך בניגון וידאו.
+          Your browser does not support the video tag.
         </video>
       ) : (
         <Box
