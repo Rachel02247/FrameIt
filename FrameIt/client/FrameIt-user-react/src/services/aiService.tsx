@@ -104,6 +104,7 @@ export async function transformImageToArt(imageUrl: string, style: string) {
       prompt: `Transform this image ${styleDescription}. Maintain the main subject and composition of the original image: ${imageUrl}`,
     });
 
+
     if (!images || images.length === 0) {
       throw new Error("No images returned from AI service");
     }
@@ -118,6 +119,7 @@ export async function transformImageToArt(imageUrl: string, style: string) {
     } else {
       throw new Error("Unsupported image format returned from AI service");
     }
+
   } catch (error) {
     console.error("Error transforming image:", error);
     throw error;
