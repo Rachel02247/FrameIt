@@ -57,7 +57,7 @@ function ImageToArt() {
     }
 
     loadSelectedImageUrl()
-  }, [selectedImage, files])
+  }, [files])
 
   const handleImageSelect = (imageId: string) => {
     setSelectedImage(imageId)
