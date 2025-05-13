@@ -22,38 +22,18 @@ interface ImageGridProps {
   images: ImageProps[]
 }
 
-export function ImageGrid() {
-  const dispatch = useDispatch<AppDispatch>()
-  const files = useSelector(selectFiles)
-  const loading = useSelector((state: RootState) => state.files.loading)
-  const error = useSelector((state: RootState) => state.files.error) // Added error handling
-  const userId = sessionStorage.getItem("id") || "0"
+export function ImageGrid({ images }: ImageGridProps) {
+  const [selectedImage, setSelectedImage] = useState<ImageProps | null>(null)
 
-  const [selectedImage, setSelectedImage] = useState<MyFile | null>(null) // Fixed type to MyFile
-
-  useEffect(() => {
-    if (userId) {
-      dispatch(fetchFilesByUserId(Number(userId)))
-    }
-  }, [userId, dispatch])
-
-  if (loading) {
-    return <Box sx={{ textAlign: "center", py: 6, color: "text.secondary" }}>Loading files...</Box>
-  }
-
-  if (error) {
-    return <Box sx={{ textAlign: "center", py: 6, color: "error.main" }}>Error: {error}</Box> // Display error
-  }
-
-  if (files.length === 0) {
-    return <Box sx={{ textAlign: "center", py: 6, color: "text.secondary" }}>No files found</Box>
+  if (images.length === 0) {
+    return <Box sx={{ textAlign: "center", py: 6, color: "text.secondary" }}>No images found</Box>
   }
 
   return (
     <>
       <Grid container spacing={2}>
-        {files.map((file) => (
-          <Grid item xs={6} sm={4} md={3} key={file.id}>
+        {images.map((image) => (
+          <Grid item xs={6} sm={4} md={3} key={image.id}>
             <Box
               sx={{
                 position: "relative",
@@ -66,12 +46,12 @@ export function ImageGrid() {
                   transition: "opacity 0.3s",
                 },
               }}
-              onClick={() => setSelectedImage(file)}
+              onClick={() => setSelectedImage(image)}
             >
               <Box
                 component="img"
-                src={`${import.meta.env.VITE_API_URL}/files/download/${file.s3Key}`}
-                alt={file.fileName}
+                src={image.src}
+                alt={image.alt}
                 sx={{
                   position: "absolute",
                   top: 0,
@@ -106,15 +86,15 @@ export function ImageGrid() {
                 }}
               >
                 <img
-                  src={`${import.meta.env.VITE_API_URL}/files/download/${selectedImage.s3Key}`}
-                  alt={selectedImage.fileName}
+                  src={selectedImage.src}
+                  alt={selectedImage.alt}
                   onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
                     e.currentTarget.src = "/placeholder.svg"
                   }}
                 />
               </Box>
-              {selectedImage.fileName && (
-                <Box sx={{ mt: 2, textAlign: "center" }}>{selectedImage.fileName}</Box>
+              {selectedImage.description && (
+                <Box sx={{ mt: 2, textAlign: "center" }}>{selectedImage.description}</Box>
               )}
             </Box>
           )}
