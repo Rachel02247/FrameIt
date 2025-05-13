@@ -46,18 +46,19 @@ function ImageToArt() {
   useEffect(() => {
     const loadSelectedImageUrl = async () => {
       if (selectedImage) {
-        const selectedFile = files.find((file) => file.id === selectedImage)
+        const selectedFile = files.find((file) => file.id === selectedImage);
         if (selectedFile) {
-          const url = await getImageUrl({ s3Key: selectedFile.s3Key })
-          setSelectedImageUrl(url)
+          const url = await getImageUrl({ s3Key: selectedFile.s3Key });
+          console.log("Loaded image URL:", url); // Debugging log
+          setSelectedImageUrl(url);
         }
       } else {
-        setSelectedImageUrl(null)
+        setSelectedImageUrl(null);
       }
-    }
+    };
 
-    loadSelectedImageUrl()
-  }, [files])
+    loadSelectedImageUrl();
+  }, [selectedImage, files, getImageUrl]);
 
   const handleImageSelect = (imageId: string) => {
     setSelectedImage(imageId)
@@ -70,28 +71,34 @@ function ImageToArt() {
   }
 
   const handleGenerateArt = async () => {
-    if (!selectedImage || !selectedStyle || !selectedImageUrl) return
+    if (!selectedImage || !selectedStyle || !selectedImageUrl) {
+      enqueueSnackbar("Please select an image and style before generating art.", {
+        variant: "warning",
+      });
+      return;
+    }
 
-    setIsGenerating(true)
+    console.log("Generating art with URL:", selectedImageUrl); // Debugging log
+
+    setIsGenerating(true);
 
     try {
-      // Call the AI service to transform the image
-      const artUrl = await transformImageToArt(selectedImageUrl, selectedStyle)
+      const artUrl = await transformImageToArt(selectedImageUrl, selectedStyle);
 
-      if (artUrl !== undefined && artUrl !== null) {
-        setGeneratedArt(artUrl)
+      if (artUrl) {
+        setGeneratedArt(artUrl);
       } else {
         enqueueSnackbar("Could not generate artwork. Please try again.", {
-          variant: "error", 
-        })
+          variant: "error",
+        });
       }
     } catch (error) {
-      console.error("Error generating art:", error)
+      console.error("Error generating art:", error);
       enqueueSnackbar("An error occurred during art generation.", {
-        variant: "error", 
-      })
+        variant: "error",
+      });
     } finally {
-      setIsGenerating(false)
+      setIsGenerating(false);
     }
   }
 

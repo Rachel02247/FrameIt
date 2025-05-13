@@ -1,10 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import { Grid, Box, Typography, useTheme } from "@mui/material";
 import { motion } from "framer-motion";
 import { useLanguage } from "../../context/LanguageContext";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../component/global-states/store";
+import { getFileDownloadUrl } from "../../services/filesService";
 
 const imageUrls = [
-  "https://images.pexels.com/photos/459972/pexels-photo-459972.jpeg",
   "https://images.pexels.com/photos/3661350/pexels-photo-3661350.jpeg",
   "https://images.pexels.com/photos/3770585/pexels-photo-3770585.jpeg",
   "https://images.pexels.com/photos/753451/pexels-photo-753451.jpeg",
@@ -21,8 +24,13 @@ const shuffleArray = (array: string[]) => {
 
 const PhotoGrid: React.FC = () => {
   const [images, setImages] = useState<string[]>(imageUrls);
+  const [userFilesImages, setUserFilesImages] = useState<string[]>([]);
   const theme = useTheme();
   const { language } = useLanguage();
+
+  // Redux selectors
+  const user = useSelector((state: RootState) => state.user.user);
+  const files = useSelector((state: RootState) => state.files.files);
 
   const translations = {
     en: {
@@ -36,12 +44,50 @@ const PhotoGrid: React.FC = () => {
   const t = translations[language];
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setImages((prev) => shuffleArray([...prev]));
-    }, 6000);
+    let isMounted = true;
+    const fetchUserImages = async () => {
+      if (user && files && files.length > 0) {
 
-    return () => clearInterval(interval);
-  }, []);
+        const sortedFiles = [...files]
+          .sort((a, b) => Number(b.id) - Number(a.id))
+          .slice(0, 6);
+
+        // Fetch download URLs for each file
+        const urls: string[] = [];
+        for (const file of sortedFiles) {
+          try {
+            const res = await getFileDownloadUrl(file.s3Key);
+            if (typeof res === "string") {
+              urls.push(res);
+            } else if (res && typeof res.url === "string") {
+              urls.push(res.url);
+            }
+          } catch (e: any) {
+            console.error("Error fetching image URL:", e);}
+        }
+        if (isMounted) setUserFilesImages(urls);
+      } else {
+        setUserFilesImages([]);
+      }
+    };
+    fetchUserImages();
+    return () => {
+      isMounted = false;
+    };
+  }, [user, files]);
+
+  // Shuffle images every 6 seconds (only for default images)
+  useEffect(() => {
+    if (!user) {
+      const interval = setInterval(() => {
+        setImages((prev) => shuffleArray([...prev]));
+      }, 6000);
+      return () => clearInterval(interval);
+    }
+  }, [user]);
+
+  // Decide which images to show
+  const imagesToShow = user && userFilesImages.length > 0 ? userFilesImages : images;
 
   return (
     <Box
@@ -61,7 +107,7 @@ const PhotoGrid: React.FC = () => {
       </Typography>
 
       <Grid container spacing={2} justifyContent="center">
-        {images.map((url, index) => (
+        {imagesToShow.map((url, index) => (
           <Grid item key={index} xs={6} sm={4} md={3} lg={2}>
             <motion.div
               layout
