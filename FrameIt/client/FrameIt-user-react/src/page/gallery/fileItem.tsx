@@ -67,36 +67,36 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
 
   const isVideo = file.fileType.toLowerCase() === "mp4" || file.fileType.toLowerCase() === "mov"
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    const loadFileUrl = async () => {
+  //   const loadFileUrl = async () => {
 
-      setIsLoading(true)
+  //     setIsLoading(true)
 
-      try {
+  //     try {
 
-        const result = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap();
-        setPresignedUrl(result);
+  //       const result = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap();
+  //       setPresignedUrl(result);
 
-      } catch (error) {
+  //     } catch (error) {
         
-        console.error("Error loading file URL:", error)
-        setImageError(true)
+  //       console.error("Error loading file URL:", error)
+  //       setImageError(true)
       
-      } finally {
-        setIsLoading(false)
-      }
-    }
-    if (file.s3Key) {
-      loadFileUrl();
-    }
-  }, [file.s3Key, dispatch])
+  //     } finally {
+  //       setIsLoading(false)
+  //     }
+  //   }
+  //   if (file.s3Key) {
+  //     loadFileUrl();
+  //   }
+  // }, [file.s3Key, dispatch])
 
-  useEffect(() => {
-    if (userId) {
-      dispatch(fetchUserCollections(userId))
-    }
-  }, [userId, dispatch])
+  // useEffect(() => {
+  //   if (userId) {
+  //     dispatch(fetchUserCollections(userId))
+  //   }
+  // }, [userId, dispatch])
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation(); 
