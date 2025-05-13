@@ -38,7 +38,7 @@ const FolderItem: React.FC<FolderItemProps> = ({ folder, onClick, onDelete }) =>
 
   const handleDownload = (e: React.MouseEvent) => {
     e.stopPropagation();
-    downloadFile(folder.id, folder.name);
+    downloadFile(folder.id, folder.name, "");
   };
 
   return (

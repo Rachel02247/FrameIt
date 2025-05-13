@@ -1,9 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Dialog, DialogContent, Grid, Box } from "@mui/material"
+import { useDispatch, useSelector } from "react-redux"
+import { AppDispatch, RootState } from "../global-states/store"
+import { fetchFilesByUserId, selectFiles } from "../global-states/fileSlice"
+import { MyFile } from "../../types"
 
 interface ImageProps {
   id: string
@@ -17,19 +22,38 @@ interface ImageGridProps {
   images: ImageProps[]
 }
 
-export function ImageGrid({ images }: ImageGridProps) {
-  const [selectedImage, setSelectedImage] = useState<ImageProps | null>(null)
-  const [imgS3Url] = useState('');
+export function ImageGrid() {
+  const dispatch = useDispatch<AppDispatch>()
+  const files = useSelector(selectFiles)
+  const loading = useSelector((state: RootState) => state.files.loading)
+  const error = useSelector((state: RootState) => state.files.error) // Added error handling
+  const userId = sessionStorage.getItem("id") || "0"
 
-  if (images.length === 0) {
-    return <Box sx={{ textAlign: "center", py: 6, color: "text.secondary" }}>No images found</Box>
+  const [selectedImage, setSelectedImage] = useState<MyFile | null>(null) // Fixed type to MyFile
+
+  useEffect(() => {
+    if (userId) {
+      dispatch(fetchFilesByUserId(Number(userId)))
+    }
+  }, [userId, dispatch])
+
+  if (loading) {
+    return <Box sx={{ textAlign: "center", py: 6, color: "text.secondary" }}>Loading files...</Box>
+  }
+
+  if (error) {
+    return <Box sx={{ textAlign: "center", py: 6, color: "error.main" }}>Error: {error}</Box> // Display error
+  }
+
+  if (files.length === 0) {
+    return <Box sx={{ textAlign: "center", py: 6, color: "text.secondary" }}>No files found</Box>
   }
 
   return (
     <>
       <Grid container spacing={2}>
-        {images.map((image) => (
-          <Grid item xs={6} sm={4} md={3} key={image.id}>
+        {files.map((file) => (
+          <Grid item xs={6} sm={4} md={3} key={file.id}>
             <Box
               sx={{
                 position: "relative",
@@ -42,12 +66,12 @@ export function ImageGrid({ images }: ImageGridProps) {
                   transition: "opacity 0.3s",
                 },
               }}
-              onClick={() => setSelectedImage(image)}
+              onClick={() => setSelectedImage(file)}
             >
               <Box
                 component="img"
-                src={image.src ?? imgS3Url}
-                alt={image.alt}
+                src={`${import.meta.env.VITE_API_URL}/files/download/${file.s3Key}`}
+                alt={file.fileName}
                 sx={{
                   position: "absolute",
                   top: 0,
@@ -82,14 +106,16 @@ export function ImageGrid({ images }: ImageGridProps) {
                 }}
               >
                 <img
-                  src={selectedImage.src || "/placeholder.svg"}
-                  alt={selectedImage.alt}
+                  src={`${import.meta.env.VITE_API_URL}/files/download/${selectedImage.s3Key}`}
+                  alt={selectedImage.fileName}
                   onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
                     e.currentTarget.src = "/placeholder.svg"
                   }}
                 />
               </Box>
-              {selectedImage.description && <Box sx={{ mt: 2, textAlign: "center" }}>{selectedImage.description}</Box>}
+              {selectedImage.fileName && (
+                <Box sx={{ mt: 2, textAlign: "center" }}>{selectedImage.fileName}</Box>
+              )}
             </Box>
           )}
         </DialogContent>
