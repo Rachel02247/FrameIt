@@ -125,10 +125,10 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
 
   const handleFileClick = (e: React.MouseEvent) => {
     if ((e.target as HTMLElement).closest(".file-actions")) {
-      e.stopPropagation();
+      onOpenPreview(file.id);
       return;
     }
-    onOpenPreview(file.id);
+    e.stopPropagation();
   };
 
   const handleDownload = (e: React.MouseEvent) => {
