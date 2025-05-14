@@ -18,10 +18,12 @@ import {
   Chip,
   IconButton,
   CircularProgress,
+  Grid,
 } from "@mui/material"
 import { ArrowBack, Search } from "@mui/icons-material"
-import { ImageGrid } from "../../component/AI/ImageGrid"
-import { useGalleryImages } from "../../component/AI/GalleryIntegration"
+import { useSelector, useDispatch } from "react-redux"
+import { AppDispatch, RootState } from "../../component/global-states/store"
+import { fetchFilesByUserId } from "../../component/global-states/fileSlice"
 
 const predefinedCategories = ["People", "Animals", "Nature", "Urban", "Food", "Travel", "Sports"]
 
@@ -49,49 +51,34 @@ function TabPanel(props: TabPanelProps) {
 
 function SmartFiltering() {
   const navigate = useNavigate()
+  const dispatch = useDispatch<AppDispatch>()
+  const files = useSelector((state: RootState) => state.files.files)
+  const loading = useSelector((state: RootState) => state.files.loading)
+
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [filteredImages, setFilteredImages] = useState<any[]>([])
   const [tabValue, setTabValue] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
-  const { files, loading, getImageUrl } = useGalleryImages()
-  const [imageUrls, setImageUrls] = useState<Record<string, string>>({})
 
   useEffect(() => {
-    // Load presigned URLs for all images
-    const loadImageUrls = async () => {
-      const urls: Record<string, string> = {}
-
-      for (const file of files) {
-        const url = await getImageUrl({ s3Key: file.s3Key }) // Await the Promise
-        if (url) {
-          urls[file.id] = url
-        }
-      }
-
-      setImageUrls(urls)
-    }
-
-    if (files.length > 0) {
-      loadImageUrls()
-    }
-  }, [files])
+    // Dispatch Redux action to fetch files
+    dispatch(fetchFilesByUserId(1)) // Replace 1 with the actual user ID
+  }, [dispatch])
 
   useEffect(() => {
     // Convert files to the format expected by ImageGrid
     const convertFilesToImageGrid = () => {
       return files.map((file) => ({
         id: file.id,
-        src: imageUrls[file.id] || "",
+        src: file.downloadUrl || "/placeholder.svg", // Use placeholder if downloadUrl is not ready
         alt: file.fileName,
-        tags: file.fileType, // In a real app, you'd have actual tags
+        tags: file.fileType,
       }))
     }
 
-    if (Object.keys(imageUrls).length > 0) {
-      setFilteredImages(convertFilesToImageGrid())
-    }
-  }, [files, imageUrls])
+    setFilteredImages(convertFilesToImageGrid())
+  }, [files])
 
   const handleSearch = () => {
     setIsLoading(true)
@@ -102,18 +89,17 @@ function SmartFiltering() {
         setFilteredImages(
           files.map((file) => ({
             id: file.id,
-            src: imageUrls[file.id] || "",
+            src: file.downloadUrl || "/placeholder.svg",
             alt: file.fileName,
             tags: file.fileType,
           })),
         )
       } else {
-        // Simple client-side filtering - in a real app, this would call your AI service
         const filtered = files
           .filter((file) => file.fileName.toLowerCase().includes(searchQuery.toLowerCase()))
           .map((file) => ({
             id: file.id,
-            src: imageUrls[file.id] || "",
+            src: file.downloadUrl || "/placeholder.svg",
             alt: file.fileName,
             tags: file.fileType,
           }))
@@ -128,25 +114,22 @@ function SmartFiltering() {
     setSelectedCategory(category === selectedCategory ? null : category)
     setIsLoading(true)
 
-    // Simulate AI-based category filtering with a timeout
     setTimeout(() => {
       if (category === selectedCategory) {
         setFilteredImages(
           files.map((file) => ({
             id: file.id,
-            src: imageUrls[file.id] || "",
+            src: file.downloadUrl || "/placeholder.svg",
             alt: file.fileName,
             tags: file.fileType,
           })),
         )
       } else {
-        // In a real app, this would call your AI service to categorize images
-        // For now, we'll just randomly filter some images
         const filtered = files
           .filter(() => Math.random() > 0.5) // Random filtering for demo
           .map((file) => ({
             id: file.id,
-            src: imageUrls[file.id] || "",
+            src: file.downloadUrl || "/placeholder.svg",
             alt: file.fileName,
             tags: file.fileType,
           }))
@@ -159,24 +142,6 @@ function SmartFiltering() {
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue)
-  }
-
-  if (loading) {
-    return (
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
-          <IconButton onClick={() => navigate("/myWorkspace/aiFeatures")} sx={{ mr: 1 }}>
-            <ArrowBack />
-          </IconButton>
-          <Typography variant="h4" component="h1" fontWeight="bold">
-            Smart Filtering
-          </Typography>
-        </Box>
-        <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
-          <CircularProgress size={60} />
-        </Box>
-      </Container>
-    )
   }
 
   return (
@@ -240,16 +205,44 @@ function SmartFiltering() {
             {selectedCategory
               ? `${selectedCategory} Images`
               : searchQuery
-                ? `Results for "${searchQuery}"`
-                : "All Images"}
+              ? `Results for "${searchQuery}"`
+              : "All Images"}
           </Typography>
 
-          {isLoading ? (
+          {loading || isLoading ? (
             <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
               <CircularProgress />
             </Box>
           ) : (
-            <ImageGrid images={filteredImages} />
+            <Grid container spacing={2}>
+              {filteredImages.map((image) => (
+                <Grid item xs={6} sm={4} md={3} key={image.id}>
+                  <Box
+                    sx={{
+                      position: "relative",
+                      paddingTop: "100%", // 1:1 Aspect Ratio
+                      borderRadius: 1,
+                      overflow: "hidden",
+                      backgroundColor: "grey.200", // Placeholder background
+                    }}
+                  >
+                    <img
+                      src={image.src}
+                      alt={image.alt}
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                      onError={(e) => (e.currentTarget.src = "/placeholder.svg")}
+                    />
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
           )}
         </CardContent>
       </Card>
