@@ -29,7 +29,7 @@ import type { Folder, MyFile } from "../../types"
 import CreateFolder from "../../hooks/createFolder"
 import ImagePreviewModal from "../../hooks/imagePreviewModal"
 import { deleteFolder, fetchDataByUserIdAndFolderId, fetchFolderByCurrentFolder, fetchFoldersBreadcrumbs, fetchFoldersByUserId } from "../../services/folderService"
-import { deleteFile } from "../../services/filesService"
+import { deleteFile } from "../../component/global-states/fileSlice"
 
 
 const Gallery = () => {

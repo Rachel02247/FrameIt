@@ -8,8 +8,8 @@ import {
   DialogActions,
   Box
 } from '@mui/material';
-import {  useDispatch } from 'react-redux';
-import {  AppDispatch } from '../component/global-states/store';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState, AppDispatch } from '../component/global-states/store';
 import { useLanguage } from "../context/LanguageContext";
 import { createCollection } from "../component/global-states/tagSlice";
 
@@ -21,7 +21,7 @@ interface CreateCollectionProps {
 
 const CreateCollection: React.FC<CreateCollectionProps> = ({ open, onClose, fetchData }) => {
   const [collectionName, setCollectionName] = useState('');
-  const userId = sessionStorage.getItem('id') || '0'
+  const userId = useSelector((state: RootState) => state.user.user?.id);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const { language } = useLanguage();

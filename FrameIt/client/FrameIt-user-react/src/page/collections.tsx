@@ -37,7 +37,6 @@ import RefreshIcon from "@mui/icons-material/Refresh"
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchUserCollections, fetchCollectionFiles, setSelectedTag, sortFiles } from "../component/global-states/tagSlice"
-import { fetchFilesByUserId } from "../component/global-states/fileSlice"
 import type { AppDispatch, RootState } from "../component/global-states/store"
 import CreateCollection from "../hooks/createCollection"
 import ImagePreviewModal from "../hooks/imagePreviewModal"
@@ -45,15 +44,13 @@ import LoadingIndicator from "../hooks/loadingIndicator"
 import FileItem from "./gallery/fileItem"
 
 const Collections: React.FC = () => {
-
   const dispatch = useDispatch<AppDispatch>()
-  const userId = sessionStorage.getItem("id") ?? 0;
+  const userId = useSelector((state: RootState) => state.user.user?.id)
   const { collections, files, selectedTagId, loading } = useSelector((state: RootState) => state.tags)
 
   const [selectedFileIndex, setSelectedFileIndex] = useState<number | null>(null)
   const [openCreateCollection, setOpenCreateCollection] = useState(false)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
   const isMedium = useMediaQuery(theme.breakpoints.down("md"))
@@ -63,17 +60,7 @@ const Collections: React.FC = () => {
   }, [userId, dispatch])
 
   useEffect(() => {
-    if (userId) dispatch(fetchFilesByUserId(parseInt(userId)));
-  }, [userId, dispatch]);
-
-  useEffect(() => {
-    console.log("in useEffect in collections");
-
-    
     if (selectedTagId !== 0) dispatch(fetchCollectionFiles(selectedTagId))
-      console.log("in useEffect collections after dispatch");
-
-      
   }, [selectedTagId, dispatch])
 
   const handleTagSelect = (tagId: number) => dispatch(setSelectedTag(tagId))
@@ -211,7 +198,7 @@ const Collections: React.FC = () => {
             >
               New Collection
             </Button>
-
+     
             <Tooltip title="Options">
               <IconButton
                 onClick={handleMenuOpen}
@@ -276,7 +263,7 @@ const Collections: React.FC = () => {
           onClose={() => setOpenCreateCollection(false)}
           fetchData={() => userId && dispatch(fetchUserCollections(userId))}
         />
-
+       
 
         {loading ? (
           <LoadingIndicator />

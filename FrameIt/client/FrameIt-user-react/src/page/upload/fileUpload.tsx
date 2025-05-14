@@ -117,27 +117,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload }) => {
         setUploadProgress(0);
 
         try {
-            const totalFiles = files.length;
-            let completedFiles = 0;
-
-            for (const file of files) {
-                const formData = new FormData();
-                formData.append("file", file.file ?? new Blob());
-                formData.append("FileName", file.fileName);
-                formData.append("FileType", file.fileType);
-                formData.append("FolderId", selectedFolder);
-                formData.append("Size", file.size.toString());
-                formData.append("S3Key", `${selectedFolder}/${file.fileName}`);
-                formData.append("IsDeleted", "false");
-                formData.append("OwnerId", userId);
-
-                await onUpload([file], selectedFolder); // Upload each file individually
-                completedFiles++;
-
-                // Update progress percentage
-                setUploadProgress(Math.round((completedFiles / totalFiles) * 100));
-            }
-
+            await onUpload(files, selectedFolder);
             console.log("✅ Upload successful!");
             setFiles([]);
         } catch (error) {
@@ -263,7 +243,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload }) => {
                             {t.cancel}
                         </Button>
                         <Button onClick={handleUpload} color="primary" disabled={loading}>
-                           {loading? <img src="/img/spinner.gif" alt="spinner" width={24} /> : t.upload } 
+                           {loading? <img src="img/spinner.gif" alt="spinner" width={24} /> : t.upload } 
                         </Button>
                     </DialogActions>
                 </Dialog>

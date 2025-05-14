@@ -4,6 +4,7 @@ import type React from "react"
 import { Typography, IconButton, Paper, Tooltip, Stack } from "@mui/material"
 import FolderIcon from "@mui/icons-material/Folder"
 import DownloadIcon from "@mui/icons-material/Download"
+import ShareIcon from "@mui/icons-material/Share"
 import DeleteIcon from "@mui/icons-material/Delete"
 import { downloadFile } from "../../hooks/download"
 import { useLanguage } from "../../context/LanguageContext";
@@ -19,10 +20,12 @@ const FolderItem: React.FC<FolderItemProps> = ({ folder, onClick, onDelete }) =>
   const translations = {
     en: {
       download: "Download",
+      share: "Share",
       delete: "Delete",
     },
     he: {
       download: "הורד",
+      share: "שתף",
       delete: "מחק",
     },
   };
@@ -30,17 +33,13 @@ const FolderItem: React.FC<FolderItemProps> = ({ folder, onClick, onDelete }) =>
   const t = translations[language];
 
   const handleDeleteClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); 
-    // if (window.confirm(language === "he" ? "האם אתה בטוח שברצונך למחוק תקיה זו?" : "Are you sure you want to delete this folder?")) {
-      onDelete();
-    // }
-  };
+    e.stopPropagation()
+    onDelete()
+  }
 
-  const handleDownload = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    downloadFile(folder.id, folder.name, "");
-  };
-
+  const handleDownload = () => {
+    downloadFile(folder.id, folder.name);
+  }
   return (
     <Paper
       onClick={onClick}
@@ -81,6 +80,7 @@ const FolderItem: React.FC<FolderItemProps> = ({ folder, onClick, onDelete }) =>
           mb: 1,
           zIndex: 3,
         }}
+
       />
 
       <Typography
@@ -103,15 +103,21 @@ const FolderItem: React.FC<FolderItemProps> = ({ folder, onClick, onDelete }) =>
         sx={{
           mt: 1,
           opacity: 0.8,
-          zIndex: 3,
+          zIndex : 3,
           "&:hover": {
             opacity: 1,
           },
         }}
       >
         <Tooltip title={t.download}>
-          <IconButton onClick={handleDownload} size="small" sx={{ color: "primary.main", zIndex: 4 }}>
+          <IconButton onClick={handleDownload} size="small" sx={{ color: "primary.main" , zIndex: 4}}>
             <DownloadIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+
+        <Tooltip title={t.share}>
+          <IconButton size="small" sx={{ color: "primary.main", zIndex: 4 }}>
+            <ShareIcon fontSize="small" />
           </IconButton>
         </Tooltip>
 
