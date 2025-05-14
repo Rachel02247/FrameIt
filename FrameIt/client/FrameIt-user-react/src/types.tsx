@@ -25,6 +25,7 @@ export type Tag ={
 }
 
 export type MyFile = {
+  downloadUrl?: string | null;
   file: File | null;
   id: string;
   fileName: string; 
