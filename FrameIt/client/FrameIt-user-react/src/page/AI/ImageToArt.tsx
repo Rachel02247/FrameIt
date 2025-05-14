@@ -40,16 +40,15 @@ function ImageToArt() {
   const [selectedStyle, setSelectedStyle] = useState<string>("picasso")
   const [isGenerating, setIsGenerating] = useState(false)
   const [generatedArt, setGeneratedArt] = useState<string | null>(null)
-  const { files, getImageUrl } = useGalleryImages()
+  const { files,  } = useGalleryImages()
   const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null)
 
   useEffect(() => {
-    const loadSelectedImageUrl = async () => {
+    const loadSelectedImageUrl = () => {
       if (selectedImage) {
         const selectedFile = files.find((file) => file.id === selectedImage);
         if (selectedFile) {
-          const url = await getImageUrl({ s3Key: selectedFile.s3Key });
-          setSelectedImageUrl(url);
+          setSelectedImageUrl(selectedFile.downloadUrl || null);
         }
       } else {
         setSelectedImageUrl(null);
@@ -57,7 +56,7 @@ function ImageToArt() {
     };
 
     loadSelectedImageUrl();
-  }, [selectedImage, getImageUrl]); // הסר את התלות ב-files
+  }, [selectedImage, files]);
 
   const handleImageSelect = (imageId: string) => {
     setSelectedImage(imageId)

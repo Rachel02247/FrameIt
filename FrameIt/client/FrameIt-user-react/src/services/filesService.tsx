@@ -45,7 +45,22 @@ export const getFileDownloadUrl = async (s3Key: string) => {
 export const fetchFilesByUserId = async (userId: number) => {
   try {
     const response = await axios.get(`${API_URL_BASE}/myfiles/${userId}`);
-    return response.data;
+    const files = response.data;
+
+    // Fetch download URLs for all files
+    const filesWithUrls = await Promise.all(
+      files.map(async (file: { id: string; s3Key: string }) => {
+        try {
+          const downloadUrl = await getFileDownloadUrl(file.s3Key);
+          return { ...file, downloadUrl }; // Add the download URL to the file object
+        } catch (error) {
+          console.error(`Error fetching download URL for file ${file.id}:`, error);
+          return { ...file, downloadUrl: null }; // Handle errors gracefully
+        }
+      })
+    );
+
+    return filesWithUrls;
   } catch (error) {
     console.error("Error fetching files by user ID:", error);
     throw error;

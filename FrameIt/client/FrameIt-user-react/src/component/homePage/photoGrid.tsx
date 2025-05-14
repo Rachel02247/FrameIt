@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import { Grid, Box, Typography, useTheme } from "@mui/material";
 import { motion } from "framer-motion";
 import { useLanguage } from "../../context/LanguageContext";
-import { useSelector } from "react-redux";
-import type { RootState } from "../../component/global-states/store";
-import { getFileDownloadUrl } from "../../services/filesService";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState, AppDispatch } from "../../component/global-states/store";
+import { fetchFilesByUserId } from "../../component/global-states/fileSlice";
 
 const imageUrls = [
   "https://images.pexels.com/photos/3661350/pexels-photo-3661350.jpeg",
@@ -31,6 +31,7 @@ const PhotoGrid: React.FC = () => {
   // Redux selectors
   const user = useSelector((state: RootState) => state.user.user);
   const files = useSelector((state: RootState) => state.files.files);
+  const dispatch = useDispatch<AppDispatch>();
 
   const translations = {
     en: {
@@ -45,37 +46,33 @@ const PhotoGrid: React.FC = () => {
 
   useEffect(() => {
     let isMounted = true;
-    const fetchUserImages = async () => {
-      if (user && files && files.length > 0) {
-        const sortedFiles = [...files]
-          .filter(f => !!f.s3Key)
-          .sort((a, b) => Number(b.id) - Number(a.id))
-          .slice(0, 6);
 
-        const urls: string[] = [];
-        for (const file of sortedFiles) {
-          try {
-            const res = await getFileDownloadUrl(file.s3Key);
-            console.log("getFileDownloadUrl result:", res);
-            if (typeof res === "string") {
-              urls.push(res);
-            } else if (res && typeof res.url === "string") {
-              urls.push(res.url);
-            }
-          } catch (e: any) {
-            console.error("Error fetching image URL:", e);
-          }
+    const fetchUserImages = async () => {
+      if (user) {
+        // Dispatch fetchFilesByUserId to load files into Redux
+        if (user.id) {
+          await dispatch(fetchFilesByUserId(Number(user.id)));
         }
-        if (isMounted) setUserFilesImages(urls);
-      } else {
-        setUserFilesImages([]);
+
+        if (files && files.length > 0) {
+          const sortedFiles = [...files]
+            .filter((f) => !!f.s3Key)
+            .sort((a, b) => Number(b.id) - Number(a.id))
+            .slice(0, 6);
+
+          const urls = sortedFiles.map((file) => file.downloadUrl || "");
+          if (isMounted) setUserFilesImages(urls);
+        } else {
+          setUserFilesImages([]);
+        }
       }
     };
+
     fetchUserImages();
     return () => {
       isMounted = false;
     };
-  }, [user, files]);
+  }, [user, files, dispatch]);
 
   // Shuffle images every 6 seconds (only for default images)
   useEffect(() => {
