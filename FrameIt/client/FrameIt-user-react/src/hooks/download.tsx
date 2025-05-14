@@ -3,7 +3,7 @@ import axios from 'axios';
 const API_URL = import.meta.env.VITE_API_URL;
 const API_URL_BASE = `${API_URL}/files`;
 
-const downloadFile = async (fileId: string, fileName: string, presignedUrl: string) => {
+const downloadFile = async (fileId: string, fileName: string) => {
   try {
     console.log(fileName);
     const response = await axios.get(`${API_URL_BASE}/${fileId?? '0'}/downloadToComputer`, {
@@ -14,7 +14,7 @@ const downloadFile = async (fileId: string, fileName: string, presignedUrl: stri
       
     });
 
-    const url = window.URL.createObjectURL(response.data ?? presignedUrl);
+    const url = window.URL.createObjectURL(response.data);
     const link = document.createElement('a');
     link.href = url;
     link.setAttribute('download', fileName);

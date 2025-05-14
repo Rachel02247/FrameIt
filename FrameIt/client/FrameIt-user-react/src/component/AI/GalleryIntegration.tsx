@@ -1,31 +1,37 @@
 "use client"
 
-import { useEffect } from "react"
+import { useState, useEffect } from "react"
 import { Box, Typography } from "@mui/material"
-import { useDispatch, useSelector } from "react-redux"
-import { AppDispatch, RootState } from "../global-states/store"
-import { fetchFilesByUserId, getFileDownloadUrl } from "../global-states/fileSlice"
+import type { MyFile } from "../../types"
+import { fetchFilesByUserId } from "../../services/filesService"
 import LoadingIndicator from "../../hooks/loadingIndicator"
 
 // This component will fetch and provide images from your gallery
 export function useGalleryImages() {
+  const [files, setFiles] = useState<MyFile[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  const dispatch = useDispatch<AppDispatch>()
-  const files = useSelector((state: RootState) => state.files.files)
-  const loading = useSelector((state: RootState) => state.files.loading)
-  const error = useSelector((state: RootState) => state.files.error)
-  const userId = useSelector((state: RootState) => state.user.user?.id)
+  const userId = localStorage.getItem("userId") || "0"
 
   useEffect(() => {
-    if (userId) {
-        dispatch(fetchFilesByUserId(Number(userId)))
+    const fetchImages = async () => {
+      setLoading(true)
+      try {
+        const data = await fetchFilesByUserId(Number(userId)) // Await the async function
+        setFiles(data)
+      } catch (error) {
+        console.error("Error fetching gallery images:", error)
+        setError("Failed to load your images. Please try again later.")
+      } finally {
+        setLoading(false)
+      }
     }
 
-  }, [userId, dispatch])
+    fetchImages()
+  }, [userId])
 
-  const getImageUrl = async (file: { s3Key: string }) => {    
-    return await dispatch(getFileDownloadUrl(file.s3Key)).unwrap();
-  }
+  const getImageUrl = (s3Key: string) => `${import.meta.env.VITE_API_URL}/files/download/${s3Key}`
 
   return { files, loading, error, getImageUrl }
 }

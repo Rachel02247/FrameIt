@@ -3,9 +3,8 @@ import { Modal, Box, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../component/global-states/store';
-import { getFileDownloadUrl } from '../component/global-states/fileSlice';
+import { getFileDownloadUrl } from '../services/filesService';
+import { getS3Url } from './aws';
 
 interface ImagePreviewModalProps {
   file: {
@@ -24,19 +23,21 @@ interface ImagePreviewModalProps {
 const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({ file, onClose, onNext, onPrev, hasNext, hasPrev }) => {
   const isVideo = file.fileType.toLowerCase() === 'mp4' || file.fileType.toLowerCase() === 'mov';
   const [presignedUrl, setPresignedUrl] = React.useState<string | null>(null);
-  const dispatch = useDispatch<AppDispatch>();
+  const [s3ImgUrl, setS3ImgUrl] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     const loadFileUrl = async () => {
       try {
-        const result = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap();
-        setPresignedUrl(result);
+        const url = await getFileDownloadUrl(file.id);
+         const s3Url = await getFileDownloadUrl(file.s3Key) || getS3Url(file.s3Key);
+        setPresignedUrl(url);
+        setS3ImgUrl(s3Url);
       } catch (error) {
         console.error('Error loading file URL:', error);
       }
     };
     loadFileUrl();
-  }, [file.s3Key, dispatch]);
+  }, [file.id]);
 
   return (
     <Modal open onClose={onClose}>
@@ -51,7 +52,6 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({ file, onClose, on
           width: '100%',
           height: '100%',
           backgroundColor: 'rgba(0,0,0,0.8)',
-          overflow: 'hidden',
         }}
       >
         {hasPrev && (
@@ -61,9 +61,9 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({ file, onClose, on
         )}
 
         {isVideo ? (
-          <video controls src={presignedUrl ?? "img/frameItLogo.png"} style={{ maxHeight: '80vh' }} />
+          <video controls src={s3ImgUrl ?? presignedUrl ?? "img/frameItLogo.png"} style={{ maxHeight: '80vh' }} />
         ) : (
-          <img src={ presignedUrl ?? "img/frameItLogo.png"} alt={file.fileName} style={{ maxHeight: '80vh' }} />
+          <img src={s3ImgUrl ?? presignedUrl ?? "img/frameItLogo.png"} alt={file.fileName} style={{ maxHeight: '80vh' }} />
         )}
 
         {hasNext && (

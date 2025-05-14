@@ -1,14 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Dialog, DialogContent, Grid, Box } from "@mui/material"
-import { useDispatch, useSelector } from "react-redux"
-import { AppDispatch, RootState } from "../global-states/store"
-import { fetchFilesByUserId, selectFiles } from "../global-states/fileSlice"
-import { MyFile } from "../../types"
 
 interface ImageProps {
   id: string
@@ -24,6 +19,7 @@ interface ImageGridProps {
 
 export function ImageGrid({ images }: ImageGridProps) {
   const [selectedImage, setSelectedImage] = useState<ImageProps | null>(null)
+  const [imgS3Url] = useState('');
 
   if (images.length === 0) {
     return <Box sx={{ textAlign: "center", py: 6, color: "text.secondary" }}>No images found</Box>
@@ -50,7 +46,7 @@ export function ImageGrid({ images }: ImageGridProps) {
             >
               <Box
                 component="img"
-                src={image.src}
+                src={image.src ?? imgS3Url}
                 alt={image.alt}
                 sx={{
                   position: "absolute",
@@ -86,16 +82,14 @@ export function ImageGrid({ images }: ImageGridProps) {
                 }}
               >
                 <img
-                  src={selectedImage.src}
+                  src={selectedImage.src || "/placeholder.svg"}
                   alt={selectedImage.alt}
                   onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
                     e.currentTarget.src = "/placeholder.svg"
                   }}
                 />
               </Box>
-              {selectedImage.description && (
-                <Box sx={{ mt: 2, textAlign: "center" }}>{selectedImage.description}</Box>
-              )}
+              {selectedImage.description && <Box sx={{ mt: 2, textAlign: "center" }}>{selectedImage.description}</Box>}
             </Box>
           )}
         </DialogContent>

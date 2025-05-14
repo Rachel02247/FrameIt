@@ -1,48 +1,35 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Box, Grid, CircularProgress } from "@mui/material"
-import { useGalleryImages, GalleryLoading } from "./GalleryIntegration"
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { Box, Grid, CircularProgress } from "@mui/material";
+import type { RootState, AppDispatch } from "../global-states/store";
+import { fetchFilesByUserId } from "../global-states/fileSlice";
 
 interface ImageSelectorProps {
-  selectedImage: string | null
-  onSelect: (imageId: string) => void
+  selectedImage: string | null;
+  onSelect: (imageId: string) => void;
 }
 
 export function ImageSelector({ selectedImage, onSelect }: ImageSelectorProps) {
-  const { files, loading, error, getImageUrl } = useGalleryImages()
-  const [imageUrls, setImageUrls] = useState<Record<string, string>>({})
+  const dispatch = useDispatch<AppDispatch>();
+  const files = useSelector((state: RootState) => state.files.files);
+  const loading = useSelector((state: RootState) => state.files.loading);
 
   useEffect(() => {
-    // Load presigned URLs for all images
-    const loadImageUrls = async () => {
-      const urls: Record<string, string> = {}
-
-      for (const file of files) {
-        const url = await getImageUrl({ s3Key: file.s3Key })
-        if (url) {
-          urls[file.id] = url
-        }
-      }
-
-      setImageUrls(urls)
-    }
-
-    if (files.length > 0) {
-      loadImageUrls()
-    }
-  }, [files, getImageUrl])
+    dispatch(fetchFilesByUserId(1)); // Replace 1 with the actual user ID
+  }, [dispatch]);
 
   if (loading) {
-    return <GalleryLoading />
-  }
-
-  if (error) {
-    return <Box sx={{ p: 3, color: "error.main" }}>{error}</Box>
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
+        <CircularProgress />
+      </Box>
+    );
   }
 
   if (files.length === 0) {
-    return <Box sx={{ p: 3 }}>No images found in your gallery. Please upload some images first.</Box>
+    return <Box sx={{ p: 3 }}>No images found in your gallery. Please upload some images first.</Box>;
   }
 
   return (
@@ -55,52 +42,35 @@ export function ImageSelector({ selectedImage, onSelect }: ImageSelectorProps) {
                 position: "relative",
                 paddingTop: "100%", // 1:1 Aspect Ratio
                 cursor: "pointer",
-                borderRadius: 8,
+                borderRadius: 1,
                 overflow: "hidden",
-                border: 8,
+                border: 2,
                 borderColor: selectedImage === file.id ? "primary.main" : "transparent",
                 "&:hover": {
                   borderColor: selectedImage === file.id ? "primary.main" : "grey.300",
                 },
                 transition: "all 0.2s",
+                backgroundColor: "grey.200", // Placeholder background
               }}
               onClick={() => onSelect(file.id)}
             >
-              {imageUrls[file.id] ? (
-                <Box
-                  component="img"
-                  src={imageUrls[file.id]}
-                  alt={file.fileName}
-                  sx={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                  }}
-                />
-              ) : (
-                <Box
-                  sx={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: "100%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    bgcolor: "grey.100",
-                  }}
-                >
-                  <CircularProgress size={24} />
-                </Box>
-              )}
+              <img
+                src={file.downloadUrl || "/placeholder.svg"} // Use placeholder if downloadUrl is not ready
+                alt={file.fileName || "Image"}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                }}
+                onError={(e) => (e.currentTarget.src = "/placeholder.svg")}
+              />
             </Box>
           </Grid>
         ))}
       </Grid>
     </Box>
-  )
+  );
 }

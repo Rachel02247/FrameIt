@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { generateText, experimental_generateImage } from "ai";
 import { openai } from "@ai-sdk/openai";
 
@@ -7,6 +8,7 @@ if (!OPENAI_API_KEY) {
   // Warn once at module load if key is missing
   console.error("OpenAI API key is missing. Please set VITE_OPENAI_API_KEY in your environment.");
 }
+
 
 type ImageAnalysisResult = {
   objects: string[];
@@ -20,6 +22,7 @@ type SearchResult = {
   relevanceScore: number;
 };
 
+// For image analysis
 export async function analyzeImage(imageUrl: string): Promise<ImageAnalysisResult | null> {
   console.log("Analyzing image with URL:", imageUrl); // Debugging log
 
@@ -39,15 +42,15 @@ export async function analyzeImage(imageUrl: string): Promise<ImageAnalysisResul
 
   try {
     const { text } = await generateText({
-      model: openai.chat("gpt-4o"),
+      model: openai("gpt-4o"),
       prompt: `Analyze this image in detail: ${imageUrl}
-
+      
       Identify:
       1. Main objects and people
       2. Dominant colors
       3. Scene type or setting
       4. Mood or atmosphere
-
+      
       Format the response as JSON with these keys: 
       {
         "objects": ["object1", "object2", ...], 
@@ -63,7 +66,7 @@ export async function analyzeImage(imageUrl: string): Promise<ImageAnalysisResul
     try {
       return JSON.parse(text) as ImageAnalysisResult;
     } catch (e) {
-      console.error("Failed to parse analysis result:", e);
+      console.error("Failed to parse analysis result:", e as Error); // Explicitly cast error to `Error`
       return {
         objects: ["Unknown"],
         colors: ["Unknown"],
@@ -77,6 +80,7 @@ export async function analyzeImage(imageUrl: string): Promise<ImageAnalysisResul
   }
 }
 
+// For image-to-art transformation
 export async function transformImageToArt(imageUrl: string, style: string) {
   console.log("Transforming image:", imageUrl, "with style:", style); // Debugging log
 
@@ -124,8 +128,10 @@ export async function transformImageToArt(imageUrl: string, style: string) {
     console.error("Error transforming image:", error);
     throw error;
   }
+
 }
 
+// For smart filtering and free search
 export async function searchImagesByDescription(
   description: string,
   imageUrls: string[]
@@ -136,11 +142,11 @@ export async function searchImagesByDescription(
 
   try {
     const { text } = await generateText({
-      model: openai.chat("gpt-4o"),
+      model: openai("gpt-4o"),
       prompt: `I have a collection of images and want to find ones that match this description: "${description}". 
       For each image URL in this list, rate its relevance to the description on a scale of 0-100:
       ${imageUrls.join("\n")}
-
+      
       Return only a JSON array of objects with imageUrl and relevanceScore keys.`,
       system: "You are an expert image search system. Help find the most relevant images based on text descriptions.",
     });

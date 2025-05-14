@@ -50,10 +50,13 @@ function TabPanel(props: TabPanelProps) {
 }
 
 function SmartFiltering() {
+
   const navigate = useNavigate()
   const dispatch = useDispatch<AppDispatch>()
   const files = useSelector((state: RootState) => state.files.files)
   const loading = useSelector((state: RootState) => state.files.loading)
+
+  const userId = sessionStorage.getItem("id") || 0
 
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
@@ -62,8 +65,8 @@ function SmartFiltering() {
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    // Dispatch Redux action to fetch files
-    dispatch(fetchFilesByUserId(1)) // Replace 1 with the actual user ID
+
+    dispatch(fetchFilesByUserId(parseInt(userId as string))) 
   }, [dispatch])
 
   useEffect(() => {
