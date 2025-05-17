@@ -16,7 +16,7 @@ export default () => {
             position: "absolute",
             zIndex: 2,
           }}
-          src="img/logo.png"
+          src="/img/logo.png"
           alt="logo"
         />
       </Link>

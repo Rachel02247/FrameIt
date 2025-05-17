@@ -1,42 +1,40 @@
 import React from "react";
 import { Container, Typography } from "@mui/material";
-import axios from "axios";
 import FileUpload from "./fileUpload";
-import { useSelector } from "react-redux";
-import { RootState } from "../../component/global-states/store";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "../../component/global-states/store";
 import { MyFile } from "../../types";
-import { uploadFiles } from "../../services/filesService";
+import { uploadFiles } from "../../component/global-states/fileSlice";
 
 const Upload = () => {
   const user = useSelector((state: RootState) => state.user.user);
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleUpload = async (files: MyFile[], folderId: string) => {
-    const formData = new FormData();
+    const formattedFiles = files.map((file) => ({
+      ...file,
+      isDeleted: false,
+      ownerId: user?.id ?? "0",
+    }));
 
-    for (let i = 0; i < files.length; i++) {
-
-      const file = files[i];
-      formData.append("file", file.file ?? new Blob());
-      formData.append("FileName", file.fileName);
-      formData.append("FileType", file.fileType);
-      formData.append("FolderId", folderId);
-      formData.append("Size", file.size.toString());
-      formData.append("S3Key", `${folderId}/${file.fileName}`);
-      formData.append("IsDeleted", "false");
-      formData.append("OwnerId", user?.id ?? "0");
-
-      try {
-
-        const response = await uploadFiles(formData);
-        
-        console.log("File uploaded successfully:", response);
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          console.error("Error uploading file:", error.response?.data || error.message);
-        } else {
-          console.error("Unknown error:", error);
+    try {
+      const formData = new FormData();
+      formattedFiles.forEach((file) => {
+        if (file.file) {
+          formData.append("files", file.file);
         }
-      }
+        formData.append("fileMetadata", JSON.stringify({
+          s3Key: file.s3Key,
+          isDeleted: file.isDeleted,
+          ownerId: file.ownerId,
+        }));
+      });
+      formData.append("folderId", folderId);
+
+      await dispatch(uploadFiles(formData)).unwrap();
+      console.log("Files uploaded successfully");
+    } catch (error) {
+      console.error("Error uploading files:", error);
     }
   };
 
@@ -57,7 +55,6 @@ const Upload = () => {
             isDeleted: false,
             folderId: folderId,
             ownerId: user?.id ?? "0",
-          
           }));
           return handleUpload(myFiles, folderId);
         }}

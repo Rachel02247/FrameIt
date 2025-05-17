@@ -48,17 +48,14 @@ const PhotoGrid: React.FC = () => {
     let isMounted = true;
 
     const fetchUserImages = async () => {
-      if (user) {
-        // Dispatch fetchFilesByUserId to load files into Redux
-        if (user.id) {
-          await dispatch(fetchFilesByUserId(Number(user.id)));
-        }
+      if (user?.id) {
+        await dispatch(fetchFilesByUserId(Number(user.id)));
 
         if (files && files.length > 0) {
           const sortedFiles = [...files]
-            .filter((f) => !!f.s3Key)
-            .sort((a, b) => Number(b.id) - Number(a.id))
-            .slice(0, 6);
+            .filter((f) => !!f.s3Key) 
+            .sort((a, b) => Number(b.id) - Number(a.id)) // Sort by id (descending)
+            .slice(0, 6); 
 
           const urls = sortedFiles.map((file) => file.downloadUrl || "");
           if (isMounted) setUserFilesImages(urls);
