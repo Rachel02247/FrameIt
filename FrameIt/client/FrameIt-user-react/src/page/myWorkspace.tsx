@@ -16,7 +16,7 @@ const MyWorkspace: React.FC = () => {
       upload: "Upload",
       createCollage: "Create Collage",
       create: "Create",
-      aiFiltering: "AI    Filtering",
+      aiFiltering: "AI Filtering",
       apply: "Apply",
       myCollections: "My Collections",
       manage: "Manage",

@@ -49,6 +49,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload }) => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
+    const [uploadInterval, setUploadInterval] = useState<NodeJS.Timeout | null>(null);
     const [files, setFiles] = useState<MyFile[]>([]);
     const [selectedFolder, setSelectedFolder] = useState<string>("");
     const [folders, setFolders] = useState<Folder[]>([]);
@@ -116,6 +117,18 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload }) => {
         setLoading(true);
         setUploadProgress(0);
 
+        // Simulate upload progress
+        const interval = setInterval(() => {
+            setUploadProgress((prev) => {
+                if (prev >= 100) {
+                    clearInterval(interval);
+                    return 100;
+                }
+                return prev + Math.floor(Math.random() * 10) + 5; // Increment by 5-15
+            });
+        }, 300); // Update every 300ms
+        setUploadInterval(interval);
+
         try {
             await onUpload(files, selectedFolder);
             console.log("✅ Upload successful!");
@@ -125,8 +138,20 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload }) => {
         } finally {
             setLoading(false);
             setOpen(false);
+            if (uploadInterval) {
+                clearInterval(uploadInterval);
+            }
+            setUploadProgress(0);
         }
     };
+
+    useEffect(() => {
+        return () => {
+            if (uploadInterval) {
+                clearInterval(uploadInterval);
+            }
+        };
+    }, [uploadInterval]);
 
     return (
         <>
@@ -243,7 +268,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUpload }) => {
                             {t.cancel}
                         </Button>
                         <Button onClick={handleUpload} color="primary" disabled={loading}>
-                           {loading? <img src="img/spinner.gif" alt="spinner" width={24} /> : t.upload } 
+                           {loading? <img src="/img/spinner.gif" alt="spinner" width={24} /> : t.upload } 
                         </Button>
                     </DialogActions>
                 </Dialog>

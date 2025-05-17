@@ -5,7 +5,6 @@ import { openai } from "@ai-sdk/openai";
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
 if (!OPENAI_API_KEY) {
-  // Warn once at module load if key is missing
   console.error("OpenAI API key is missing. Please set VITE_OPENAI_API_KEY in your environment.");
 }
 
@@ -42,7 +41,7 @@ export async function analyzeImage(imageUrl: string): Promise<ImageAnalysisResul
 
   try {
     const { text } = await generateText({
-      model: openai("gpt-4o"),
+      model: openai("gpt-4o-mini"),
       prompt: `Analyze this image in detail: ${imageUrl}
       
       Identify:
@@ -104,7 +103,8 @@ export async function transformImageToArt(imageUrl: string, style: string) {
 
   try {
     const { images } = await experimental_generateImage({
-      model: openai.image("dall-e-3"),
+      // model: openai.image("dall-e-3"),
+     model: openai.image("gpt-4o-mini"),
       prompt: `Transform this image ${styleDescription}. Maintain the main subject and composition of the original image: ${imageUrl}`,
     });
 
@@ -142,7 +142,7 @@ export async function searchImagesByDescription(
 
   try {
     const { text } = await generateText({
-      model: openai("gpt-4o"),
+      model: openai("gpt-4o-mini"),
       prompt: `I have a collection of images and want to find ones that match this description: "${description}". 
       For each image URL in this list, rate its relevance to the description on a scale of 0-100:
       ${imageUrls.join("\n")}
@@ -153,7 +153,7 @@ export async function searchImagesByDescription(
 
     try {
       const results = JSON.parse(text) as SearchResult[];
-      return results.filter((item) => item.relevanceScore > 70);
+      return results.filter((item) => item.relevanceScore > 80);
     } catch (e) {
       console.error("Failed to parse search results:", e);
       return [];
