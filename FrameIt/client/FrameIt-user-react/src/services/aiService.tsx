@@ -81,7 +81,7 @@ export async function analyzeImage(imageUrl: string): Promise<ImageAnalysisResul
 
 // For image-to-art transformation
 export async function transformImageToArt(imageUrl: string, style: string) {
-  console.log("Transforming image:", imageUrl, "with style:", style); // Debugging log
+  console.log("Transforming image:", imageUrl, "with style:", style); 
 
   if (!OPENAI_API_KEY) {
     throw new Error("OpenAI API key is missing.");

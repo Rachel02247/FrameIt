@@ -116,7 +116,7 @@ const Collections: React.FC = () => {
             left: 0,
             right: 0,
             height: "4px",
-            background: "linear-gradient(90deg, #1976d2, #42a5f5)",
+            background: "linear-gradient(90deg,rgb(56, 57, 58),rgb(31, 31, 31))",
           },
         }}
       >

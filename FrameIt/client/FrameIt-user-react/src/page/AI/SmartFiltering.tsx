@@ -22,6 +22,7 @@ import {
 import { ArrowBack, Search } from "@mui/icons-material"
 import { ImageGrid } from "../../component/AI/ImageGrid"
 import { useGalleryImages } from "../../component/AI/GalleryIntegration"
+import LoadingIndicator from "../../hooks/loadingIndicator"
 
 const predefinedCategories = ["People", "Animals", "Nature", "Urban", "Food", "Travel", "Sports"]
 
@@ -63,9 +64,13 @@ function SmartFiltering() {
       const urls: Record<string, string> = {}
 
       for (const file of files) {
-        const url = await getImageUrl({ s3Key: file.s3Key }) // Await the Promise
-        if (url) {
-          urls[file.id] = url
+        if (file.downloadUrl) {
+          urls[file.id] = file.downloadUrl
+        } else {
+          const url = await getImageUrl({ s3Key: file.s3Key })
+          if (url) {
+            urls[file.id] = url
+          }
         }
       }
 
@@ -75,7 +80,7 @@ function SmartFiltering() {
     if (files.length > 0) {
       loadImageUrls()
     }
-  }, [files])
+  }, [files, getImageUrl])
 
   useEffect(() => {
     // Convert files to the format expected by ImageGrid
@@ -182,7 +187,7 @@ function SmartFiltering() {
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
-        <IconButton onClick={() => navigate("/aiFeatures")} sx={{ mr: 1 }}>
+        <IconButton onClick={() => navigate("/myWorkspace/aiFeatures")} sx={{ mr: 1 }}>
           <ArrowBack />
         </IconButton>
         <Typography variant="h4" component="h1" fontWeight="bold">
@@ -226,7 +231,7 @@ function SmartFiltering() {
           <Button
             variant="contained"
             onClick={handleSearch}
-            startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : <Search />}
+            startIcon={isLoading ? <LoadingIndicator/>: <Search />}
             disabled={isLoading || !searchQuery.trim()}
           >
             {isLoading ? "Searching..." : "Search"}
