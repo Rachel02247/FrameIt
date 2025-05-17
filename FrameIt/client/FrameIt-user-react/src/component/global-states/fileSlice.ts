@@ -112,19 +112,24 @@ const fileSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
-      // Get File Download URL
       .addCase(getFileDownloadUrl.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getFileDownloadUrl.fulfilled, (state) => {
+      .addCase(getFileDownloadUrl.fulfilled, (state, action) => {
         state.loading = false;
+
+        const s3Key = action.meta.arg;
+        const url = action.payload;
+        const file = state.files.find(f => f.s3Key === s3Key);
+        if (file) {
+          (file as MyFile).downloadUrl = url;
+        }
       })
       .addCase(getFileDownloadUrl.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       })
-      // Delete File
       .addCase(deleteFile.pending, (state) => {
         state.loading = true;
         state.error = null;

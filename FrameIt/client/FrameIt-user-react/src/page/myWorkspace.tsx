@@ -16,7 +16,7 @@ const MyWorkspace: React.FC = () => {
       upload: "Upload",
       createCollage: "Create Collage",
       create: "Create",
-      aiFiltering: "AI Filtering",
+      aiFiltering: "AI \nFiltering",
       apply: "Apply",
       myCollections: "My Collections",
       manage: "Manage",
@@ -89,7 +89,13 @@ const MyWorkspace: React.FC = () => {
           <Card>
             <CardContent>
               <Filter fontSize="large" />
-              <Typography variant="h6">{t.aiFiltering}</Typography>
+              <Typography variant="h6">  {t.aiFiltering.split('\n').map((line, index) => (
+                <React.Fragment key={index}>
+                  {line}
+                  <br />
+                </React.Fragment>
+              ))}
+              </Typography>
               <Button
                 component={Link}
                 to="/myWorkspace/AiFeuteres"

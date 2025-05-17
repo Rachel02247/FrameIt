@@ -36,8 +36,12 @@ function ImageAnalysis() {
       if (selectedImage) {
         const selectedFile = files.find((file) => file.id === selectedImage)
         if (selectedFile) {
-          const url = await getImageUrl({ s3Key: selectedFile.s3Key })
-          setSelectedImageUrl(url)
+          if (selectedFile.downloadUrl) {
+            setSelectedImageUrl(selectedFile.downloadUrl)
+          } else {
+            const url = await getImageUrl({ s3Key: selectedFile.s3Key })
+            setSelectedImageUrl(url)
+          }
         }
       } else {
         setSelectedImageUrl(null)
@@ -45,7 +49,7 @@ function ImageAnalysis() {
     }
 
     loadSelectedImageUrl()
-  }, [selectedImage, files])
+  }, [selectedImage, files, getImageUrl])
 
   const handleImageSelect = (imageId: string) => {
     setSelectedImage(imageId)
@@ -71,7 +75,7 @@ function ImageAnalysis() {
     } catch (error) {
       console.error("Error analyzing image:", error)
       enqueueSnackbar("An error occurred during image analysis.", {
-        variant: "error", // No changes needed here
+        variant: "error", 
       })
     } finally {
       setIsAnalyzing(false)

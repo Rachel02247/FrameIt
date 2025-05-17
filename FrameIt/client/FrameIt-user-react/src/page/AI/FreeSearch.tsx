@@ -43,9 +43,13 @@ function FreeSearch() {
       const urls: Record<string, string> = {}
 
       for (const file of files) {
-        const url = await getImageUrl({ s3Key: file.s3Key }) // Fixed to use `s3Key` instead of `id`
-        if (url) {
-          urls[file.id] = url
+        if (file.downloadUrl) {
+          urls[file.id] = file.downloadUrl
+        } else {
+          const url = await getImageUrl({ s3Key: file.s3Key })
+          if (url) {
+            urls[file.id] = url
+          }
         }
       }
 

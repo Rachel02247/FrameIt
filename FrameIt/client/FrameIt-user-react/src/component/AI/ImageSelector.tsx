@@ -19,9 +19,13 @@ export function ImageSelector({ selectedImage, onSelect }: ImageSelectorProps) {
       const urls: Record<string, string> = {}
 
       for (const file of files) {
-        const url = await getImageUrl({ s3Key: file.s3Key })
-        if (url) {
-          urls[file.id] = url
+        if (file.downloadUrl) {
+          urls[file.id] = file.downloadUrl
+        } else {
+          const url = await getImageUrl({ s3Key: file.s3Key })
+          if (url) {
+            urls[file.id] = url
+          }
         }
       }
 
@@ -31,7 +35,7 @@ export function ImageSelector({ selectedImage, onSelect }: ImageSelectorProps) {
     if (files.length > 0) {
       loadImageUrls()
     }
-  }, [])
+  }, [files, getImageUrl])
 
   if (loading) {
     return <GalleryLoading />
@@ -53,7 +57,7 @@ export function ImageSelector({ selectedImage, onSelect }: ImageSelectorProps) {
             <Box
               sx={{
                 position: "relative",
-                paddingTop: "100%", // 1:1 Aspect Ratio
+                paddingTop: "100%",
                 cursor: "pointer",
                 borderRadius: 1,
                 overflow: "hidden",
