@@ -23,8 +23,15 @@ export function useGalleryImages() {
 
   }, [userId, dispatch])
 
-  const getImageUrl = async (file: { s3Key: string }) => {    
-    return await dispatch(getFileDownloadUrl(file.s3Key)).unwrap();
+  const getImageUrl = async (file: { s3Key: string; downloadUrl?: string }) => {
+    // בדוק אם ה-downloadUrl כבר קיים
+    if (file.downloadUrl) {
+      return file.downloadUrl
+    }
+
+    // אם לא קיים, בצע קריאה לשרת ושמור את ה-URL ב-Redux
+    const url = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap()
+    return url
   }
 
   return { files, loading, error, getImageUrl }
