@@ -1,8 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import type React from "react"
+
+import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import {
   Container,
   Typography,
@@ -16,13 +17,12 @@ import {
   FormControlLabel,
   Radio,
   FormControl,
-} from "@mui/material";
-import { ArrowBack, Download, Loop } from "@mui/icons-material";
-import { ImageSelector } from "../../component/AI/ImageSelector";
-import { useSnackbar } from "notistack";
-import { transformImageToArt } from "../../services/aiService";
-import { fetchFilesByUserId } from "../../component/global-states/fileSlice";
-import type { RootState, AppDispatch } from "../../component/global-states/store";
+} from "@mui/material"
+import { ArrowBack, Download, Loop } from "@mui/icons-material"
+import { ImageSelector } from "../../component/AI/ImageSelector"
+import { useSnackbar } from "notistack"
+import { useGalleryImages } from "../../component/AI/GalleryIntegration"
+import { transformImageToArt } from "../../services/aiService"
 
 const artStyles = [
   { id: "picasso", name: "Picasso", description: "Cubist style with geometric shapes" },
@@ -31,92 +31,83 @@ const artStyles = [
   { id: "pop-art", name: "Pop Art", description: "Bold colors and outlines, comic book style" },
   { id: "realistic", name: "Realistic", description: "Detailed and true-to-life representation" },
   { id: "anime", name: "Anime", description: "Japanese animation style" },
-];
+]
 
 function ImageToArt() {
-  const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
-  const { enqueueSnackbar } = useSnackbar();
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [selectedStyle, setSelectedStyle] = useState<string>("picasso");
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedArt, setGeneratedArt] = useState<string | null>(null);
-  const files = useSelector((state: RootState) => state.files.files);
-  const loading = useSelector((state: RootState) => state.files.loading);
-  const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
+  const navigate = useNavigate()
+  const { enqueueSnackbar } = useSnackbar()
+  const [selectedImage, setSelectedImage] = useState<string | null>(null)
+  const [selectedStyle, setSelectedStyle] = useState<string>("picasso")
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [generatedArt, setGeneratedArt] = useState<string | null>(null)
+  const { files, getImageUrl } = useGalleryImages()
+  const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null)
 
   useEffect(() => {
-    dispatch(fetchFilesByUserId(1)); // Replace 1 with the actual user ID
-  }, [dispatch]);
-
-  useEffect(() => {
-    const loadSelectedImageUrl = () => {
+    const loadSelectedImageUrl = async () => {
       if (selectedImage) {
-        const selectedFile = files.find((file) => file.id === selectedImage);
+        const selectedFile = files.find((file) => file.id === selectedImage)
         if (selectedFile) {
-          setSelectedImageUrl(selectedFile.downloadUrl || null);
+          const url = await getImageUrl({ s3Key: selectedFile.s3Key })
+          setSelectedImageUrl(url)
         }
       } else {
-        setSelectedImageUrl(null);
+        setSelectedImageUrl(null)
       }
-    };
+    }
 
-    loadSelectedImageUrl();
-  }, [selectedImage, files]);
+    loadSelectedImageUrl()
+  }, [files])
 
   const handleImageSelect = (imageId: string) => {
-    setSelectedImage(imageId);
-    setGeneratedArt(null);
-  };
+    setSelectedImage(imageId)
+    setGeneratedArt(null)
+  }
 
   const handleStyleSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedStyle(event.target.value);
-    setGeneratedArt(null);
-  };
+    setSelectedStyle(event.target.value)
+    setGeneratedArt(null)
+  }
 
   const handleGenerateArt = async () => {
-    if (!selectedImage || !selectedStyle || !selectedImageUrl) {
-      enqueueSnackbar("Please select an image and style before generating art.", {
-        variant: "warning",
-      });
-      return;
-    }
+    if (!selectedImage || !selectedStyle || !selectedImageUrl) return
 
-    setIsGenerating(true);
+    setIsGenerating(true)
 
     try {
-      const artUrl = await transformImageToArt(selectedImageUrl, selectedStyle);
+      // Call the AI service to transform the image
+      const artUrl = await transformImageToArt(selectedImageUrl, selectedStyle)
 
-      if (artUrl) {
-        setGeneratedArt(artUrl);
+      if (artUrl !== undefined && artUrl !== null) {
+        setGeneratedArt(artUrl)
       } else {
         enqueueSnackbar("Could not generate artwork. Please try again.", {
-          variant: "error",
-        });
+          variant: "error", 
+        })
       }
     } catch (error) {
-      console.error("Error generating art:", error);
+      console.error("Error generating art:", error)
       enqueueSnackbar("An error occurred during art generation.", {
-        variant: "error",
-      });
+        variant: "error", 
+      })
     } finally {
-      setIsGenerating(false);
+      setIsGenerating(false)
     }
-  };
+  }
 
   const handleDownload = () => {
-    if (!generatedArt) return;
+    if (!generatedArt) return
 
-    const link = document.createElement("a");
-    link.href = generatedArt;
-    link.download = `art-${selectedStyle}-${Date.now()}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+    const link = document.createElement("a")
+    link.href = generatedArt
+    link.download = `art-${selectedStyle}-${Date.now()}.png`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4, top: 10 }}>
+    <Container maxWidth="lg" sx={{ py: 4 }}>
       <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
         <IconButton onClick={() => navigate("/myWorkspace/aiFeatures")} sx={{ mr: 1 }}>
           <ArrowBack />
@@ -133,13 +124,7 @@ function ImageToArt() {
               <Typography variant="h6" component="h2" gutterBottom>
                 Select an Image from Your Gallery
               </Typography>
-              {loading ? (
-                <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
-                  <Loop />
-                </Box>
-              ) : (
-                <ImageSelector selectedImage={selectedImage} onSelect={handleImageSelect} />
-              )}
+              <ImageSelector selectedImage={selectedImage} onSelect={handleImageSelect} />
             </CardContent>
           </Card>
         </Grid>
@@ -219,7 +204,7 @@ function ImageToArt() {
         </Card>
       )}
     </Container>
-  );
+  )
 }
 
-export default ImageToArt;
+export default ImageToArt
