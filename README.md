@@ -34,4 +34,4 @@ To run the project locally:
 
 1. Clone the repository (if available):
    ```bash
-   git clone https://github.com/your-username/frameit.git
+   git clone https://github.com/Rachel02247/frameit.git
