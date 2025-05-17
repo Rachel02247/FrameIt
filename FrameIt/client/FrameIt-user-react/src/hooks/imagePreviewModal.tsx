@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Box, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { useSelector } from "react-redux";
-import { RootState } from "../component/global-states/store";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "../component/global-states/store";
+import { getFileDownloadUrl } from "../component/global-states/fileSlice";
 
 interface ImagePreviewModalProps {
   file: {
@@ -29,10 +30,24 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
   hasPrev,
 }) => {
   const isVideo = file.fileType.toLowerCase() === "mp4" || file.fileType.toLowerCase() === "mov";
+  const dispatch = useDispatch<AppDispatch>();
   const files = useSelector((state: RootState) => state.files.files);
 
   const currentFile = files.find((f) => f.id === file.id);
-  const fileUrl = currentFile?.downloadUrl || "img/frameItLogo.png";
+  const [fileUrl, setFileUrl] = useState(currentFile?.downloadUrl);
+
+  useEffect(() => {
+    if (currentFile && !currentFile.downloadUrl && currentFile.s3Key) {
+      dispatch(getFileDownloadUrl(currentFile.s3Key))
+        .unwrap()
+        .then((url) => {
+          setFileUrl(url);
+        })
+        .catch(() => {
+          setFileUrl(undefined);
+        });
+    }
+  }, [currentFile, dispatch]);
 
   return (
     <Modal open onClose={onClose}>
@@ -56,9 +71,9 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
         )}
 
         {isVideo ? (
-          <video controls src={fileUrl} style={{ maxHeight: "80vh" }} />
+          <video controls src={fileUrl ?? '/img/frameItLogo.png'} style={{ maxHeight: "80vh" }} />
         ) : (
-          <img src={fileUrl} alt={file.fileName} style={{ maxHeight: "80vh" }} />
+          <img src={fileUrl ?? '/img/frameItLogo.png'} alt={file.fileName} style={{ maxHeight: "80vh" }} />
         )}
 
         {hasNext && (

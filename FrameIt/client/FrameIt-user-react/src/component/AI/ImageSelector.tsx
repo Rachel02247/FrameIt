@@ -14,7 +14,6 @@ export function ImageSelector({ selectedImage, onSelect }: ImageSelectorProps) {
   const [imageUrls, setImageUrls] = useState<Record<string, string>>({})
 
   useEffect(() => {
-    // Load presigned URLs for all images
     const loadImageUrls = async () => {
       const urls: Record<string, string> = {}
 
@@ -22,7 +21,12 @@ export function ImageSelector({ selectedImage, onSelect }: ImageSelectorProps) {
         if (file.downloadUrl) {
           urls[file.id] = file.downloadUrl
         } else {
-          const url = await getImageUrl({ s3Key: file.s3Key })
+          const { s3Key, downloadUrl, ...rest } = file
+          const url = await getImageUrl({
+            s3Key,
+            ...(downloadUrl ? { downloadUrl } : {}),
+            ...rest,
+          })
           if (url) {
             urls[file.id] = url
           }
