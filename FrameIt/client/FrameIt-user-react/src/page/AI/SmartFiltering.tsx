@@ -64,9 +64,10 @@ function SmartFiltering() {
       const urls: Record<string, string> = {}
 
       for (const file of files) {
+        // בדוק אם ה-downloadUrl כבר קיים
         if (file.downloadUrl) {
           urls[file.id] = file.downloadUrl
-        } else {
+        } else if (!urls[file.id]) {
           const url = await getImageUrl({ s3Key: file.s3Key })
           if (url) {
             urls[file.id] = url

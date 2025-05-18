@@ -34,18 +34,25 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
   const files = useSelector((state: RootState) => state.files.files);
 
   const currentFile = files.find((f) => f.id === file.id);
-  const [fileUrl, setFileUrl] = useState(currentFile?.downloadUrl);
+  const [fileUrl, setFileUrl] = useState<string | undefined>(currentFile?.downloadUrl ?? undefined);
 
   useEffect(() => {
-    if (currentFile && !currentFile.downloadUrl && currentFile.s3Key) {
-      dispatch(getFileDownloadUrl(currentFile.s3Key))
-        .unwrap()
-        .then((url) => {
-          setFileUrl(url);
-        })
-        .catch(() => {
-          setFileUrl(undefined);
-        });
+    // Reset fileUrl when currentFile changes
+    if (currentFile) {
+      if (currentFile.downloadUrl) {
+        setFileUrl(currentFile.downloadUrl);
+      } else if (currentFile.s3Key) {
+        dispatch(getFileDownloadUrl(currentFile.s3Key))
+          .unwrap()
+          .then((url) => {
+            setFileUrl(url);
+          })
+          .catch(() => {
+            setFileUrl(undefined);
+          });
+      }
+    } else {
+      setFileUrl(undefined); // Reset fileUrl if no currentFile
     }
   }, [currentFile, dispatch]);
 
@@ -71,9 +78,9 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
         )}
 
         {isVideo ? (
-          <video controls src={fileUrl ?? '/img/frameItLogo.png'} style={{ maxHeight: "80vh" }} />
+          <video controls src={fileUrl ?? "/img/frameItLogo.png"} style={{ maxHeight: "80vh" }} />
         ) : (
-          <img src={fileUrl ?? '/img/frameItLogo.png'} alt={file.fileName} style={{ maxHeight: "80vh" }} />
+          <img src={fileUrl ?? "/img/frameItLogo.png"} alt={file.fileName} style={{ maxHeight: "80vh" }} />
         )}
 
         {hasNext && (
