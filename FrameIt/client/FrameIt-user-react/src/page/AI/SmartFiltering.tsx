@@ -368,14 +368,25 @@ function SmartFiltering() {
       }));
     };
 
+    // if (Object.keys(imageUrls).length > 0) {
+    //   // השוואה רדודה כדי למנוע עדכון אם המערך זהה
+    //   const newFilteredImages = convertFilesToImageGrid();
+    //   if (JSON.stringify(newFilteredImages) !== JSON.stringify(filteredImages)) {
+    //     setFilteredImages(newFilteredImages);
+    //   }
+    // }
     if (Object.keys(imageUrls).length > 0) {
-      // השוואה רדודה כדי למנוע עדכון אם המערך זהה
       const newFilteredImages = convertFilesToImageGrid();
-      if (JSON.stringify(newFilteredImages) !== JSON.stringify(filteredImages)) {
+
+      // נבצע השוואה רק אם המספרים של התמונות השתנו כדי למנוע לולאה
+      const isSameLength = newFilteredImages.length === filteredImages.length;
+      const isSameContent = isSameLength && newFilteredImages.every((img, i) => img.id === filteredImages[i]?.id);
+
+      if (!isSameContent) {
         setFilteredImages(newFilteredImages);
       }
     }
-  }, [files, imageUrls, filteredImages]); // הוספנו filteredImages כתלות - שימי לב לזה
+  }, [files, imageUrls]); // הוספנו filteredImages כתלות - שימי לב לזה
 
   const handleSearch = useCallback(() => {
     setIsLoading(true);
@@ -499,7 +510,7 @@ function SmartFiltering() {
           <Button
             variant="contained"
             onClick={handleSearch}
-            startIcon={isLoading ? <LoadingIndicator/>: <Search />}
+            startIcon={isLoading ? <LoadingIndicator /> : <Search />}
             disabled={isLoading || !searchQuery.trim()}
           >
             {isLoading ? "Searching..." : "Search"}
