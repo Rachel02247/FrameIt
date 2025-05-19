@@ -121,9 +121,9 @@ const fileSlice = createSlice({
 
         const s3Key = action.meta.arg;
         const url = action.payload;
-        const file = state.files.find(f => f.s3Key === s3Key);
-        if (file) {
-          (file as MyFile).downloadUrl = url;
+        const file = state.files.find((f) => f.s3Key === s3Key);
+        if (file && !file.downloadUrl) {
+          file.downloadUrl = url;
         }
       })
       .addCase(getFileDownloadUrl.rejected, (state, action) => {

@@ -24,14 +24,17 @@ export function useGalleryImages() {
   }, [userId, dispatch])
 
   const getImageUrl = async (file: { s3Key: string; downloadUrl?: string }) => {
-    // בדוק אם ה-downloadUrl כבר קיים
     if (file.downloadUrl) {
-      return file.downloadUrl
+      return file.downloadUrl;
     }
 
-    // אם לא קיים, בצע קריאה לשרת ושמור את ה-URL ב-Redux
-    const url = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap()
-    return url
+    try {
+      const url = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap();
+      return url;
+    } catch (error) {
+      console.error("Failed to fetch image URL:", error);
+      return null;
+    }
   }
 
   return { files, loading, error, getImageUrl }
