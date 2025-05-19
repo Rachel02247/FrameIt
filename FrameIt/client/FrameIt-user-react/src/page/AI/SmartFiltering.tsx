@@ -83,21 +83,38 @@ function SmartFiltering() {
     }
   }, [files, getImageUrl])
 
+  // useEffect(() => {
+  //   // Convert files to the format expected by ImageGrid
+  //   const convertFilesToImageGrid = () => {
+  //     return files.map((file) => ({
+  //       id: file.id,
+  //       src: imageUrls[file.id] || "",
+  //       alt: file.fileName,
+  //       tags: file.fileType, // In a real app, you'd have actual tags
+  //     }))
+  //   }
+
+  //   if (Object.keys(imageUrls).length > 0) {
+  //     setFilteredImages(convertFilesToImageGrid())
+  //   }
+  // }, [files, imageUrls])
+  const [didInitialize, setDidInitialize] = useState(false);
+
   useEffect(() => {
-    // Convert files to the format expected by ImageGrid
-    const convertFilesToImageGrid = () => {
-      return files.map((file) => ({
+    if (!didInitialize && files.length > 0 && Object.keys(imageUrls).length > 0) {
+      const images = files.map((file) => ({
         id: file.id,
         src: imageUrls[file.id] || "",
         alt: file.fileName,
-        tags: file.fileType, // In a real app, you'd have actual tags
-      }))
+        tags: file.fileType,
+      }));
+      setFilteredImages(images);
+      setDidInitialize(true);
     }
+  }, [files, imageUrls, didInitialize]);
 
-    if (Object.keys(imageUrls).length > 0) {
-      setFilteredImages(convertFilesToImageGrid())
-    }
-  }, [files, imageUrls])
+
+
 
   const handleSearch = () => {
     setIsLoading(true)
@@ -232,7 +249,7 @@ function SmartFiltering() {
           <Button
             variant="contained"
             onClick={handleSearch}
-            startIcon={isLoading ? <LoadingIndicator/>: <Search />}
+            startIcon={isLoading ? <LoadingIndicator /> : <Search />}
             disabled={isLoading || !searchQuery.trim()}
           >
             {isLoading ? "Searching..." : "Search"}

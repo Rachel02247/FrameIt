@@ -1,0 +1,23 @@
+<div class="sidebar-container">
+
+    <div class="sidebar-header">
+
+        <a>
+            <img style="width: 40px;" class="img-logo" src="/img/logo.png" alt="logo" />
+        </a>
+        <a>
+            <mat-icon class="logo-icon">people</mat-icon>
+            users
+        </a>
+
+    </div>
+
+    <div class="user-avatar">
+        @if(userName){
+        {{userName.charAt(0).toUpperCase()}}
+        }
+        @else{
+        <mat-icon>person</mat-icon>
+        }
+    </div>
+</div>
