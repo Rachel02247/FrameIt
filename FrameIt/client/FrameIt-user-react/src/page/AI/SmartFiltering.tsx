@@ -58,55 +58,35 @@ function SmartFiltering() {
   const { files, loading, getImageUrl } = useGalleryImages()
   const [imageUrls, setImageUrls] = useState<Record<string, string>>({})
 
-  // useEffect(() => {
-  //   // Load presigned URLs for all images
-  //   const loadImageUrls = async () => {
-  //     const urls: Record<string, string> = {}
-
-  //     for (const file of files) {
-  //       // בדוק אם ה-downloadUrl כבר קיים
-  //       if (file.downloadUrl) {
-  //         urls[file.id] = file.downloadUrl
-  //       } else if (!urls[file.id]) {
-  //         const url = await getImageUrl({ s3Key: file.s3Key })
-  //         if (url) {
-  //           urls[file.id] = url
-  //         }
-  //       }
-  //     }
-
-  //     setImageUrls(urls)
-  //   }
-
-  //   if (files.length > 0) {
-  //     loadImageUrls()
-  //   }
-  // }, [files, getImageUrl])
-
-
   useEffect(() => {
     const loadImageUrls = async () => {
-      const urls: Record<string, string> = {}
+      const urls: Record<string, string> = {};
+      const batchSize = 10;
 
-      for (const file of files) {
-        if (!imageUrls[file.id]) {
-          const url = file.downloadUrl || (await getImageUrl({ s3Key: file.s3Key }))
-          if (url) {
-            urls[file.id] = url
-          }
-        }
+      for (let i = 0; i < files.length; i += batchSize) {
+        const batch = files.slice(i, i + batchSize);
+
+        await Promise.all(
+          batch.map(async (file) => {
+            if (file.downloadUrl) {
+              urls[file.id] = file.downloadUrl;
+            } else if (!urls[file.id]) {
+              const url = await getImageUrl({ s3Key: file.s3Key });
+              if (url) {
+                urls[file.id] = url;
+              }
+            }
+          })
+        );
       }
 
-      if (Object.keys(urls).length > 0) {
-        setImageUrls((prev) => ({ ...prev, ...urls }))
-      }
-    }
+      setImageUrls(urls);
+    };
 
     if (files.length > 0) {
-      loadImageUrls()
+      loadImageUrls();
     }
   }, [files, getImageUrl])
-
 
   useEffect(() => {
     // Convert files to the format expected by ImageGrid
@@ -257,7 +237,7 @@ function SmartFiltering() {
           <Button
             variant="contained"
             onClick={handleSearch}
-            startIcon={isLoading ? <LoadingIndicator /> : <Search />}
+            startIcon={isLoading ? <LoadingIndicator/>: <Search />}
             disabled={isLoading || !searchQuery.trim()}
           >
             {isLoading ? "Searching..." : "Search"}

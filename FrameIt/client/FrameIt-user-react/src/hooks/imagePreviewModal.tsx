@@ -1,5 +1,7 @@
+"use client"
+
 import React, { useEffect, useState } from "react";
-import { Modal, Box, IconButton } from "@mui/material";
+import { Modal, Box, IconButton, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -37,7 +39,6 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
   const [fileUrl, setFileUrl] = useState<string | undefined>(currentFile?.downloadUrl ?? undefined);
 
   useEffect(() => {
-    // Reset fileUrl when currentFile changes
     if (currentFile) {
       if (currentFile.downloadUrl) {
         setFileUrl(currentFile.downloadUrl);
@@ -52,7 +53,7 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
           });
       }
     } else {
-      setFileUrl(undefined); // Reset fileUrl if no currentFile
+      setFileUrl(undefined);
     }
   }, [currentFile, dispatch]);
 
@@ -77,10 +78,16 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
           </IconButton>
         )}
 
-        {isVideo ? (
-          <video controls src={fileUrl ?? "/img/frameItLogo.png"} style={{ maxHeight: "80vh" }} />
+        {fileUrl ? (
+          isVideo ? (
+            <video controls src={fileUrl} style={{ maxHeight: "80vh" }} />
+          ) : (
+            <img src={fileUrl} alt={file.fileName} style={{ maxHeight: "80vh" }} />
+          )
         ) : (
-          <img src={fileUrl ?? "/img/frameItLogo.png"} alt={file.fileName} style={{ maxHeight: "80vh" }} />
+          <Typography variant="h6" sx={{ color: "#fff" }}>
+            {file.fileName}
+          </Typography>
         )}
 
         {hasNext && (
