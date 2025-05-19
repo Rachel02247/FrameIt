@@ -58,30 +58,55 @@ function SmartFiltering() {
   const { files, loading, getImageUrl } = useGalleryImages()
   const [imageUrls, setImageUrls] = useState<Record<string, string>>({})
 
+  // useEffect(() => {
+  //   // Load presigned URLs for all images
+  //   const loadImageUrls = async () => {
+  //     const urls: Record<string, string> = {}
+
+  //     for (const file of files) {
+  //       // בדוק אם ה-downloadUrl כבר קיים
+  //       if (file.downloadUrl) {
+  //         urls[file.id] = file.downloadUrl
+  //       } else if (!urls[file.id]) {
+  //         const url = await getImageUrl({ s3Key: file.s3Key })
+  //         if (url) {
+  //           urls[file.id] = url
+  //         }
+  //       }
+  //     }
+
+  //     setImageUrls(urls)
+  //   }
+
+  //   if (files.length > 0) {
+  //     loadImageUrls()
+  //   }
+  // }, [files, getImageUrl])
+
+
   useEffect(() => {
-    // Load presigned URLs for all images
     const loadImageUrls = async () => {
       const urls: Record<string, string> = {}
 
       for (const file of files) {
-        // בדוק אם ה-downloadUrl כבר קיים
-        if (file.downloadUrl) {
-          urls[file.id] = file.downloadUrl
-        } else if (!urls[file.id]) {
-          const url = await getImageUrl({ s3Key: file.s3Key })
+        if (!imageUrls[file.id]) {
+          const url = file.downloadUrl || (await getImageUrl({ s3Key: file.s3Key }))
           if (url) {
             urls[file.id] = url
           }
         }
       }
 
-      setImageUrls(urls)
+      if (Object.keys(urls).length > 0) {
+        setImageUrls((prev) => ({ ...prev, ...urls }))
+      }
     }
 
     if (files.length > 0) {
       loadImageUrls()
     }
   }, [files, getImageUrl])
+
 
   useEffect(() => {
     // Convert files to the format expected by ImageGrid
@@ -232,7 +257,7 @@ function SmartFiltering() {
           <Button
             variant="contained"
             onClick={handleSearch}
-            startIcon={isLoading ? <LoadingIndicator/>: <Search />}
+            startIcon={isLoading ? <LoadingIndicator /> : <Search />}
             disabled={isLoading || !searchQuery.trim()}
           >
             {isLoading ? "Searching..." : "Search"}
