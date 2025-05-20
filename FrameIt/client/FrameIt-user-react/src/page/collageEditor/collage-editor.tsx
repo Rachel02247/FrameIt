@@ -135,10 +135,9 @@ const CollageEditor = () => {
   }
 
   const handleSendEmail = () => {
-    if (!collageRef.current)
-      return
-    sendEmail(collageRef.current)
-  }
+    if (!collageRef.current) return;
+    sendEmail(collageRef.current);
+  };
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3, p: 3, maxWidth: "80%", mx: "auto" }}>
@@ -153,7 +152,7 @@ const CollageEditor = () => {
         <CollageCanvas
           ref={collageRef}
           images={images}
-          backgroundColor={backgroundColor} // Pass updated background color
+          backgroundColor={backgroundColor}
           width={canvasWidth}
           height={canvasHeight}
           selectedImageId={selectedImageId}
@@ -165,7 +164,6 @@ const CollageEditor = () => {
         {/* Upload and Download Section */}
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
           <ImageUploader onUpload={handleImageUpload} />
-
           <Button
             variant="contained"
             color="primary"
@@ -174,40 +172,37 @@ const CollageEditor = () => {
           >
             Download Collage
           </Button>
-
           <Button
             variant="outlined"
             color="secondary"
             onClick={handleSendEmail}
           >
-            Send by Email
+            Send to my email
           </Button>
         </Box>
-
-
-        <Divider sx={{ width: "100%", my: 2 }} />
-
-        {/* Options Section */}
-        <Paper sx={{ p: 3, bgcolor: theme.palette.background.paper, display: "flex", flexWrap: "wrap", gap: 3, justifyContent: "space-between" }}>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
-            <TemplateSelector onSelect={handleTemplateSelect} />
-          </Box>
-
-          <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
-
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
-            <AspectRatioSelector selectedRatio={aspectRatio} onChange={handleAspectRatioChange} />
-          </Box>
-
-          <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
-
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
-            <BackgroundColorPicker color={backgroundColor} onChange={handleBackgroundColorChange} />
-          </Box>
-        </Paper>
       </Box>
-    </Box>
-  )
-}
 
-export default CollageEditor
+      {/* Options Section */}
+      <Divider sx={{ width: "100%", my: 2 }} />
+      <Paper sx={{ p: 3, bgcolor: theme.palette.background.paper, display: "flex", flexWrap: "wrap", gap: 3, justifyContent: "space-between" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
+          <TemplateSelector onSelect={handleTemplateSelect} />
+        </Box>
+
+        <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
+
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
+          <AspectRatioSelector selectedRatio={aspectRatio} onChange={handleAspectRatioChange} />
+        </Box>
+
+        <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
+
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
+          <BackgroundColorPicker color={backgroundColor} onChange={handleBackgroundColorChange} />
+        </Box>
+      </Paper>
+    </Box>
+  );
+};
+
+export default CollageEditor;

@@ -18,11 +18,12 @@ import {
   Radio,
   FormControl,
 } from "@mui/material"
-import { ArrowBack, Download, Loop } from "@mui/icons-material"
+import { ArrowBack, Download, Loop, Email } from "@mui/icons-material"
 import { ImageSelector } from "../../component/AI/ImageSelector"
 import { useSnackbar } from "notistack"
 import { useGalleryImages } from "../../component/AI/GalleryIntegration"
 import { transformImageToArt } from "../../services/aiService"
+import { sendEmail } from "../../hooks/sendEmail";
 
 const artStyles = [
   { id: "picasso", name: "Picasso", description: "Cubist style with geometric shapes" },
@@ -109,6 +110,19 @@ function ImageToArt() {
     link.click()
     document.body.removeChild(link)
   }
+
+  const handleSendEmail = async () => {
+    if (!generatedArt) return;
+
+    const imgElement = document.createElement("img");
+    imgElement.src = generatedArt;
+
+    try {
+      await sendEmail(imgElement);
+    } catch (error) {
+      console.error("Error sending email:", error);
+    }
+  };
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -200,9 +214,14 @@ function ImageToArt() {
               >
                 <img src={generatedArt || "/placeholder.svg"} alt="Generated artwork" />
               </Box>
-              <Button variant="contained" onClick={handleDownload} startIcon={<Download />}>
-                Download Artwork
-              </Button>
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <Button variant="contained" onClick={handleDownload} startIcon={<Download />}>
+                  Download Artwork
+                </Button>
+                <Button variant="contained" color="secondary" onClick={handleSendEmail} startIcon={<Email />}>
+                  Send via Email
+                </Button>
+              </Box>
             </Box>
           </CardContent>
         </Card>

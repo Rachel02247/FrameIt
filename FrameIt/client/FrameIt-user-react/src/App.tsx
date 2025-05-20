@@ -14,7 +14,6 @@ function AppContent() {
 
   useEffect(() => {
     document.body.style.backgroundColor = theme.palette.background.default;
-    // (אופציונלי) גם ה-html
     document.documentElement.style.backgroundColor = theme.palette.background.default;
   }, [theme.palette.background.default]);
 
