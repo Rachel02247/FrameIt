@@ -2,9 +2,12 @@ import emailjs from "@emailjs/browser";
 import { toPng } from "html-to-image";
 
 export const sendEmail = async (element: HTMLElement) => {
+ 
   const tokenEmail = sessionStorage.getItem("token")?.split(".")[1];
-  const emailPlayload = tokenEmail ? JSON.parse(atob(tokenEmail)) : null;
-  const userEmail = emailPlayload?.email || 'r0527102247@gmail.com';
+  const emailPayload = tokenEmail ? JSON.parse(atob(tokenEmail)) : null;
+  const userEmail =
+    emailPayload?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"] ||
+    'framit.norply@gmail.com';
 
   const userName = sessionStorage.getItem("name");
 
