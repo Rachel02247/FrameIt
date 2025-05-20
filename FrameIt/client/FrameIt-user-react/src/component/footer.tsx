@@ -25,12 +25,12 @@ export default () => {
         <Typography variant="body2" align="center" color="secondary">
           Contact us at:{' '}
 
-          <Link
+          <a
             href="mailto:frameit.noreply@gmail.com?subject=Support%20Request&body=Hi%2C%20I%20need%20help%20with%20FrameIt"
             color="inherit"
           >
             support@frameit.com
-          </Link>
+          </a>
 
         </Typography>
       </Container>

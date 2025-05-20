@@ -1,5 +1,5 @@
 import emailjs from "@emailjs/browser";
-import { toPng } from "html-to-image";
+import { toJpeg } from "html-to-image";
 import { toast } from "react-toastify";
 
 export const sendEmail = async (element: HTMLElement) => {
@@ -15,12 +15,18 @@ export const sendEmail = async (element: HTMLElement) => {
 
   try {
     let quality = 0.95;
-    let dataUrl = await toPng(element, { quality });
+    let dataUrl = await toJpeg(element, { quality });
 
-    while (dataUrl.length > 50 * 1024 && quality > 0.1) {
+    const maxSize = 50 * 1024; // 50KB
+
+    // הורדת איכות עד שעוברים את התנאי או מגיעים לסף איכות מינימלי
+    while ((dataUrl.length * 3) / 4 > maxSize && quality > 0.1) {
       quality -= 0.05;
-      dataUrl = await toPng(element, { quality });
+      dataUrl = await toJpeg(element, { quality });
     }
+
+    const finalSize = Math.round((dataUrl.length * 3) / 4);
+    console.log(`Final image size: ${finalSize} bytes, quality: ${quality.toFixed(2)}`);
 
     await emailjs.send(
       import.meta.env.VITE_EMAILJS_SERVICE_ID,

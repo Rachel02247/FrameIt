@@ -37,6 +37,7 @@ export const uploadFiles = createAsyncThunk(
   "files/uploadFiles",
   async (formData: FormData, { rejectWithValue }) => {
     try {
+      console.log("Uploading files...");
       const response = await axios.post(`${API_URL_BASE}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
