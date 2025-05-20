@@ -42,7 +42,7 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
     if (currentFile) {
       if (currentFile.downloadUrl) {
         setFileUrl(currentFile.downloadUrl);
-      } else if (currentFile.s3Key) {
+      } else {
         dispatch(getFileDownloadUrl(currentFile.s3Key))
           .unwrap()
           .then((url) => {

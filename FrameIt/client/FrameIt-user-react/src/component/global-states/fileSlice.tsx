@@ -22,7 +22,9 @@ export const fetchFilesByUserId = createAsyncThunk(
   "files/fetchFilesByUserId",
   async (userId: number, { rejectWithValue }) => {
     try {
+      console.log("Fetching files for user ID:", userId);
       const response = await axios.get(`${API_URL_BASE}/myfiles/${userId}`);
+      console.log("Fetched files:", response.data);
       return response.data;
     } catch (error) {
       console.error("Error fetching files by user ID:", error);
@@ -92,6 +94,7 @@ const fileSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchFilesByUserId.fulfilled, (state, action: PayloadAction<MyFile[]>) => {
+        console.log("Action payload:", action.payload);
         state.files = action.payload;
         state.loading = false;
       })
