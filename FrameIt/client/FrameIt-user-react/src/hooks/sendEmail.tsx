@@ -22,7 +22,7 @@ export const sendEmail = async (element: HTMLElement) => {
       import.meta.env.VITE_EMAILJS_SERVICE_ID,
       import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
       {
-        to_email: userEmail,
+        to_email: userEmail ?? 'r0527102247@gmail.com',
         message: "Here is your collage!",
         user_name: userName,
         collage_base64: dataUrl,
