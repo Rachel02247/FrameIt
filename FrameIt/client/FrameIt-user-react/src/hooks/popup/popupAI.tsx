@@ -64,7 +64,7 @@ export default () => {
         <Typography variant="body1" sx={{ fontSize: "1rem", lineHeight: 1.8 }}>
           <EmailIcon sx={{ verticalAlign: "middle", mr: 1, color: "secondary.main" }} />
           Questions or feedback? We’d love to hear from you. <br />
-          <Link href="mailto:support@framelt.com" underline="hover" color="primary">
+          <Link href="mailto:frameit.noreply@gmail.com" underline="hover" color="primary">
             support@framelt.com
           </Link>
         </Typography>
