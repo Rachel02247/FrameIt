@@ -69,7 +69,7 @@ export default function PopupNotice() {
           Have questions or feedback?
           <br />
           <strong>We’re listening.</strong> Reach us at: <br />
-          <Link href="mailto:support@framelt.com" underline="hover" color="primary">
+          <Link href="mailto:frameit.noreply@gmail.com" underline="hover" color="primary">
             support@framelt.com
           </Link>
         </Typography>

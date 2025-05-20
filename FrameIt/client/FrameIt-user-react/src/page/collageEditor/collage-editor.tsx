@@ -11,6 +11,7 @@ import { Divider, Button, Box, Typography, Paper } from "@mui/material"
 import DownloadIcon from "@mui/icons-material/Download"
 import type { CollageImage, Template, AspectRatio } from "../../types"
 import { useTheme } from "@mui/material/styles"
+import { sendEmail } from "../../hooks/sendEmail"
 
 const CollageEditor = () => {
   const theme = useTheme()
@@ -57,7 +58,6 @@ const CollageEditor = () => {
 
     setImages((prevImages) => [...prevImages, ...newImages])
 
-    // Apply template if selected
     if (selectedTemplate && newImages.length > 0) {
       applyTemplate([...images, ...newImages])
     }
@@ -69,7 +69,6 @@ const CollageEditor = () => {
     const arrangedImages = [...imagesToArrange]
     const templatePositions = selectedTemplate.layout
 
-    // Apply template positions to images
     for (let i = 0; i < Math.min(arrangedImages.length, templatePositions.length); i++) {
       const position = templatePositions[i]
       arrangedImages[i] = {
@@ -135,6 +134,12 @@ const CollageEditor = () => {
     }
   }
 
+  const handleSendEmail = () => {
+    if (!collageRef.current)
+      return
+    sendEmail(collageRef.current)
+  }
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3, p: 3, maxWidth: "80%", mx: "auto" }}>
       {/* Title */}
@@ -160,6 +165,7 @@ const CollageEditor = () => {
         {/* Upload and Download Section */}
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
           <ImageUploader onUpload={handleImageUpload} />
+
           <Button
             variant="contained"
             color="primary"
@@ -168,29 +174,38 @@ const CollageEditor = () => {
           >
             Download Collage
           </Button>
+
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={handleSendEmail}
+          >
+            Send by Email
+          </Button>
         </Box>
+
+
+        <Divider sx={{ width: "100%", my: 2 }} />
+
+        {/* Options Section */}
+        <Paper sx={{ p: 3, bgcolor: theme.palette.background.paper, display: "flex", flexWrap: "wrap", gap: 3, justifyContent: "space-between" }}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
+            <TemplateSelector onSelect={handleTemplateSelect} />
+          </Box>
+
+          <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
+
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
+            <AspectRatioSelector selectedRatio={aspectRatio} onChange={handleAspectRatioChange} />
+          </Box>
+
+          <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
+
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
+            <BackgroundColorPicker color={backgroundColor} onChange={handleBackgroundColorChange} />
+          </Box>
+        </Paper>
       </Box>
-
-      <Divider sx={{ width: "100%", my: 2 }} />
-
-      {/* Options Section */}
-      <Paper sx={{ p: 3, bgcolor: theme.palette.background.paper, display: "flex", flexWrap: "wrap", gap: 3, justifyContent: "space-between" }}>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
-          <TemplateSelector onSelect={handleTemplateSelect} />
-        </Box>
-
-        <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
-
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
-          <AspectRatioSelector selectedRatio={aspectRatio} onChange={handleAspectRatioChange} />
-        </Box>
-
-        <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
-
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
-          <BackgroundColorPicker color={backgroundColor} onChange={handleBackgroundColorChange} />
-        </Box>
-      </Paper>
     </Box>
   )
 }
