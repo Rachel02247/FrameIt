@@ -23,6 +23,9 @@ import { ArrowBack, Search } from "@mui/icons-material"
 import { ImageGrid } from "../../component/AI/ImageGrid"
 import { useGalleryImages } from "../../component/AI/GalleryIntegration"
 import LoadingIndicator from "../../hooks/loadingIndicator"
+import { useDispatch } from "react-redux"
+import { AppDispatch } from "../../component/global-states/store"
+import { getFileDownloadUrl } from "../../component/global-states/fileSlice"
 
 const predefinedCategories = ["People", "Animals", "Nature", "Urban", "Food", "Travel", "Sports"]
 
@@ -58,6 +61,8 @@ function SmartFiltering() {
   const { files, loading, getImageUrl } = useGalleryImages()
   const [imageUrls, setImageUrls] = useState<Record<string, string>>({})
 
+  const dispatch = useDispatch<AppDispatch>()
+
   useEffect(() => {
     const loadImageUrls = async () => {
       const urls: Record<string, string> = {};
@@ -71,7 +76,7 @@ function SmartFiltering() {
             if (file.downloadUrl) {
               urls[file.id] = file.downloadUrl;
             } else if (!urls[file.id]) {
-              const url = await getImageUrl({ s3Key: file.s3Key });
+              const url = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap();
               if (url) {
                 urls[file.id] = url;
               }
