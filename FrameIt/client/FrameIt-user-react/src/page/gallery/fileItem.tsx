@@ -179,8 +179,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
           onError={() => setImageError(true)}
         >
           <source src={presignedUrl} type={`video/${file.fileType}`} />
-          הדפדפן שלך אינו תומך בניגון וידאו.
-        </video>
+          your browser does'nt support on video display        </video>
       ) : (
         <Box
           component="img"
