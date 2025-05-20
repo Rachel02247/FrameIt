@@ -4,7 +4,8 @@ import { toPng } from "html-to-image";
 export const sendEmail = async (element: HTMLElement) => {
   const tokenEmail = sessionStorage.getItem("token")?.split(".")[1];
   const emailPlayload = tokenEmail ? JSON.parse(atob(tokenEmail)) : null;
-  const userEmail = emailPlayload?.email;
+  const userEmail = emailPlayload?.email || 'r0527102247@gmail.com';
+  
 
   const userName = sessionStorage.getItem("name");
 

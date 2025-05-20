@@ -48,6 +48,12 @@ export default () => {
 
   const t = translations[language];
 
+const handlelogout = () => {
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('name');
+    sessionStorage.removeItem('id');
+}
+
   return (
     <React.Fragment>
       <Box
@@ -128,7 +134,7 @@ export default () => {
           <ListItemIcon>
             {user ? <Logout fontSize="small" /> : <Login fontSize="small" />}
           </ListItemIcon>
-          <Link to="/login">{user ? t.logout : t.login}</Link>
+          <Link to="/login" onClick={handlelogout}>{user ? t.logout : t.login}</Link>
         </MenuItem>
       </Menu>
     </React.Fragment>
