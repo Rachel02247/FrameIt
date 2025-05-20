@@ -27,7 +27,7 @@ import CreateCollection from "../../hooks/createCollection"
 import { downloadByUrl, downloadFile } from "../../hooks/download"
 import type { FileItemProps } from "../../types"
 import { useLanguage } from "../../context/LanguageContext"
-import { getImageUrl } from "../../services/awsService"
+import { getFileDownloadUrl } from "../../component/global-states/fileSlice"
 
 // Function to get file preview URL from server
 
@@ -71,9 +71,15 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
       setIsLoading(true)
 
       try {
-      const getFilePreviewUrl = await getImageUrl(file.s3Key);
+        if (file.downloadUrl) {
+          setPresignedUrl(file.downloadUrl)
+          return
+        }
+
+        const getFilePreviewUrl = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap()
         console.log("getFilePreviewUrl", getFilePreviewUrl)
         setPresignedUrl(getFilePreviewUrl);
+        file.downloadUrl = presignedUrl;
       } catch (error) {
         console.error("Error loading file URL:", error)
         setImageError(true)

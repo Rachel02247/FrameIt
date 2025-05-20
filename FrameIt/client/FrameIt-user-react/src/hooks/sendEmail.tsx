@@ -1,15 +1,20 @@
-import emailjs from "@emailjs/browser"
-import { toPng } from "html-to-image"
+import emailjs from "@emailjs/browser";
+import { toPng } from "html-to-image";
 
 export const sendEmail = async (element: HTMLElement) => {
+  const tokenEmail = sessionStorage.getItem("token")?.split(".")[1];
+  const userEmail = tokenEmail ? JSON.parse(atob(tokenEmail)) : null;
 
-    const tokenEmail = sessionStorage.getItem("token")?.split(".")[1]
-    const userEmail = tokenEmail ? JSON.parse(atob(tokenEmail)) : null
-
-    const userName = sessionStorage.getItem("name");
+  const userName = sessionStorage.getItem("name");
 
   try {
-    const dataUrl = await toPng(element, { quality: 0.95 })
+    let quality = 0.95; 
+    let dataUrl = await toPng(element, { quality });
+
+    while (dataUrl.length > 50 * 1024 && quality > 0.1) {
+      quality -= 0.05;
+      dataUrl = await toPng(element, { quality });
+    }
 
     await emailjs.send(
       import.meta.env.VITE_EMAILJS_SERVICE_ID,
@@ -21,11 +26,11 @@ export const sendEmail = async (element: HTMLElement) => {
         collage_base64: dataUrl,
       },
       import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-    )
+    );
 
-    alert("Email sent successfully!")
+    alert("Email sent successfully!");
   } catch (error) {
-    console.error("Error sending email:", error)
-    alert("Failed to send email.")
+    console.error("Error sending email:", error);
+    alert("Failed to send email.");
   }
-}
+};
