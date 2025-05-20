@@ -24,6 +24,9 @@ import { useSnackbar } from "notistack"
 import { useGalleryImages } from "../../component/AI/GalleryIntegration"
 import { transformImageToArt } from "../../services/aiService"
 import { sendEmail } from "../../hooks/sendEmail";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../component/global-states/store";
+import { getFileDownloadUrl } from "../../component/global-states/fileSlice";
 
 const artStyles = [
   { id: "picasso", name: "Picasso", description: "Cubist style with geometric shapes" },
@@ -41,7 +44,8 @@ function ImageToArt() {
   const [selectedStyle, setSelectedStyle] = useState<string>("picasso")
   const [isGenerating, setIsGenerating] = useState(false)
   const [generatedArt, setGeneratedArt] = useState<string | null>(null)
-  const { files, getImageUrl } = useGalleryImages()
+  const { files,  } = useGalleryImages()
+  const dispatch = useDispatch<AppDispatch>();
   const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null)
 
   useEffect(() => {
@@ -52,8 +56,8 @@ function ImageToArt() {
           if (selectedFile.downloadUrl) {
             setSelectedImageUrl(selectedFile.downloadUrl)
           } else {
-            const url = await getImageUrl({ s3Key: selectedFile.s3Key })
-            setSelectedImageUrl(url)
+            const url = await dispatch(getFileDownloadUrl(selectedFile.s3Key)).unwrap();
+            setSelectedImageUrl(url);
           }
         }
       } else {
@@ -62,7 +66,7 @@ function ImageToArt() {
     }
 
     loadSelectedImageUrl()
-  }, [selectedImage, files, getImageUrl])
+  }, [selectedImage, files, dispatch])
 
   const handleImageSelect = (imageId: string) => {
     setSelectedImage(imageId)

@@ -6,11 +6,11 @@ export const sendEmail = async (element: HTMLElement) => {
   const emailPlayload = tokenEmail ? JSON.parse(atob(tokenEmail)) : null;
   const userEmail = emailPlayload?.email || 'r0527102247@gmail.com';
   
-
   const userName = sessionStorage.getItem("name");
 
   try {
-    let quality = 0.95; 
+
+    let quality = 0.95;
     let dataUrl = await toPng(element, { quality });
 
     while (dataUrl.length > 50 * 1024 && quality > 0.1) {
@@ -29,8 +29,10 @@ export const sendEmail = async (element: HTMLElement) => {
       },
       import.meta.env.VITE_EMAILJS_PUBLIC_KEY
     );
-
-    alert("Email sent successfully!");
+    console.log("Email sent successfully!");
+    console.log(userEmail);
+    console.log(userName);
+      alert("Email sent successfully!");
   } catch (error) {
     console.error("Error sending email:", error);
     alert("Failed to send email.");
