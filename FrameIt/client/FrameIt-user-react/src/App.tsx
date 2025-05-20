@@ -8,6 +8,7 @@ import ThemeToggle from "./component/themeToggle";
 import { LanguageProvider } from "./context/LanguageContext";
 import LanguageToggle from "./component/languageToggle";
 import { useTheme } from "@mui/material/styles";
+import { ToastContainer } from "react-toastify";
 
 function AppContent() {
   const theme = useTheme();
@@ -22,6 +23,7 @@ function AppContent() {
       <LanguageToggle />
       <Provider store={store}>
         <RouterProvider router={router} />
+        <ToastContainer position="top-center" />
       </Provider>
     </>
   );

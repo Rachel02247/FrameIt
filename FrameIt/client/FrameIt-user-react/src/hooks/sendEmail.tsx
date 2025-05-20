@@ -1,8 +1,8 @@
 import emailjs from "@emailjs/browser";
 import { toPng } from "html-to-image";
+import { toast } from "react-toastify";
 
 export const sendEmail = async (element: HTMLElement) => {
- 
   const tokenEmail = sessionStorage.getItem("token")?.split(".")[1];
   const emailPayload = tokenEmail ? JSON.parse(atob(tokenEmail)) : null;
   const userEmail =
@@ -11,10 +11,9 @@ export const sendEmail = async (element: HTMLElement) => {
 
   const userName = sessionStorage.getItem("name");
 
+  const toastId = toast.loading("Sending email...");
+
   try {
-    console.log("Sending email...");
-    console.log(userEmail);
-    console.log(userName);
     let quality = 0.95;
     let dataUrl = await toPng(element, { quality });
 
@@ -34,12 +33,20 @@ export const sendEmail = async (element: HTMLElement) => {
       },
       import.meta.env.VITE_EMAILJS_PUBLIC_KEY
     );
-    console.log("Email sent successfully!");
-    console.log(userEmail);
-    console.log(userName);
-    alert("Email sent successfully!");
+
+    toast.update(toastId, {
+      render: "Email sent successfully!",
+      type: "success",
+      isLoading: false,
+      autoClose: 3000,
+    });
   } catch (error) {
     console.error("Error sending email:", error);
-    alert("Failed to send email.");
+    toast.update(toastId, {
+      render: "Failed to send email. Please try again.",
+      type: "error",
+      isLoading: false,
+      autoClose: 3000,
+    });
   }
 };
