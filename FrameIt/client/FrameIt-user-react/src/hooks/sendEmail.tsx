@@ -5,11 +5,13 @@ export const sendEmail = async (element: HTMLElement) => {
   const tokenEmail = sessionStorage.getItem("token")?.split(".")[1];
   const emailPlayload = tokenEmail ? JSON.parse(atob(tokenEmail)) : null;
   const userEmail = emailPlayload?.email || 'r0527102247@gmail.com';
-  
+
   const userName = sessionStorage.getItem("name");
 
   try {
-
+    console.log("Sending email...");
+    console.log(userEmail);
+    console.log(userName);
     let quality = 0.95;
     let dataUrl = await toPng(element, { quality });
 
@@ -32,7 +34,7 @@ export const sendEmail = async (element: HTMLElement) => {
     console.log("Email sent successfully!");
     console.log(userEmail);
     console.log(userName);
-      alert("Email sent successfully!");
+    alert("Email sent successfully!");
   } catch (error) {
     console.error("Error sending email:", error);
     alert("Failed to send email.");
