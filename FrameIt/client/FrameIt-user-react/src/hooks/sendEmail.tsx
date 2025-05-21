@@ -21,6 +21,7 @@ export const sendEmail = async (element: HTMLElement) => {
 
     // הורדת איכות עד שעוברים את התנאי או מגיעים לסף איכות מינימלי
     while ((dataUrl.length * 3) / 4 > maxSize && quality > 0.1) {
+      console.log(`Image size: ${Math.round((dataUrl.length * 3) / 4)} bytes, quality: ${quality.toFixed(2)}`);
       quality -= 0.05;
       dataUrl = await toJpeg(element, { quality });
     }

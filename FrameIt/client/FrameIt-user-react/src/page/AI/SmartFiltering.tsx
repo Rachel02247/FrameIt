@@ -55,43 +55,58 @@ function SmartFiltering() {
   const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
-  const [filteredImages, setFilteredImages] = useState<any[]>([])
+  const [, setFilteredImages] = useState<any[]>([])
   const [tabValue, setTabValue] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
-  const { files, loading, getImageUrl } = useGalleryImages()
+  const { files, loading,  } = useGalleryImages()
   const [imageUrls, setImageUrls] = useState<Record<string, string>>({})
 
   const dispatch = useDispatch<AppDispatch>()
 
+  const BATCH_SIZE = 10; // Define batch size for loading images
+  const [currentBatch, setCurrentBatch] = useState(0); // Track the current batch index
+  const [displayedImages, setDisplayedImages] = useState<any[]>([]); // Images to display
+
   useEffect(() => {
-    const loadImageUrls = async () => {
+    const loadBatch = async () => {
+      const startIndex = currentBatch * BATCH_SIZE;
+      const endIndex = startIndex + BATCH_SIZE;
+      const batch = files.slice(startIndex, endIndex);
+
       const urls: Record<string, string> = {};
-      const batchSize = 10;
-
-      for (let i = 0; i < files.length; i += batchSize) {
-        const batch = files.slice(i, i + batchSize);
-
-        await Promise.all(
-          batch.map(async (file) => {
-            if (file.downloadUrl) {
-              urls[file.id] = file.downloadUrl;
-            } else if (!urls[file.id]) {
-              const url = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap();
-              if (url) {
-                urls[file.id] = url;
-              }
+      await Promise.all(
+        batch.map(async (file) => {
+          if (file.downloadUrl) {
+            urls[file.id] = file.downloadUrl;
+          } else if (!imageUrls[file.id]) {
+            const url = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap();
+            if (url) {
+              urls[file.id] = url;
             }
-          })
-        );
-      }
+          }
+        })
+      );
 
-      setImageUrls(urls);
+      setImageUrls((prev) => ({ ...prev, ...urls }));
+
+      const newImages = batch.map((file) => ({
+        id: file.id,
+        src: urls[file.id] || "",
+        alt: file.fileName,
+        tags: file.fileType,
+      }));
+
+      setDisplayedImages((prev) => [...prev, ...newImages]);
     };
 
-    if (files.length > 0) {
-      loadImageUrls();
+    if (files.length > 0 && currentBatch * BATCH_SIZE < files.length) {
+      loadBatch();
     }
-  }, [files, getImageUrl])
+  }, [currentBatch, files, dispatch, imageUrls]);
+
+  const handleLoadMore = () => {
+    setCurrentBatch((prev) => prev + 1); // Increment batch index to load the next batch
+  };
 
   useEffect(() => {
     // Convert files to the format expected by ImageGrid
@@ -265,7 +280,16 @@ function SmartFiltering() {
               <CircularProgress />
             </Box>
           ) : (
-            <ImageGrid images={filteredImages} />
+            <>
+              <ImageGrid images={displayedImages} />
+              {currentBatch * BATCH_SIZE < files.length && (
+                <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+                  <Button variant="contained" onClick={handleLoadMore}>
+                    Load More
+                  </Button>
+                </Box>
+              )}
+            </>
           )}
         </CardContent>
       </Card>

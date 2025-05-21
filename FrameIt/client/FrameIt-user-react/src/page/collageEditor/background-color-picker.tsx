@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState } from "react"
-import { Box, Typography, Button, Popover, Grid } from "@mui/material"
+import { Box, Typography, Button, Popover, Grid, TextField, MenuItem } from "@mui/material"
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown"
 import CheckIcon from "@mui/icons-material/Check"
 
@@ -26,6 +26,15 @@ const predefinedColors = [
   "#e8f5e9", // Light green
 ]
 
+const fonts = [
+  "Arial",
+  "Verdana",
+  "Times New Roman",
+  "Georgia",
+  "Courier New",
+  "Comic Sans MS",
+]
+
 interface BackgroundColorPickerProps {
   color: string
   onChange: (color: string) => void
@@ -33,6 +42,9 @@ interface BackgroundColorPickerProps {
 
 export const BackgroundColorPicker = ({ color, onChange }: BackgroundColorPickerProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
+  const [text, setText] = useState<string>("")
+  const [font, setFont] = useState<string>("Arial")
+  const [textColor, setTextColor] = useState<string>("#000000")
   const open = Boolean(anchorEl)
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -138,6 +150,42 @@ export const BackgroundColorPicker = ({ color, onChange }: BackgroundColorPicker
           </Box>
         </Box>
       </Popover>
+
+      <Typography variant="subtitle1" fontWeight="medium">
+        Add Text
+      </Typography>
+      <TextField
+        fullWidth
+        variant="outlined"
+        placeholder="Enter your text"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+      />
+      <Typography variant="subtitle1" fontWeight="medium">
+        Select Font
+      </Typography>
+      <TextField
+        select
+        fullWidth
+        variant="outlined"
+        value={font}
+        onChange={(e) => setFont(e.target.value)}
+      >
+        {fonts.map((fontOption) => (
+          <MenuItem key={fontOption} value={fontOption}>
+            {fontOption}
+          </MenuItem>
+        ))}
+      </TextField>
+      <Typography variant="subtitle1" fontWeight="medium">
+        Text Color
+      </Typography>
+      <input
+        type="color"
+        value={textColor}
+        onChange={(e) => setTextColor(e.target.value)}
+        style={{ width: "100%", height: 32, padding: 0, border: "none" }}
+      />
     </Box>
   )
 }

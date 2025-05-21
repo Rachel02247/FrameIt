@@ -30,7 +30,8 @@ const Upload = () => {
         }));
       });
       formData.append("folderId", folderId);
-
+      console.log("Uploading files... :)");
+      console.log(formData)
       await dispatch(uploadFiles(formData)).unwrap();
       console.log("Files uploaded successfully");
     } catch (error) {
