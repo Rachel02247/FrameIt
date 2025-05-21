@@ -51,6 +51,7 @@ function ImageToArt() {
   const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
   const [currentBatch, setCurrentBatch] = useState(0); // Moved inside the component
   const [displayedImages, setDisplayedImages] = useState<{ id: string; src: string; alt: string }[]>([]); // Moved inside the component
+  const [loadedImageIds, setLoadedImageIds] = useState<Set<string>>(new Set()); // Track loaded image IDs
 
   useEffect(() => {
     const loadSelectedImageUrl = async () => {
@@ -79,33 +80,44 @@ function ImageToArt() {
       const batch = files.slice(startIndex, endIndex);
 
       const urls: Record<string, string> = {};
+      const newImages: { id: string; src: string; alt: string }[] = [];
+
       await Promise.all(
         batch.map(async (file) => {
-          if (file.downloadUrl) {
-            urls[file.id] = file.downloadUrl;
-          } else if (!urls[file.id]) {
-            const url = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap();
-            urls[file.id] = url;
+          if (!loadedImageIds.has(file.id)) {
+            if (file.downloadUrl) {
+              urls[file.id] = file.downloadUrl;
+            } else if (!urls[file.id]) {
+              const url = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap();
+              urls[file.id] = url;
+            }
+
+            newImages.push({
+              id: file.id,
+              src: urls[file.id] || "",
+              alt: file.fileName,
+            });
           }
         })
       );
 
-      const newImages = batch.map((file) => ({
-        id: file.id,
-        src: urls[file.id] || "",
-        alt: file.fileName,
-      }));
-
-      setDisplayedImages((prev) => [...prev, ...newImages]); // Update displayedImages
+      setDisplayedImages((prev) => [...prev, ...newImages]);
+      setLoadedImageIds((prev) => {
+        const updatedSet = new Set(prev);
+        newImages.forEach((image) => updatedSet.add(image.id));
+        return updatedSet;
+      });
     };
 
     if (files.length > 0 && currentBatch * BATCH_SIZE < files.length) {
       loadBatch();
     }
-  }, [currentBatch, files, dispatch]);
+  }, [currentBatch, files, dispatch, loadedImageIds]);
 
   const handleLoadMore = () => {
-    setCurrentBatch((prev) => prev + 1); // Increment batch index to load the next batch
+    if (currentBatch * BATCH_SIZE < files.length) {
+      setCurrentBatch((prev) => prev + 1); // Increment batch index to load the next batch
+    }
   };
 
   const handleImageSelect = (imageId: string) => {

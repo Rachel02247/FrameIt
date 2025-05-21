@@ -66,6 +66,7 @@ function SmartFiltering() {
   const BATCH_SIZE = 10; 
   const [currentBatch, setCurrentBatch] = useState(0); // Track the current batch index
   const [displayedImages, setDisplayedImages] = useState<any[]>([]); // Images to display
+  const [loadedImageIds, setLoadedImageIds] = useState<Set<string>>(new Set()); // Track loaded image IDs
 
   useEffect(() => {
     const loadBatch = async () => {
@@ -74,38 +75,48 @@ function SmartFiltering() {
       const batch = files.slice(startIndex, endIndex);
 
       const urls: Record<string, string> = {};
+      const newImages: any[] = [];
+
       await Promise.all(
         batch.map(async (file) => {
-          if (file.downloadUrl) {
-            urls[file.id] = file.downloadUrl;
-          } else if (!imageUrls[file.id]) {
-            const url = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap();
-            if (url) {
-              urls[file.id] = url;
+          if (!loadedImageIds.has(file.id)) {
+            if (file.downloadUrl) {
+              urls[file.id] = file.downloadUrl;
+            } else if (!imageUrls[file.id]) {
+              const url = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap();
+              if (url) {
+                urls[file.id] = url;
+              }
             }
+
+            newImages.push({
+              id: file.id,
+              src: urls[file.id] || "",
+              alt: file.fileName,
+              tags: file.fileType,
+            });
           }
         })
       );
 
       setImageUrls((prev) => ({ ...prev, ...urls }));
-
-      const newImages = batch.map((file) => ({
-        id: file.id,
-        src: urls[file.id] || "",
-        alt: file.fileName,
-        tags: file.fileType,
-      }));
-
       setDisplayedImages((prev) => [...prev, ...newImages]);
+      setLoadedImageIds((prev) => {
+        const updatedSet = new Set(prev);
+        newImages.forEach((image) => updatedSet.add(image.id));
+        return updatedSet;
+      });
     };
 
     if (files.length > 0 && currentBatch * BATCH_SIZE < files.length) {
       loadBatch();
     }
-  }, [currentBatch, files, dispatch, imageUrls]);
+  }, [currentBatch, files, dispatch, imageUrls, loadedImageIds]);
 
   const handleLoadMore = () => {
-    setCurrentBatch((prev) => prev + 1); // Increment batch index to load the next batch
+    if (currentBatch * BATCH_SIZE < files.length) {
+      setCurrentBatch((prev) => prev + 1); // Increment batch index to load the next batch
+    }
   };
 
   useEffect(() => {
