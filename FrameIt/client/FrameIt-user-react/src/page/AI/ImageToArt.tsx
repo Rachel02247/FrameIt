@@ -49,8 +49,9 @@ function ImageToArt() {
   const { files } = useGalleryImages();
   const dispatch = useDispatch<AppDispatch>();
   const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
-  const [currentBatch, setCurrentBatch] = useState(0); // Moved inside the component
-  const [displayedImages, setDisplayedImages] = useState<{ id: string; src: string; alt: string }[]>([]); // Moved inside the component
+  const [currentBatch, setCurrentBatch] = useState(0); // Track the current batch index
+  type DisplayedImage = { id: string; src: string; alt: string };
+  const [displayedImages, setDisplayedImages] = useState<DisplayedImage[]>([]); // Images to display
   const [loadedImageIds, setLoadedImageIds] = useState<Set<string>>(new Set()); // Track loaded image IDs
 
   useEffect(() => {
@@ -80,7 +81,7 @@ function ImageToArt() {
       const batch = files.slice(startIndex, endIndex);
 
       const urls: Record<string, string> = {};
-      const newImages: { id: string; src: string; alt: string }[] = [];
+      const newImages: DisplayedImage[] = [];
 
       await Promise.all(
         batch.map(async (file) => {
