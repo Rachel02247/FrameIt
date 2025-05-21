@@ -7,9 +7,7 @@ import { AppDispatch, RootState } from "../global-states/store"
 import { fetchFilesByUserId, getFileDownloadUrl } from "../global-states/fileSlice"
 import LoadingIndicator from "../../hooks/loadingIndicator"
 
-// This component will fetch and provide images from your gallery
 export function useGalleryImages() {
-
   const dispatch = useDispatch<AppDispatch>()
   const files = useSelector((state: RootState) => state.files.files)
   const loading = useSelector((state: RootState) => state.files.loading)
@@ -18,22 +16,24 @@ export function useGalleryImages() {
 
   useEffect(() => {
     if (userId) {
-        dispatch(fetchFilesByUserId(Number(userId)))
+      console.log("Fetching files for user ID:", userId)
+      dispatch(fetchFilesByUserId(Number(userId)))
+        .unwrap()
+        .catch((err) => console.error("Error fetching files:", err))
     }
-
   }, [userId, dispatch])
 
   const getImageUrl = async (file: { s3Key: string; downloadUrl?: string }) => {
     if (file.downloadUrl) {
-      return file.downloadUrl;
+      return file.downloadUrl
     }
 
     try {
-      const url = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap();
-      return url;
+      const url = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap()
+      return url
     } catch (error) {
-      console.error("Failed to fetch image URL:", error);
-      return null;
+      console.error("Failed to fetch image URL:", error)
+      return null
     }
   }
 

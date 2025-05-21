@@ -63,7 +63,7 @@ function SmartFiltering() {
 
   const dispatch = useDispatch<AppDispatch>()
 
-  const BATCH_SIZE = 10; // Define batch size for loading images
+  const BATCH_SIZE = 10; 
   const [currentBatch, setCurrentBatch] = useState(0); // Track the current batch index
   const [displayedImages, setDisplayedImages] = useState<any[]>([]); // Images to display
 

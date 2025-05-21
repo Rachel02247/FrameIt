@@ -28,6 +28,9 @@ export const fetchFilesByUserId = createAsyncThunk(
       return response.data;
     } catch (error) {
       console.error("Error fetching files by user ID:", error);
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data?.message || "Failed to fetch files");
+      }
       return rejectWithValue("Failed to fetch files");
     }
   }
@@ -55,16 +58,15 @@ export const getFileDownloadUrl = createAsyncThunk(
   "files/getFileDownloadUrl",
   async (s3Key: string, { rejectWithValue }) => {
     try {
-      console.log("bfor gtFileDownloadUrl");
-      console.log("s3Key", s3Key);
-      
+      console.log("Fetching download URL for s3Key:", s3Key);
       const response = await axios.get(`${API_URL_BASE}/${s3Key}/download`);
-      console.log("in getFileDownloadUrl");
-      console.log(response.data);
-      
+      console.log("Fetched download URL:", response.data);
       return response.data;
     } catch (error) {
       console.error("Error fetching file download URL:", error);
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data?.message || "Failed to fetch file download URL");
+      }
       return rejectWithValue("Failed to fetch file download URL");
     }
   }

@@ -25,3 +25,4 @@ dist-ssr
 .env
 FrameIt/server/FrameItAPI/.env
 FrameIt/client/FrameIt-user-react/.env
+FrameIt/client/FrameIt-user-react/.env
