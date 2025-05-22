@@ -11,6 +11,10 @@ import { Divider, Button, Box, Typography, Paper } from "@mui/material"
 import DownloadIcon from "@mui/icons-material/Download"
 import type { CollageImage, Template, AspectRatio } from "../../types"
 import { useTheme } from "@mui/material/styles"
+<<<<<<< HEAD
+=======
+import { sendEmail } from "../../hooks/sendEmail"
+>>>>>>> clean-dev
 
 const CollageEditor = () => {
   const theme = useTheme()
@@ -57,7 +61,10 @@ const CollageEditor = () => {
 
     setImages((prevImages) => [...prevImages, ...newImages])
 
+<<<<<<< HEAD
     // Apply template if selected
+=======
+>>>>>>> clean-dev
     if (selectedTemplate && newImages.length > 0) {
       applyTemplate([...images, ...newImages])
     }
@@ -69,7 +76,10 @@ const CollageEditor = () => {
     const arrangedImages = [...imagesToArrange]
     const templatePositions = selectedTemplate.layout
 
+<<<<<<< HEAD
     // Apply template positions to images
+=======
+>>>>>>> clean-dev
     for (let i = 0; i < Math.min(arrangedImages.length, templatePositions.length); i++) {
       const position = templatePositions[i]
       arrangedImages[i] = {
@@ -135,6 +145,14 @@ const CollageEditor = () => {
     }
   }
 
+<<<<<<< HEAD
+=======
+  const handleSendEmail = () => {
+    if (!collageRef.current) return;
+    sendEmail(collageRef.current);
+  };
+
+>>>>>>> clean-dev
   return (
     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3, p: 3, maxWidth: "80%", mx: "auto" }}>
       {/* Title */}
@@ -148,7 +166,11 @@ const CollageEditor = () => {
         <CollageCanvas
           ref={collageRef}
           images={images}
+<<<<<<< HEAD
           backgroundColor={backgroundColor} // Pass updated background color
+=======
+          backgroundColor={backgroundColor}
+>>>>>>> clean-dev
           width={canvasWidth}
           height={canvasHeight}
           selectedImageId={selectedImageId}
@@ -168,12 +190,27 @@ const CollageEditor = () => {
           >
             Download Collage
           </Button>
+<<<<<<< HEAD
         </Box>
       </Box>
 
       <Divider sx={{ width: "100%", my: 2 }} />
 
       {/* Options Section */}
+=======
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={handleSendEmail}
+          >
+            Send to my email
+          </Button>
+        </Box>
+      </Box>
+
+      {/* Options Section */}
+      <Divider sx={{ width: "100%", my: 2 }} />
+>>>>>>> clean-dev
       <Paper sx={{ p: 3, bgcolor: theme.palette.background.paper, display: "flex", flexWrap: "wrap", gap: 3, justifyContent: "space-between" }}>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
           <TemplateSelector onSelect={handleTemplateSelect} />
@@ -192,7 +229,14 @@ const CollageEditor = () => {
         </Box>
       </Paper>
     </Box>
+<<<<<<< HEAD
   )
 }
 
 export default CollageEditor
+=======
+  );
+};
+
+export default CollageEditor;
+>>>>>>> clean-dev

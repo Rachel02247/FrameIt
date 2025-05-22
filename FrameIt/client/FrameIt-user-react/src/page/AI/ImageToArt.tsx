@@ -18,11 +18,22 @@ import {
   Radio,
   FormControl,
 } from "@mui/material"
+<<<<<<< HEAD
 import { ArrowBack, Download, Loop } from "@mui/icons-material"
+=======
+import { ArrowBack, Download, Loop, Email } from "@mui/icons-material"
+>>>>>>> clean-dev
 import { ImageSelector } from "../../component/AI/ImageSelector"
 import { useSnackbar } from "notistack"
 import { useGalleryImages } from "../../component/AI/GalleryIntegration"
 import { transformImageToArt } from "../../services/aiService"
+<<<<<<< HEAD
+=======
+import { sendEmail } from "../../hooks/sendEmail";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../component/global-states/store";
+import { getFileDownloadUrl } from "../../component/global-states/fileSlice";
+>>>>>>> clean-dev
 
 const artStyles = [
   { id: "picasso", name: "Picasso", description: "Cubist style with geometric shapes" },
@@ -33,6 +44,7 @@ const artStyles = [
   { id: "anime", name: "Anime", description: "Japanese animation style" },
 ]
 
+<<<<<<< HEAD
 function ImageToArt() {
   const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
@@ -42,10 +54,29 @@ function ImageToArt() {
   const [generatedArt, setGeneratedArt] = useState<string | null>(null)
   const { files, getImageUrl } = useGalleryImages()
   const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null)
+=======
+const BATCH_SIZE = 10; // Define batch size for loading images
+
+function ImageToArt() {
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedStyle, setSelectedStyle] = useState<string>("picasso");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedArt, setGeneratedArt] = useState<string | null>(null);
+  const { files } = useGalleryImages();
+  const dispatch = useDispatch<AppDispatch>();
+  const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
+  const [currentBatch, setCurrentBatch] = useState(0); // Track the current batch index
+  type DisplayedImage = { id: string; src: string; alt: string };
+  const [displayedImages, setDisplayedImages] = useState<DisplayedImage[]>([]); // Images to display
+  const [loadedImageIds, setLoadedImageIds] = useState<Set<string>>(new Set()); // Track loaded image IDs
+>>>>>>> clean-dev
 
   useEffect(() => {
     const loadSelectedImageUrl = async () => {
       if (selectedImage) {
+<<<<<<< HEAD
         const selectedFile = files.find((file) => file.id === selectedImage)
         if (selectedFile) {
           if (selectedFile.downloadUrl) {
@@ -109,6 +140,131 @@ function ImageToArt() {
     link.click()
     document.body.removeChild(link)
   }
+=======
+        const selectedFile = files.find((file) => file.id === selectedImage);
+        if (selectedFile) {
+          if (selectedFile.downloadUrl) {
+            setSelectedImageUrl(selectedFile.downloadUrl);
+          } else {
+            const url = await dispatch(getFileDownloadUrl(selectedFile.s3Key)).unwrap();
+            setSelectedImageUrl(url);
+          }
+        }
+      } else {
+        setSelectedImageUrl(null);
+      }
+    };
+
+    loadSelectedImageUrl();
+  }, [selectedImage, files, dispatch]);
+
+  useEffect(() => {
+    const loadBatch = async () => {
+      const startIndex = currentBatch * BATCH_SIZE;
+      const endIndex = startIndex + BATCH_SIZE;
+      const batch = files.slice(startIndex, endIndex);
+
+      const urls: Record<string, string> = {};
+      const newImages: DisplayedImage[] = [];
+
+      await Promise.all(
+        batch.map(async (file) => {
+          if (!loadedImageIds.has(file.id)) {
+            if (file.downloadUrl) {
+              urls[file.id] = file.downloadUrl;
+            } else if (!urls[file.id]) {
+              const url = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap();
+              urls[file.id] = url;
+            }
+
+            newImages.push({
+              id: file.id,
+              src: urls[file.id] || "",
+              alt: file.fileName,
+            });
+          }
+        })
+      );
+
+      setDisplayedImages((prev) => [...prev, ...newImages]);
+      setLoadedImageIds((prev) => {
+        const updatedSet = new Set(prev);
+        newImages.forEach((image) => updatedSet.add(image.id));
+        return updatedSet;
+      });
+    };
+
+    if (files.length > 0 && currentBatch * BATCH_SIZE < files.length) {
+      loadBatch();
+    }
+  }, [currentBatch, files, dispatch, loadedImageIds]);
+
+  const handleLoadMore = () => {
+    if (currentBatch * BATCH_SIZE < files.length) {
+      setCurrentBatch((prev) => prev + 1); // Increment batch index to load the next batch
+    }
+  };
+
+  const handleImageSelect = (imageId: string) => {
+    setSelectedImage(imageId);
+    setGeneratedArt(null);
+  };
+
+  const handleStyleSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedStyle(event.target.value);
+    setGeneratedArt(null);
+  };
+
+  const handleGenerateArt = async () => {
+    if (!selectedImage || !selectedStyle || !selectedImageUrl) return;
+
+    setIsGenerating(true);
+
+    try {
+      // Call the AI service to transform the image
+      const artUrl = await transformImageToArt(selectedImageUrl, selectedStyle);
+
+      if (artUrl !== undefined && artUrl !== null) {
+        setGeneratedArt(artUrl);
+      } else {
+        enqueueSnackbar("Could not generate artwork. Please try again.", {
+          variant: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error generating art:", error);
+      enqueueSnackbar("An error occurred during art generation.", {
+        variant: "error",
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleDownload = () => {
+    if (!generatedArt) return;
+
+    const link = document.createElement("a");
+    link.href = generatedArt;
+    link.download = `art-${selectedStyle}-${Date.now()}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleSendEmail = async () => {
+    if (!generatedArt) return;
+
+    const imgElement = document.createElement("img");
+    imgElement.src = generatedArt;
+
+    try {
+      await sendEmail(imgElement);
+    } catch (error) {
+      console.error("Error sending email:", error);
+    }
+  };
+>>>>>>> clean-dev
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -128,7 +284,22 @@ function ImageToArt() {
               <Typography variant="h6" component="h2" gutterBottom>
                 Select an Image from Your Gallery
               </Typography>
+<<<<<<< HEAD
               <ImageSelector selectedImage={selectedImage} onSelect={handleImageSelect} />
+=======
+              <ImageSelector
+                selectedImage={selectedImage}
+                onSelect={handleImageSelect}
+                images={displayedImages} 
+              />
+              {currentBatch * BATCH_SIZE < files.length && (
+                <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+                  <Button variant="contained" onClick={handleLoadMore}>
+                    Load More
+                  </Button>
+                </Box>
+              )}
+>>>>>>> clean-dev
             </CardContent>
           </Card>
         </Grid>
@@ -200,15 +371,33 @@ function ImageToArt() {
               >
                 <img src={generatedArt || "/placeholder.svg"} alt="Generated artwork" />
               </Box>
+<<<<<<< HEAD
               <Button variant="contained" onClick={handleDownload} startIcon={<Download />}>
                 Download Artwork
               </Button>
+=======
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <Button variant="contained" onClick={handleDownload} startIcon={<Download />}>
+                  Download Artwork
+                </Button>
+                <Button variant="contained" color="secondary" onClick={handleSendEmail} startIcon={<Email />}>
+                  Send via Email
+                </Button>
+              </Box>
+>>>>>>> clean-dev
             </Box>
           </CardContent>
         </Card>
       )}
     </Container>
+<<<<<<< HEAD
   )
 }
 
 export default ImageToArt
+=======
+  );
+}
+
+export default ImageToArt;
+>>>>>>> clean-dev

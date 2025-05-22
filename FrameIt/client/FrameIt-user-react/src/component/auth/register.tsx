@@ -13,13 +13,21 @@ import { styled, useTheme } from '@mui/material/styles';
 import { Link, useNavigate } from 'react-router-dom';
 import { AppDispatch, RootState } from '../global-states/store';
 import { register } from '../global-states/userSlice';
+<<<<<<< HEAD
+=======
+import LoginWithGoogle from './loginWithGoogle';
+>>>>>>> clean-dev
 
 
 // Custom styled components
 const LogoRing = styled(Box)(({ theme }) => ({
     width: 250,
     height: 250,
+<<<<<<< HEAD
     border: `25px solid ${theme.palette.error.main}`, 
+=======
+    border: `25px solid ${theme.palette.error.main}`,
+>>>>>>> clean-dev
     borderRadius: '50%',
     position: 'relative',
     margin: '0 auto 40px',
@@ -167,16 +175,28 @@ const Register = () => {
                                 error={!!formError}
                             />
                             {(formError || error) && (
+<<<<<<< HEAD
                                <FormHelperText error sx={{ mb: 2 }}>
                                {formError || error/*?.response?.data?.message*/ || 'An unexpected error occurred'}
                            </FormHelperText>
                            
+=======
+                                <FormHelperText error sx={{ mb: 2 }}>
+                                    {formError || error/*?.response?.data?.message*/ || 'An unexpected error occurred'}
+                                </FormHelperText>
+
+>>>>>>> clean-dev
                             )}
                             <Button type="submit" fullWidth variant="outlined" disabled={loading} sx={{ py: 1.5, '&:hover': { bgcolor: '#666699', color: 'white' } }}>
                                 {loading ? <img src="/img/spinner.gif" alt="spinnre" width={24} /> : 'Register'}
                             </Button>
                             <p>Already have an account? <Link to="/login">Sign In</Link></p>
                         </form>
+<<<<<<< HEAD
+=======
+                        <LoginWithGoogle />
+
+>>>>>>> clean-dev
                     </Paper>
                 </Container>
             </Box>

@@ -1,0 +1,84 @@
+# === Node.js (React, Angular, etc.) ===
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+.pnpm-debug.log
+
+# === Build Output ===
+dist/
+build/
+out/
+coverage/
+tmp/
+temp/
+
+# === .NET ===
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.log
+*.vspscc
+*.vssscc
+*.dbmdl
+*.pdb
+*.cache
+*.exe
+*.dll
+
+# === Visual Studio ===
+.vscode/
+.vs/
+*.ncb
+*.sdf
+*.opensdf
+*.suo
+*.psess
+*.vsp
+*.vspx
+*.tmp
+*.ide
+
+# === Environment / Secrets ===
+.env
+.env.*
+*.secret
+secrets.*
+
+# === OS Files ===
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# === Logs ===
+*.log
+logs/
+log/
+*.log.*
+
+# === Angular specific ===
+.angular/
+.angular-cache/
+
+# === React specific ===
+.react/
+
+# === Others ===
+.idea/
+*.iml
+*.swp
+*.bak
+*.orig
+*.rej
+
+# === Git backup ===
+*.orig
+
+# === TypeScript compiled files ===
+*.tsbuildinfo

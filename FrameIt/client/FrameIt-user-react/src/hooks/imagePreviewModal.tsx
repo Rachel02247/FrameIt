@@ -1,5 +1,12 @@
+<<<<<<< HEAD
 import React, { useEffect, useState } from "react";
 import { Modal, Box, IconButton } from "@mui/material";
+=======
+"use client"
+
+import React, { useEffect, useState } from "react";
+import { Modal, Box, IconButton, Typography } from "@mui/material";
+>>>>>>> clean-dev
 import CloseIcon from "@mui/icons-material/Close";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -37,11 +44,18 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
   const [fileUrl, setFileUrl] = useState<string | undefined>(currentFile?.downloadUrl ?? undefined);
 
   useEffect(() => {
+<<<<<<< HEAD
     // Reset fileUrl when currentFile changes
     if (currentFile) {
       if (currentFile.downloadUrl) {
         setFileUrl(currentFile.downloadUrl);
       } else if (currentFile.s3Key) {
+=======
+    if (currentFile) {
+      if (currentFile.downloadUrl) {
+        setFileUrl(currentFile.downloadUrl);
+      } else {
+>>>>>>> clean-dev
         dispatch(getFileDownloadUrl(currentFile.s3Key))
           .unwrap()
           .then((url) => {
@@ -52,7 +66,11 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
           });
       }
     } else {
+<<<<<<< HEAD
       setFileUrl(undefined); // Reset fileUrl if no currentFile
+=======
+      setFileUrl(undefined);
+>>>>>>> clean-dev
     }
   }, [currentFile, dispatch]);
 
@@ -77,10 +95,23 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
           </IconButton>
         )}
 
+<<<<<<< HEAD
         {isVideo ? (
           <video controls src={fileUrl ?? "/img/frameItLogo.png"} style={{ maxHeight: "80vh" }} />
         ) : (
           <img src={fileUrl ?? "/img/frameItLogo.png"} alt={file.fileName} style={{ maxHeight: "80vh" }} />
+=======
+        {fileUrl ? (
+          isVideo ? (
+            <video controls src={fileUrl} style={{ maxHeight: "80vh" }} />
+          ) : (
+            <img src={fileUrl} alt={file.fileName} style={{ maxHeight: "80vh" }} />
+          )
+        ) : (
+          <Typography variant="h6" sx={{ color: "#fff" }}>
+            {file.fileName}
+          </Typography>
+>>>>>>> clean-dev
         )}
 
         {hasNext && (

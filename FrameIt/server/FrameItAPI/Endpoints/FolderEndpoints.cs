@@ -71,7 +71,10 @@ public static class FolderEndpoints
             var result = await folderService.DeleteFolder(id);
             return result ? Results.NoContent() : Results.NotFound();
         });//.RequireAuthorization("admin", "editor");
+<<<<<<< HEAD
         });//.RequireAuthorization("admin", "editor");
+=======
+>>>>>>> clean-dev
 
 
         routes.MapGet("/folders/{id}/download", async (int id, IFolderService folderService, IFileService fileService) =>

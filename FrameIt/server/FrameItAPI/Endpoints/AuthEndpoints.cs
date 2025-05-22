@@ -4,6 +4,10 @@ using FrameItAPI.Entities;
 using FrameItAPI.Entities.mapping;
 using FrameItAPI.Services.interfaces;
 using Microsoft.EntityFrameworkCore;
+<<<<<<< HEAD
+=======
+using static FrameItAPI.Entities.mapping.Auth;
+>>>>>>> clean-dev
 
 
 
@@ -93,6 +97,7 @@ namespace FrameItAPI.Endpoints
                 return Results.Ok("Password changed successfully");
             });
 
+<<<<<<< HEAD
         }
     }
 
@@ -117,4 +122,25 @@ namespace FrameItAPI.Endpoints
         public string CurrentPassword { get; set; } = string.Empty;
         public string NewPassword { get; set; } = string.Empty;
     }
+=======
+            routes.MapPost("/auth/google-login", async (GoogleLoginRequest request, IGoogleAuthService googleAuthService) =>
+            {
+                var result = await googleAuthService.LoginOrRegisterWithGoogleAsync(request.Credential);
+                if (!result.IsSuccess)
+                    return Results.Unauthorized();
+
+                return Results.Ok(new
+                {
+                    Token = result.Token,
+                    User = result.User
+                });
+            });
+
+
+
+        }
+    }
+
+   
+>>>>>>> clean-dev
 }

@@ -11,6 +11,7 @@ const Upload = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleUpload = async (files: MyFile[], folderId: string) => {
+<<<<<<< HEAD
     const formattedFiles = files.map((file) => ({
       ...file,
       isDeleted: false,
@@ -31,6 +32,31 @@ const Upload = () => {
       });
       formData.append("folderId", folderId);
 
+=======
+    try {
+      const formData = new FormData();
+      files.forEach((file) => {
+        if (file.file) {
+          formData.append("files", file.file);
+        }
+        formData.append(
+          "fileMetadata",
+          JSON.stringify({
+            id: file.id,
+            fileName: file.fileName,
+            fileType: file.fileType,
+            size: file.size,
+            s3Key: file.s3Key,
+            isDeleted: file.isDeleted,
+            folderId: file.folderId,
+            ownerId: file.ownerId,
+          })
+        );
+      });
+      formData.append("folderId", folderId);
+
+      console.log("Uploading files...");
+>>>>>>> clean-dev
       await dispatch(uploadFiles(formData)).unwrap();
       console.log("Files uploaded successfully");
     } catch (error) {

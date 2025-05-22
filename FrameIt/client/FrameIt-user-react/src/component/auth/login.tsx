@@ -14,6 +14,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AppDispatch, RootState } from '../global-states/store';
 import { login } from '../global-states/userSlice';
 import { useLanguage } from "../../context/LanguageContext";
+<<<<<<< HEAD
+=======
+import LoginWithGoogle from './loginWithGoogle';
+>>>>>>> clean-dev
 
 const LogoRing = styled(Box)(({ theme }) => ({
     width: 250,
@@ -104,7 +108,11 @@ const Login = () => {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'center',
+<<<<<<< HEAD
                  top: 50,
+=======
+                top: 50,
+>>>>>>> clean-dev
                 position: 'relative',
                 bgcolor: theme.palette.background.default, // Use theme background
             }}
@@ -140,6 +148,10 @@ const Login = () => {
                             p: 2,
                         }}
                     >
+<<<<<<< HEAD
+=======
+
+>>>>>>> clean-dev
                         <form onSubmit={handleLogin}>
                             <TextField
                                 fullWidth
@@ -150,7 +162,11 @@ const Login = () => {
                                 value={credentials.email}
                                 onChange={handleChange}
                                 sx={{
+<<<<<<< HEAD
                                     bgcolor: theme.palette.background.paper, // Use theme background
+=======
+                                    bgcolor: theme.palette.background.paper,
+>>>>>>> clean-dev
                                     borderRadius: 1,
                                     mb: 2,
                                 }}
@@ -184,6 +200,10 @@ const Login = () => {
                         </form>
                         <p>{t.noAccount} <Link to="/register">{t.signUp}</Link></p>
 
+<<<<<<< HEAD
+=======
+                        <LoginWithGoogle />
+>>>>>>> clean-dev
                     </Paper>
                 </Container>
             </Box>

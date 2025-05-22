@@ -7,7 +7,11 @@ interface AuthState {
   token: string | null;
   user: Partial<User>;
   loading: boolean;
+<<<<<<< HEAD
   error: string | null; 
+=======
+  error: string | null;
+>>>>>>> clean-dev
 }
 
 const initialState: AuthState = {
@@ -46,7 +50,10 @@ export const login = createAsyncThunk(
   }
 );
 
+<<<<<<< HEAD
 // Async Thunk for Register
+=======
+>>>>>>> clean-dev
 export const register = createAsyncThunk(
   "auth/register",
   async (newUser: { Name: string; Email: string; Password: string; RoleName: string }, thunkAPI) => {
@@ -67,7 +74,27 @@ export const register = createAsyncThunk(
   }
 );
 
+<<<<<<< HEAD
 // Async Thunk for Changing Password
+=======
+export const googleLogin = createAsyncThunk(
+  "auth/googleLogin",
+  async (credential: string, thunkAPI) => {
+    try {
+      const response = await axios.post<{ token: string; user: User }>(`${url}google`, {
+        credential
+      });
+      return response.data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response) {
+        return thunkAPI.rejectWithValue(error.response.data.message || "Google login failed");
+      }
+      return thunkAPI.rejectWithValue("Google login failed");
+    }
+  }
+);
+
+>>>>>>> clean-dev
 export const changePassword = createAsyncThunk(
   "auth/changePassword",
   async (
@@ -130,6 +157,26 @@ const authSlice = createSlice({
         }
       })
 
+<<<<<<< HEAD
+=======
+      .addCase(googleLogin.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(googleLogin.fulfilled, (state, action: PayloadAction<{ token: string; user: User }>) => {
+        state.loading = false;
+        state.token = action.payload.token;
+        state.user = action.payload.user;
+        sessionStorage.setItem("token", action.payload.token);
+        sessionStorage.setItem("name", action.payload.user.Name);
+        sessionStorage.setItem("id", action.payload.user.id || "0");
+      })
+      .addCase(googleLogin.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string || "Google login failed";
+      })
+
+>>>>>>> clean-dev
 
       .addCase(register.pending, (state) => {
         state.loading = true;
@@ -155,6 +202,10 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string || "Failed to change password";
       });
+<<<<<<< HEAD
+=======
+
+>>>>>>> clean-dev
   },
 });
 
