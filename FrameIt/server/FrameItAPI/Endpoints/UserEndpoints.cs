@@ -4,6 +4,7 @@ using FrameItAPI.Services.interfaces;
 using FrameItAPI.Services.services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using static FrameItAPI.Entities.mapping.Auth;
 
 public static class UserEndpoints
 {

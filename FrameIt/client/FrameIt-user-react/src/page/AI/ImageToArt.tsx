@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import {
   Container,
@@ -52,7 +52,7 @@ function ImageToArt() {
   const [currentBatch, setCurrentBatch] = useState(0); // Track the current batch index
   type DisplayedImage = { id: string; src: string; alt: string };
   const [displayedImages, setDisplayedImages] = useState<DisplayedImage[]>([]); // Images to display
-  const [loadedImageIds, setLoadedImageIds] = useState<Set<string>>(new Set()); // Track loaded image IDs
+  // const [loadedImageIds, setLoadedImageIds] = useState<Set<string>>(new Set()); // Track loaded image IDs
 
   useEffect(() => {
     const loadSelectedImageUrl = async () => {
@@ -74,46 +74,47 @@ function ImageToArt() {
     loadSelectedImageUrl();
   }, [selectedImage, files, dispatch]);
 
-  useEffect(() => {
-    const loadBatch = async () => {
-      const startIndex = currentBatch * BATCH_SIZE;
-      const endIndex = startIndex + BATCH_SIZE;
-      const batch = files.slice(startIndex, endIndex);
 
-      const urls: Record<string, string> = {};
-      const newImages: DisplayedImage[] = [];
+const loadedImageIdsRef = useRef<Set<string>>(new Set());
 
-      await Promise.all(
-        batch.map(async (file) => {
-          if (!loadedImageIds.has(file.id)) {
-            if (file.downloadUrl) {
-              urls[file.id] = file.downloadUrl;
-            } else if (!urls[file.id]) {
-              const url = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap();
-              urls[file.id] = url;
-            }
+useEffect(() => {
+  const loadBatch = async () => {
+    const startIndex = currentBatch * BATCH_SIZE;
+    const endIndex = startIndex + BATCH_SIZE;
+    const batch = files.slice(startIndex, endIndex);
 
-            newImages.push({
-              id: file.id,
-              src: urls[file.id] || "",
-              alt: file.fileName,
-            });
+    const urls: Record<string, string> = {};
+    const newImages: DisplayedImage[] = [];
+
+    await Promise.all(
+      batch.map(async (file) => {
+        if (!loadedImageIdsRef.current.has(file.id)) {
+          if (file.downloadUrl) {
+            urls[file.id] = file.downloadUrl;
+          } else if (!urls[file.id]) {
+            const url = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap();
+            urls[file.id] = url;
           }
-        })
-      );
 
-      setDisplayedImages((prev) => [...prev, ...newImages]);
-      setLoadedImageIds((prev) => {
-        const updatedSet = new Set(prev);
-        newImages.forEach((image) => updatedSet.add(image.id));
-        return updatedSet;
-      });
-    };
+          newImages.push({
+            id: file.id,
+            src: urls[file.id] || "",
+            alt: file.fileName,
+          });
 
-    if (files.length > 0 && currentBatch * BATCH_SIZE < files.length) {
-      loadBatch();
-    }
-  }, [currentBatch, files, dispatch, loadedImageIds]);
+          loadedImageIdsRef.current.add(file.id);
+        }
+      })
+    );
+
+    setDisplayedImages((prev) => [...prev, ...newImages]);
+  };
+
+  if (files.length > 0 && currentBatch * BATCH_SIZE < files.length) {
+    loadBatch();
+  }
+}, [currentBatch, files, dispatch]);
+;
 
   const handleLoadMore = () => {
     if (currentBatch * BATCH_SIZE < files.length) {

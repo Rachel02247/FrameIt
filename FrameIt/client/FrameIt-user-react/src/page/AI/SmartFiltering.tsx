@@ -3,7 +3,7 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
 import {
   Container,
@@ -53,94 +53,106 @@ function TabPanel(props: TabPanelProps) {
 
 function SmartFiltering() {
   const navigate = useNavigate()
-  const [searchQuery, setSearchQuery] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
-  const [, setFilteredImages] = useState<any[]>([])
-  const [tabValue, setTabValue] = useState(0)
-  const [isLoading, setIsLoading] = useState(false)
-  const { files, loading,  } = useGalleryImages()
-  const [imageUrls, setImageUrls] = useState<Record<string, string>>({})
-
   const dispatch = useDispatch<AppDispatch>()
 
-  const BATCH_SIZE = 10; 
-  const [currentBatch, setCurrentBatch] = useState(0); // Track the current batch index
-  const [displayedImages, setDisplayedImages] = useState<any[]>([]); // Images to display
-  const [loadedImageIds, setLoadedImageIds] = useState<Set<string>>(new Set()); // Track loaded image IDs
+  const { files, loading } = useGalleryImages()
 
-  useEffect(() => {
-    const loadBatch = async () => {
-      const startIndex = currentBatch * BATCH_SIZE;
-      const endIndex = startIndex + BATCH_SIZE;
-      const batch = files.slice(startIndex, endIndex);
+  // States
+  const [searchQuery, setSearchQuery] = useState("")
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [tabValue, setTabValue] = useState(0)
+  const [isLoading, setIsLoading] = useState(false)
 
-      const urls: Record<string, string> = {};
-      const newImages: any[] = [];
+  // Batch loading constants and states
+  const BATCH_SIZE = 10
+  const [currentBatch, setCurrentBatch] = useState(0)
+  const [displayedImages, setDisplayedImages] = useState<any[]>([])
+  const [imageUrls, setImageUrls] = useState<Record<string, string>>({})
+  const [loadedImageIds, setLoadedImageIds] = useState<Set<string>>(new Set())
 
-      await Promise.all(
-        batch.map(async (file) => {
-          if (!loadedImageIds.has(file.id)) {
-            if (file.downloadUrl) {
-              urls[file.id] = file.downloadUrl;
-            } else if (!imageUrls[file.id]) {
-              const url = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap();
-              if (url) {
-                urls[file.id] = url;
-              }
-            }
+  // Helper to load a batch of images
+  const loadBatch = useCallback(async () => {
+    if (!files.length) return
 
-            newImages.push({
-              id: file.id,
-              src: urls[file.id] || "",
-              alt: file.fileName,
-              tags: file.fileType,
-            });
+    const startIndex = currentBatch * BATCH_SIZE
+    const endIndex = Math.min(startIndex + BATCH_SIZE, files.length)
+    const batch = files.slice(startIndex, endIndex)
+
+    const newUrls: Record<string, string> = {}
+    const newImages: any[] = []
+
+    await Promise.all(
+      batch.map(async (file) => {
+        if (loadedImageIds.has(file.id)) return
+
+        let url = file.downloadUrl || imageUrls[file.id]
+        if (!url) {
+          try {
+            url = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap()
+          } catch {
+            url = ""
           }
+        }
+
+        if (url) {
+          newUrls[file.id] = url
+        }
+
+        newImages.push({
+          id: file.id,
+          src: url || "",
+          alt: file.fileName,
+          tags: file.fileType,
         })
-      );
+      }),
+    )
 
-      setImageUrls((prev) => ({ ...prev, ...urls }));
-      setDisplayedImages((prev) => [...prev, ...newImages]);
-      setLoadedImageIds((prev) => {
-        const updatedSet = new Set(prev);
-        newImages.forEach((image) => updatedSet.add(image.id));
-        return updatedSet;
-      });
-    };
+    setImageUrls((prev) => ({ ...prev, ...newUrls }))
+    setDisplayedImages((prev) => [...prev, ...newImages])
+    setLoadedImageIds((prev) => {
+      const updated = new Set(prev)
+      newImages.forEach((img) => updated.add(img.id))
+      return updated
+    })
+  }, [currentBatch, files, dispatch, imageUrls, loadedImageIds])
 
-    if (files.length > 0 && currentBatch * BATCH_SIZE < files.length) {
-      loadBatch();
-    }
-  }, [currentBatch, files, dispatch, imageUrls, loadedImageIds]);
+  // Load new batch whenever currentBatch or files change
+  useEffect(() => {
+    if (files.length === 0) return
+    if (currentBatch * BATCH_SIZE >= files.length) return
 
-  const handleLoadMore = () => {
-    if (currentBatch * BATCH_SIZE < files.length) {
-      setCurrentBatch((prev) => prev + 1); // Increment batch index to load the next batch
-    }
-  };
+    loadBatch()
+  }, [currentBatch, files, loadBatch])
+
+  // Reset batches when files change (new load)
+  useEffect(() => {
+    setDisplayedImages([])
+    setLoadedImageIds(new Set())
+    setImageUrls({})
+    setCurrentBatch(0)
+  }, [files])
+
+  // Filtered images state and logic
+  const [filteredImages, setFilteredImages] = useState<any[]>([])
 
   useEffect(() => {
-    // Convert files to the format expected by ImageGrid
-    const convertFilesToImageGrid = () => {
-      return files.map((file) => ({
-        id: file.id,
-        src: imageUrls[file.id] || "",
-        alt: file.fileName,
-        tags: file.fileType, // In a real app, you'd have actual tags
-      }))
-    }
-
-    if (Object.keys(imageUrls).length > 0) {
-      setFilteredImages(convertFilesToImageGrid())
-    }
+    // Convert files to image grid format with URLs
+    const images = files.map((file) => ({
+      id: file.id,
+      src: imageUrls[file.id] || "",
+      alt: file.fileName,
+      tags: file.fileType,
+    }))
+    setFilteredImages(images)
   }, [files, imageUrls])
 
+  // Handle Search
   const handleSearch = () => {
     setIsLoading(true)
+    setSelectedCategory(null)
 
-    // Simulate AI-based filtering with a timeout
     setTimeout(() => {
-      if (searchQuery.trim() === "") {
+      if (!searchQuery.trim()) {
         setFilteredImages(
           files.map((file) => ({
             id: file.id,
@@ -150,7 +162,6 @@ function SmartFiltering() {
           })),
         )
       } else {
-        // Simple client-side filtering - in a real app, this would call your AI service
         const filtered = files
           .filter((file) => file.fileName.toLowerCase().includes(searchQuery.toLowerCase()))
           .map((file) => ({
@@ -159,20 +170,20 @@ function SmartFiltering() {
             alt: file.fileName,
             tags: file.fileType,
           }))
-
         setFilteredImages(filtered)
       }
       setIsLoading(false)
     }, 1000)
   }
 
+  // Handle Category Select
   const handleCategorySelect = (category: string) => {
-    setSelectedCategory(category === selectedCategory ? null : category)
     setIsLoading(true)
+    setSearchQuery("")
+    setSelectedCategory((prev) => (prev === category ? null : category))
 
-    // Simulate AI-based category filtering with a timeout
     setTimeout(() => {
-      if (category === selectedCategory) {
+      if (selectedCategory === category) {
         setFilteredImages(
           files.map((file) => ({
             id: file.id,
@@ -182,17 +193,15 @@ function SmartFiltering() {
           })),
         )
       } else {
-        // In a real app, this would call your AI service to categorize images
-        // For now, we'll just randomly filter some images
+        // Example random filtering for demo
         const filtered = files
-          .filter(() => Math.random() > 0.5) // Random filtering for demo
+          .filter(() => Math.random() > 0.5)
           .map((file) => ({
             id: file.id,
             src: imageUrls[file.id] || "",
             alt: file.fileName,
             tags: file.fileType,
           }))
-
         setFilteredImages(filtered)
       }
       setIsLoading(false)
@@ -201,6 +210,15 @@ function SmartFiltering() {
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue)
+    setSearchQuery("")
+    setSelectedCategory(null)
+    setFilteredImages([])
+  }
+
+  const handleLoadMore = () => {
+    if (currentBatch * BATCH_SIZE < files.length) {
+      setCurrentBatch((prev) => prev + 1)
+    }
   }
 
   if (loading) {
@@ -268,7 +286,7 @@ function SmartFiltering() {
           <Button
             variant="contained"
             onClick={handleSearch}
-            startIcon={isLoading ? <LoadingIndicator/>: <Search />}
+            startIcon={isLoading ? <LoadingIndicator /> : <Search />}
             disabled={isLoading || !searchQuery.trim()}
           >
             {isLoading ? "Searching..." : "Search"}
@@ -282,8 +300,8 @@ function SmartFiltering() {
             {selectedCategory
               ? `${selectedCategory} Images`
               : searchQuery
-                ? `Results for "${searchQuery}"`
-                : "All Images"}
+              ? `Results for "${searchQuery}"`
+              : "All Images"}
           </Typography>
 
           {isLoading ? (
@@ -292,8 +310,8 @@ function SmartFiltering() {
             </Box>
           ) : (
             <>
-              <ImageGrid images={displayedImages} />
-              {currentBatch * BATCH_SIZE < files.length && (
+              <ImageGrid images={displayedImages.length ? displayedImages : filteredImages} />
+              {currentBatch * BATCH_SIZE < files.length && !isLoading && (
                 <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
                   <Button variant="contained" onClick={handleLoadMore}>
                     Load More
@@ -309,5 +327,3 @@ function SmartFiltering() {
 }
 
 export default SmartFiltering
-
-
