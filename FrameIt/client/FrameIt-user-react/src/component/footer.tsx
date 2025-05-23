@@ -12,8 +12,8 @@ export default () => {
         zIndex: 0.5,
         width: '100%',
         height: 60,
-        position: 'relative', // Ensure it's part of the document flow
-        mt: 'auto', // Pushes the footer to the bottom of the content
+        position: 'relative',
+        mt: 'auto',
         p: 8,
       }}
       id="contact"
@@ -24,23 +24,15 @@ export default () => {
         </Typography>
         <Typography variant="body2" align="center" color="secondary">
           Contact us at:{' '}
-<<<<<<< HEAD
-          <Link href="mailto:support@frameit.com" color="inherit">
+          <a
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=frameit.noreply@gmail.com&su=Contact%20regarding%20FramelT%20website&body=Hello,%20I%20would%20like%20to%20contact%20regarding%20the%20FramelT%20"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: '#0077cc', textDecoration: 'none', marginLeft: '5px' }}
+          >
             support@frameit.com
-          </Link>
-=======
+          </a>
 
-         <a
-  href="https://mail.google.com/mail/?view=cm&fs=1&to=frameit.noreply@gmail.com&su=Contact%20regarding%20FramelT%20website&body=Hello,%20I%20would%20like%20to%20contact%20regarding%20the%20FramelT%20"
-  target="_blank"
-  rel="noopener noreferrer"
-  style={{ color: '#0077cc', textDecoration: 'none', marginLeft: '5px' }}
->
-  support@frameit.com
-</a>
-
-
->>>>>>> clean-dev
         </Typography>
       </Container>
     </Box>

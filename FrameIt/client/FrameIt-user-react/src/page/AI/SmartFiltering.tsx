@@ -23,12 +23,9 @@ import { ArrowBack, Search } from "@mui/icons-material"
 import { ImageGrid } from "../../component/AI/ImageGrid"
 import { useGalleryImages } from "../../component/AI/GalleryIntegration"
 import LoadingIndicator from "../../hooks/loadingIndicator"
-<<<<<<< HEAD
-=======
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "../../component/global-states/store"
 import { getFileDownloadUrl } from "../../component/global-states/fileSlice"
->>>>>>> clean-dev
 
 const predefinedCategories = ["People", "Animals", "Nature", "Urban", "Food", "Travel", "Sports"]
 
@@ -58,71 +55,6 @@ function SmartFiltering() {
   const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
-<<<<<<< HEAD
-  const [filteredImages, setFilteredImages] = useState<any[]>([])
-  const [tabValue, setTabValue] = useState(0)
-  const [isLoading, setIsLoading] = useState(false)
-  const { files, loading, getImageUrl } = useGalleryImages()
-  const [imageUrls, setImageUrls] = useState<Record<string, string>>({})
-
-  useEffect(() => {
-    // Load presigned URLs for all images
-    const loadImageUrls = async () => {
-      const urls: Record<string, string> = {}
-
-      for (const file of files) {
-        // בדוק אם ה-downloadUrl כבר קיים
-        if (file.downloadUrl) {
-          urls[file.id] = file.downloadUrl
-        } else if (!urls[file.id]) {
-          const url = await getImageUrl({ s3Key: file.s3Key })
-          if (url) {
-            urls[file.id] = url
-          }
-        }
-      }
-
-      setImageUrls(urls)
-    }
-
-    if (files.length > 0) {
-      loadImageUrls()
-    }
-  }, [files, getImageUrl])
-
-  // useEffect(() => {
-  //   // Convert files to the format expected by ImageGrid
-  //   const convertFilesToImageGrid = () => {
-  //     return files.map((file) => ({
-  //       id: file.id,
-  //       src: imageUrls[file.id] || "",
-  //       alt: file.fileName,
-  //       tags: file.fileType, // In a real app, you'd have actual tags
-  //     }))
-  //   }
-
-  //   if (Object.keys(imageUrls).length > 0) {
-  //     setFilteredImages(convertFilesToImageGrid())
-  //   }
-  // }, [files, imageUrls])
-  const [didInitialize, setDidInitialize] = useState(false);
-
-  useEffect(() => {
-    if (!didInitialize && files.length > 0 && Object.keys(imageUrls).length > 0) {
-      const images = files.map((file) => ({
-        id: file.id,
-        src: imageUrls[file.id] || "",
-        alt: file.fileName,
-        tags: file.fileType,
-      }));
-      setFilteredImages(images);
-      setDidInitialize(true);
-    }
-  }, [files, imageUrls, didInitialize]);
-
-
-
-=======
   const [, setFilteredImages] = useState<any[]>([])
   const [tabValue, setTabValue] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
@@ -202,7 +134,6 @@ function SmartFiltering() {
       setFilteredImages(convertFilesToImageGrid())
     }
   }, [files, imageUrls])
->>>>>>> clean-dev
 
   const handleSearch = () => {
     setIsLoading(true)
@@ -337,11 +268,7 @@ function SmartFiltering() {
           <Button
             variant="contained"
             onClick={handleSearch}
-<<<<<<< HEAD
-            startIcon={isLoading ? <LoadingIndicator /> : <Search />}
-=======
             startIcon={isLoading ? <LoadingIndicator/>: <Search />}
->>>>>>> clean-dev
             disabled={isLoading || !searchQuery.trim()}
           >
             {isLoading ? "Searching..." : "Search"}
@@ -364,9 +291,6 @@ function SmartFiltering() {
               <CircularProgress />
             </Box>
           ) : (
-<<<<<<< HEAD
-            <ImageGrid images={filteredImages} />
-=======
             <>
               <ImageGrid images={displayedImages} />
               {currentBatch * BATCH_SIZE < files.length && (
@@ -377,7 +301,6 @@ function SmartFiltering() {
                 </Box>
               )}
             </>
->>>>>>> clean-dev
           )}
         </CardContent>
       </Card>
@@ -385,10 +308,6 @@ function SmartFiltering() {
   )
 }
 
-<<<<<<< HEAD
-export default SmartFiltering
-=======
 export default SmartFiltering
 
 
->>>>>>> clean-dev

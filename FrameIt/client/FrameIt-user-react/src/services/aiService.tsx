@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { generateText, experimental_generateImage } from "ai";
 import { openai } from "@ai-sdk/openai";
@@ -80,56 +81,132 @@ export async function analyzeImage(imageUrl: string): Promise<ImageAnalysisResul
 }
 
 // For image-to-art transformation
+// export async function transformImageToArt(imageUrl: string, style: string) {
+//   console.log("Transforming image:", imageUrl, "with style:", style); 
+
+//   if (!OPENAI_API_KEY) {
+//     throw new Error("OpenAI API key is missing.");
+//   }
+
+//   const styleDescriptions: Record<string, string> = {
+//     picasso: "in the style of Pablo Picasso, with cubist elements, geometric shapes, and bold lines",
+//     vangogh: "in the style of Vincent van Gogh, with swirling brushstrokes, vibrant colors, and expressive technique",
+//     watercolor: "as a delicate watercolor painting with soft edges, transparent washes, and gentle color blending",
+//     "pop-art":
+//       "as pop art in the style of Roy Lichtenstein or Andy Warhol, with bold colors, comic-like outlines, and dot patterns",
+//     realistic: "in a photorealistic style with fine details, accurate lighting, and true-to-life representation",
+//     anime:
+//       "in Japanese anime style with characteristic large eyes, simplified facial features, and stylized expressions",
+//   };
+
+//   const styleDescription =
+//     styleDescriptions[style as keyof typeof styleDescriptions] || styleDescriptions.picasso;
+
+//   try {
+//     const { images } = await experimental_generateImage({
+//       // model: openai.image("dall-e-3"),
+//      model: openai.image("gpt-4o-mini"),
+//       prompt: `Transform this image ${styleDescription}. Maintain the main subject and composition of the original image: ${imageUrl}`,
+//     });
+
+
+//     if (!images || images.length === 0) {
+//       throw new Error("No images returned from AI service");
+//     }
+
+//     const image = images[0];
+
+//     if (image.base64) {
+//       return `data:image/png;base64,${image.base64}`;
+//     } else if (image.uint8Array && image.mimeType) {
+//       const blob = new Blob([image.uint8Array], { type: image.mimeType });
+//       return URL.createObjectURL(blob); 
+//     } else {
+//       throw new Error("Unsupported image format returned from AI service");
+//     }
+
+//   } catch (error) {
+//     console.error("Error transforming image:", error);
+//     throw error;
+//   }
+
+// }
+
+import axios from "axios";
+
+const REPLICATE_API_TOKEN = import.meta.env.REPLICATE_API_TOKEN;
+
+const styleDescriptions: Record<string, string> = {
+  picasso: "in the style of Pablo Picasso, with cubist elements, geometric shapes, and bold lines",
+  vangogh: "in the style of Vincent van Gogh, with swirling brushstrokes, vibrant colors, and expressive technique",
+  watercolor: "as a delicate watercolor painting with soft edges, transparent washes, and gentle color blending",
+  "pop-art": "as pop art in the style of Roy Lichtenstein or Andy Warhol, with bold colors, comic-like outlines, and dot patterns",
+  realistic: "in a photorealistic style with fine details, accurate lighting, and true-to-life representation",
+  anime: "in Japanese anime style with characteristic large eyes, simplified facial features, and stylized expressions",
+};
+
 export async function transformImageToArt(imageUrl: string, style: string) {
   console.log("Transforming image:", imageUrl, "with style:", style); 
 
-  if (!OPENAI_API_KEY) {
-    throw new Error("OpenAI API key is missing.");
-  }
-
-  const styleDescriptions: Record<string, string> = {
-    picasso: "in the style of Pablo Picasso, with cubist elements, geometric shapes, and bold lines",
-    vangogh: "in the style of Vincent van Gogh, with swirling brushstrokes, vibrant colors, and expressive technique",
-    watercolor: "as a delicate watercolor painting with soft edges, transparent washes, and gentle color blending",
-    "pop-art":
-      "as pop art in the style of Roy Lichtenstein or Andy Warhol, with bold colors, comic-like outlines, and dot patterns",
-    realistic: "in a photorealistic style with fine details, accurate lighting, and true-to-life representation",
-    anime:
-      "in Japanese anime style with characteristic large eyes, simplified facial features, and stylized expressions",
-  };
-
-  const styleDescription =
-    styleDescriptions[style as keyof typeof styleDescriptions] || styleDescriptions.picasso;
+  const styleDescription = styleDescriptions[style as keyof typeof styleDescriptions] || styleDescriptions.picasso;
 
   try {
-    const { images } = await experimental_generateImage({
-      // model: openai.image("dall-e-3"),
-     model: openai.image("gpt-4o-mini"),
-      prompt: `Transform this image ${styleDescription}. Maintain the main subject and composition of the original image: ${imageUrl}`,
+    // שלב 1: הורדת התמונה ל־Buffer
+    const imageResponse = await axios.get(imageUrl, {
+      responseType: "arraybuffer",
     });
+    const base64Image = Buffer.from(imageResponse.data).toString("base64");
 
+    const predictionRes = await axios.post(
+      "https://api.replicate.com/v1/predictions",
+      {
+        version: "a3f9e29f96e5d27871898a1d7c453b6cf083c6cb7a5ff28e8e91c2d92d16143a", // מודל image-to-image
+        input: {
+          image: `data:image/png;base64,${base64Image}`,
+          prompt: styleDescription,
+          scale: 7,
+        },
+      },
+      {
+        headers: {
+          Authorization: `Token ${REPLICATE_API_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-    if (!images || images.length === 0) {
-      throw new Error("No images returned from AI service");
+    const prediction = predictionRes.data;
+
+    let outputUrl = null;
+    while (!outputUrl) {
+      const poll = await axios.get(`https://api.replicate.com/v1/predictions/${prediction.id}`, {
+        headers: {
+          Authorization: `Token ${REPLICATE_API_TOKEN}`,
+        },
+      });
+
+      if (poll.data.status === "succeeded") {
+        outputUrl = poll.data.output;
+      } else if (poll.data.status === "failed") {
+        throw new Error("Image generation failed");
+      } else {
+        await new Promise((r) => setTimeout(r, 2000));
+      }
     }
 
-    const image = images[0];
+    const finalImageResponse = await axios.get(outputUrl, {
+      responseType: "arraybuffer",
+    });
+    const finalBase64 = Buffer.from(finalImageResponse.data).toString("base64");
 
-    if (image.base64) {
-      return `data:image/png;base64,${image.base64}`;
-    } else if (image.uint8Array && image.mimeType) {
-      const blob = new Blob([image.uint8Array], { type: image.mimeType });
-      return URL.createObjectURL(blob); 
-    } else {
-      throw new Error("Unsupported image format returned from AI service");
-    }
+    return `data:image/png;base64,${finalBase64}`;
 
-  } catch (error) {
-    console.error("Error transforming image:", error);
+  } catch (error: any) {
+    console.error("Error transforming image:", error.response?.data || error.message);
     throw error;
   }
-
 }
+
 
 // For smart filtering and free search
 export async function searchImagesByDescription(

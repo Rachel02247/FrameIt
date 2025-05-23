@@ -100,9 +100,6 @@ function ImageAnalysis() {
               <Typography variant="h6" component="h2" gutterBottom>
                 Select an Image from Your Gallery
               </Typography>
-<<<<<<< HEAD
-              <ImageSelector selectedImage={selectedImage} onSelect={handleImageSelect} />
-=======
               <ImageSelector
                 selectedImage={selectedImage}
                 onSelect={handleImageSelect}
@@ -112,7 +109,6 @@ function ImageAnalysis() {
                   alt: file.fileName || "Gallery Image"
                 }))}
               />
->>>>>>> clean-dev
               <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
                 <Button
                   variant="contained"

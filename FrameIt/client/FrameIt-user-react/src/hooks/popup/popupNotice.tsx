@@ -8,10 +8,7 @@ import {
   Button,
   Typography,
   Box,
-<<<<<<< HEAD
-  Link,
-=======
->>>>>>> clean-dev
+
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import EmailIcon from "@mui/icons-material/Email";
@@ -72,12 +69,7 @@ export default function PopupNotice() {
           Have questions or feedback?
           <br />
           <strong>We’re listening.</strong> Reach us at: <br />
-<<<<<<< HEAD
-          <Link href="mailto:support@framelt.com" underline="hover" color="primary">
-            support@framelt.com
-          </Link>
-=======
-                   <a
+      <a
   href="https://mail.google.com/mail/?view=cm&fs=1&to=frameit.noreply@gmail.com&su=Contact%20regarding%20FramelT%20website&body=Hello,%20I%20would%20like%20to%20contact%20regarding%20the%20FramelT%20"
   target="_blank"
   rel="noopener noreferrer"
@@ -85,7 +77,6 @@ export default function PopupNotice() {
 >
   support@frameit.com
 </a>
->>>>>>> clean-dev
         </Typography>
       </DialogContent>
 

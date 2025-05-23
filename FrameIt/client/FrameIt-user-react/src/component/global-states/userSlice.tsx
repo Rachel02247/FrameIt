@@ -7,11 +7,7 @@ interface AuthState {
   token: string | null;
   user: Partial<User>;
   loading: boolean;
-<<<<<<< HEAD
-  error: string | null; 
-=======
   error: string | null;
->>>>>>> clean-dev
 }
 
 const initialState: AuthState = {
@@ -50,10 +46,7 @@ export const login = createAsyncThunk(
   }
 );
 
-<<<<<<< HEAD
-// Async Thunk for Register
-=======
->>>>>>> clean-dev
+
 export const register = createAsyncThunk(
   "auth/register",
   async (newUser: { Name: string; Email: string; Password: string; RoleName: string }, thunkAPI) => {
@@ -74,9 +67,8 @@ export const register = createAsyncThunk(
   }
 );
 
-<<<<<<< HEAD
-// Async Thunk for Changing Password
-=======
+
+
 export const googleLogin = createAsyncThunk(
   "auth/googleLogin",
   async (credential: string, thunkAPI) => {
@@ -94,7 +86,7 @@ export const googleLogin = createAsyncThunk(
   }
 );
 
->>>>>>> clean-dev
+
 export const changePassword = createAsyncThunk(
   "auth/changePassword",
   async (
@@ -157,8 +149,7 @@ const authSlice = createSlice({
         }
       })
 
-<<<<<<< HEAD
-=======
+
       .addCase(googleLogin.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -176,7 +167,7 @@ const authSlice = createSlice({
         state.error = action.payload as string || "Google login failed";
       })
 
->>>>>>> clean-dev
+
 
       .addCase(register.pending, (state) => {
         state.loading = true;
@@ -202,10 +193,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string || "Failed to change password";
       });
-<<<<<<< HEAD
-=======
 
->>>>>>> clean-dev
   },
 });
 

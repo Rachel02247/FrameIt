@@ -27,11 +27,7 @@ import CreateCollection from "../../hooks/createCollection"
 import { downloadByUrl, downloadFile } from "../../hooks/download"
 import type { FileItemProps } from "../../types"
 import { useLanguage } from "../../context/LanguageContext"
-<<<<<<< HEAD
-import { getImageUrl } from "../../services/awsService"
-=======
 import { getFileDownloadUrl } from "../../component/global-states/fileSlice"
->>>>>>> clean-dev
 
 // Function to get file preview URL from server
 
@@ -75,11 +71,6 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
       setIsLoading(true)
 
       try {
-<<<<<<< HEAD
-      const getFilePreviewUrl = await getImageUrl(file.s3Key);
-        console.log("getFilePreviewUrl", getFilePreviewUrl)
-        setPresignedUrl(getFilePreviewUrl);
-=======
         if (file.downloadUrl) {
           setPresignedUrl(file.downloadUrl)
           return
@@ -89,7 +80,6 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
         console.log("getFilePreviewUrl", getFilePreviewUrl)
         setPresignedUrl(getFilePreviewUrl);
         file.downloadUrl = presignedUrl;
->>>>>>> clean-dev
       } catch (error) {
         console.error("Error loading file URL:", error)
         setImageError(true)
@@ -189,12 +179,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
           onError={() => setImageError(true)}
         >
           <source src={presignedUrl} type={`video/${file.fileType}`} />
-<<<<<<< HEAD
-          הדפדפן שלך אינו תומך בניגון וידאו.
-        </video>
-=======
           your browser does'nt support on video display        </video>
->>>>>>> clean-dev
       ) : (
         <Box
           component="img"

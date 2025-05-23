@@ -18,22 +18,15 @@ import {
   Radio,
   FormControl,
 } from "@mui/material"
-<<<<<<< HEAD
-import { ArrowBack, Download, Loop } from "@mui/icons-material"
-=======
 import { ArrowBack, Download, Loop, Email } from "@mui/icons-material"
->>>>>>> clean-dev
 import { ImageSelector } from "../../component/AI/ImageSelector"
 import { useSnackbar } from "notistack"
 import { useGalleryImages } from "../../component/AI/GalleryIntegration"
 import { transformImageToArt } from "../../services/aiService"
-<<<<<<< HEAD
-=======
 import { sendEmail } from "../../hooks/sendEmail";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../component/global-states/store";
 import { getFileDownloadUrl } from "../../component/global-states/fileSlice";
->>>>>>> clean-dev
 
 const artStyles = [
   { id: "picasso", name: "Picasso", description: "Cubist style with geometric shapes" },
@@ -44,18 +37,7 @@ const artStyles = [
   { id: "anime", name: "Anime", description: "Japanese animation style" },
 ]
 
-<<<<<<< HEAD
-function ImageToArt() {
-  const navigate = useNavigate()
-  const { enqueueSnackbar } = useSnackbar()
-  const [selectedImage, setSelectedImage] = useState<string | null>(null)
-  const [selectedStyle, setSelectedStyle] = useState<string>("picasso")
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [generatedArt, setGeneratedArt] = useState<string | null>(null)
-  const { files, getImageUrl } = useGalleryImages()
-  const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null)
-=======
-const BATCH_SIZE = 10; // Define batch size for loading images
+const BATCH_SIZE = 10;
 
 function ImageToArt() {
   const navigate = useNavigate();
@@ -71,76 +53,10 @@ function ImageToArt() {
   type DisplayedImage = { id: string; src: string; alt: string };
   const [displayedImages, setDisplayedImages] = useState<DisplayedImage[]>([]); // Images to display
   const [loadedImageIds, setLoadedImageIds] = useState<Set<string>>(new Set()); // Track loaded image IDs
->>>>>>> clean-dev
 
   useEffect(() => {
     const loadSelectedImageUrl = async () => {
       if (selectedImage) {
-<<<<<<< HEAD
-        const selectedFile = files.find((file) => file.id === selectedImage)
-        if (selectedFile) {
-          if (selectedFile.downloadUrl) {
-            setSelectedImageUrl(selectedFile.downloadUrl)
-          } else {
-            const url = await getImageUrl({ s3Key: selectedFile.s3Key })
-            setSelectedImageUrl(url)
-          }
-        }
-      } else {
-        setSelectedImageUrl(null)
-      }
-    }
-
-    loadSelectedImageUrl()
-  }, [selectedImage, files, getImageUrl])
-
-  const handleImageSelect = (imageId: string) => {
-    setSelectedImage(imageId)
-    setGeneratedArt(null)
-  }
-
-  const handleStyleSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedStyle(event.target.value)
-    setGeneratedArt(null)
-  }
-
-  const handleGenerateArt = async () => {
-    if (!selectedImage || !selectedStyle || !selectedImageUrl) return
-
-    setIsGenerating(true)
-
-    try {
-      // Call the AI service to transform the image
-      const artUrl = await transformImageToArt(selectedImageUrl, selectedStyle)
-
-      if (artUrl !== undefined && artUrl !== null) {
-        setGeneratedArt(artUrl)
-      } else {
-        enqueueSnackbar("Could not generate artwork. Please try again.", {
-          variant: "error", 
-        })
-      }
-    } catch (error) {
-      console.error("Error generating art:", error)
-      enqueueSnackbar("An error occurred during art generation.", {
-        variant: "error", 
-      })
-    } finally {
-      setIsGenerating(false)
-    }
-  }
-
-  const handleDownload = () => {
-    if (!generatedArt) return
-
-    const link = document.createElement("a")
-    link.href = generatedArt
-    link.download = `art-${selectedStyle}-${Date.now()}.png`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-  }
-=======
         const selectedFile = files.find((file) => file.id === selectedImage);
         if (selectedFile) {
           if (selectedFile.downloadUrl) {
@@ -253,18 +169,29 @@ function ImageToArt() {
   };
 
   const handleSendEmail = async () => {
-    if (!generatedArt) return;
+  if (!generatedArt) return;
 
-    const imgElement = document.createElement("img");
-    imgElement.src = generatedArt;
+  const tempContainer = document.createElement("div");
+  tempContainer.style.position = "fixed";
+  tempContainer.style.left = "-9999px"; 
+  const imgElement = document.createElement("img");
+  imgElement.src = generatedArt;
+  imgElement.alt = "Generated artwork";
+  imgElement.style.width = "500px"; 
+  imgElement.style.height = "auto";
 
-    try {
-      await sendEmail(imgElement);
-    } catch (error) {
-      console.error("Error sending email:", error);
-    }
-  };
->>>>>>> clean-dev
+  tempContainer.appendChild(imgElement);
+  document.body.appendChild(tempContainer);
+
+  try {
+    await sendEmail(tempContainer);
+  } catch (error) {
+    console.error("Error sending email:", error);
+  } finally {
+    document.body.removeChild(tempContainer);
+  }
+};
+
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -284,9 +211,6 @@ function ImageToArt() {
               <Typography variant="h6" component="h2" gutterBottom>
                 Select an Image from Your Gallery
               </Typography>
-<<<<<<< HEAD
-              <ImageSelector selectedImage={selectedImage} onSelect={handleImageSelect} />
-=======
               <ImageSelector
                 selectedImage={selectedImage}
                 onSelect={handleImageSelect}
@@ -299,7 +223,6 @@ function ImageToArt() {
                   </Button>
                 </Box>
               )}
->>>>>>> clean-dev
             </CardContent>
           </Card>
         </Grid>
@@ -371,11 +294,6 @@ function ImageToArt() {
               >
                 <img src={generatedArt || "/placeholder.svg"} alt="Generated artwork" />
               </Box>
-<<<<<<< HEAD
-              <Button variant="contained" onClick={handleDownload} startIcon={<Download />}>
-                Download Artwork
-              </Button>
-=======
               <Box sx={{ display: "flex", gap: 2 }}>
                 <Button variant="contained" onClick={handleDownload} startIcon={<Download />}>
                   Download Artwork
@@ -384,20 +302,12 @@ function ImageToArt() {
                   Send via Email
                 </Button>
               </Box>
->>>>>>> clean-dev
             </Box>
           </CardContent>
         </Card>
       )}
     </Container>
-<<<<<<< HEAD
-  )
-}
-
-export default ImageToArt
-=======
   );
 }
 
 export default ImageToArt;
->>>>>>> clean-dev

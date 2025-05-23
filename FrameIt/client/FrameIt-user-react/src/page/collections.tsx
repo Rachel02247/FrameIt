@@ -42,10 +42,7 @@ import CreateCollection from "../hooks/createCollection"
 import ImagePreviewModal from "../hooks/imagePreviewModal"
 import LoadingIndicator from "../hooks/loadingIndicator"
 import FileItem from "./gallery/fileItem"
-<<<<<<< HEAD
-=======
 import { getFileDownloadUrl } from "../component/global-states/fileSlice"
->>>>>>> clean-dev
 
 const Collections: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -91,8 +88,6 @@ const Collections: React.FC = () => {
     return 4
   }
 
-<<<<<<< HEAD
-=======
   const getFileUrl = async (file: { s3Key: string; downloadUrl?: string }) => {
     if (file.downloadUrl) {
       return file.downloadUrl
@@ -107,7 +102,6 @@ const Collections: React.FC = () => {
     }
   }
 
->>>>>>> clean-dev
   const selectedCollection = collections.find((collection) => collection.id === selectedTagId)
 
   return (
@@ -419,11 +413,6 @@ const Collections: React.FC = () => {
               </Box>
 
               <ImageList variant="standard" cols={getColumnCount()} gap={16}>
-<<<<<<< HEAD
-                {files.map((file) => (
-                  <ImageListItem key={file.id}>
-                    <FileItem file={file} onDelete={handleRefreshFiles} onOpenPreview={handleOpenPreview} />
-=======
                 {files.map(async (file) => (
                   <ImageListItem key={file.id}>
                     <FileItem
@@ -434,7 +423,6 @@ const Collections: React.FC = () => {
                       onDelete={handleRefreshFiles}
                       onOpenPreview={handleOpenPreview}
                     />
->>>>>>> clean-dev
                   </ImageListItem>
                 ))}
               </ImageList>

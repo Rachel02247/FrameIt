@@ -12,11 +12,13 @@ import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import Login from '@mui/icons-material/Login';
 import { Link, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { RootState } from '../global-states/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../global-states/store';
 import { useLanguage } from "../../context/LanguageContext";
+import { logout } from '../global-states/userSlice';
 
 export default () => {
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -26,6 +28,7 @@ export default () => {
     setAnchorEl(null);
   };
 
+  const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.user);
   const UserName = sessionStorage.getItem('name');
   const navigate = useNavigate();
@@ -48,15 +51,14 @@ export default () => {
 
   const t = translations[language];
 
-<<<<<<< HEAD
-=======
-const handlelogout = () => {
+
+  const handlelogout = () => {
+    dispatch(logout());
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('name');
     sessionStorage.removeItem('id');
-}
+  }
 
->>>>>>> clean-dev
   return (
     <React.Fragment>
       <Box
@@ -137,11 +139,9 @@ const handlelogout = () => {
           <ListItemIcon>
             {user ? <Logout fontSize="small" /> : <Login fontSize="small" />}
           </ListItemIcon>
-<<<<<<< HEAD
-          <Link to="/login">{user ? t.logout : t.login}</Link>
-=======
+
           <Link to="/login" onClick={handlelogout}>{user ? t.logout : t.login}</Link>
->>>>>>> clean-dev
+
         </MenuItem>
       </Menu>
     </React.Fragment>

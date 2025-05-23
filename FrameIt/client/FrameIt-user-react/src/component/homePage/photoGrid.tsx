@@ -30,6 +30,7 @@ const PhotoGrid: React.FC = () => {
 
   // Redux selectors
   const user = useSelector((state: RootState) => state.user.user);
+  const token = sessionStorage.getItem('token');
   const files = useSelector((state: RootState) => state.files.files);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -48,13 +49,13 @@ const PhotoGrid: React.FC = () => {
     let isMounted = true;
 
     const fetchUserImages = async () => {
-      if (user?.id) {
+      if (user?.id || token) {
         await dispatch(fetchFilesByUserId(Number(user.id)));
 
         if (files && files.length > 0) {
           const sortedFiles = [...files]
             .filter((f) => !!f.s3Key) 
-            .sort((a, b) => Number(b.id) - Number(a.id)) // Sort by id (descending)
+            .sort((a, b) => Number(b.id) - Number(a.id))
             .slice(0, 6); 
 
           const urls = sortedFiles.map((file) => file.downloadUrl || "");

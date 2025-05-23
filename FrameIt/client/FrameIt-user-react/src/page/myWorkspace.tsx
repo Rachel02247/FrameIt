@@ -98,7 +98,7 @@ const MyWorkspace: React.FC = () => {
               </Typography>
               <Button
                 component={Link}
-                to="/myWorkspace/AiFeuteres"
+                to="/myWorkspace/aiFeatures"
                 variant="contained"
                 color="primary"
                 fullWidth

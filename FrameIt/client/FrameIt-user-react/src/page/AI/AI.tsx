@@ -8,7 +8,7 @@ export default () => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate("/myWorkspace/aiFeatures"); // Ensure correct navigation path
+    navigate("/myWorkspace/aiFeatures"); 
   };
 
   return (

@@ -11,6 +11,7 @@ import ZoomInIcon from "@mui/icons-material/ZoomIn"
 import ZoomOutIcon from "@mui/icons-material/ZoomOut"
 import FlipIcon from "@mui/icons-material/Flip"
 import type { CollageImage } from "../../types"
+import EditableTextBox from "./EditableTextBox"
 
 interface CollageCanvasProps {
   images: CollageImage[]
@@ -278,7 +279,7 @@ export const CollageCanvas = forwardRef<HTMLDivElement, CollageCanvasProps>(
           backgroundColor,
           cursor: draggingId || resizing ? "grabbing" : "default",
           top: 70,
-          
+
         }}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
@@ -310,6 +311,15 @@ export const CollageCanvas = forwardRef<HTMLDivElement, CollageCanvasProps>(
                 onMouseDown={(e) => handleMouseDown(e, image.id)}
                 draggable={false}
               />
+              <EditableTextBox
+                id="textbox1"
+                initialText = "text here"
+                x={100}
+                y={150}
+                onUpdateText={(id, newText) => console.log(id, newText)}
+                onDelete={(id) => console.log('Delete:', id)}
+              />
+
 
               {isSelected && (
                 <>
@@ -429,7 +439,7 @@ export const CollageCanvas = forwardRef<HTMLDivElement, CollageCanvasProps>(
                       position: "absolute",
                       top: -48,
                       left: "50%",
-                      transform: "translateX(-50%)" ,
+                      transform: "translateX(-50%)",
                       bgcolor: "white",
                       borderRadius: 1,
                       boxShadow: 2,

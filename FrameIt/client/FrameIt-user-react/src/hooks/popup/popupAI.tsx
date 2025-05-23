@@ -9,10 +9,6 @@ import {
   Button,
   Typography,
   Box,
-<<<<<<< HEAD
-  Link,
-=======
->>>>>>> clean-dev
 } from "@mui/material";
 import PsychologyAltIcon from "@mui/icons-material/PsychologyAlt";
 import EmailIcon from "@mui/icons-material/Email";
@@ -67,11 +63,7 @@ export default () => {
         <Typography variant="body1" sx={{ fontSize: "1rem", lineHeight: 1.8 }}>
           <EmailIcon sx={{ verticalAlign: "middle", mr: 1, color: "secondary.main" }} />
           Questions or feedback? We’d love to hear from you. <br />
-<<<<<<< HEAD
-          <Link href="mailto:support@framelt.com" underline="hover" color="primary">
-            support@framelt.com
-          </Link>
-=======
+
           <a
             href="https://mail.google.com/mail/?view=cm&fs=1&to=frameit.noreply@gmail.com&su=Contact%20regarding%20FramelT%20website&body=Hello,%20I%20would%20like%20to%20contact%20regarding%20the%20FramelT%20"
             target="_blank"
@@ -80,7 +72,7 @@ export default () => {
           >
             support@frameit.com
           </a>
->>>>>>> clean-dev
+
         </Typography>
       </DialogContent>
 
