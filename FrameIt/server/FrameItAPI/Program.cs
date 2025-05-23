@@ -59,6 +59,8 @@ builder.Services.AddAWSService<IAmazonS3>();
 
 //builder.Services.AddDbContext<DataContext>();
 //builder.Services.AddAWSService<IAmazonS3>();
+
+builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IFolderService, FolderService>();
 builder.Services.AddScoped<ITagService, TagService>();
@@ -66,6 +68,7 @@ builder.Services.AddScoped<ICollageService, CollageService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddLogging();
 
 
 //=========  google login===========

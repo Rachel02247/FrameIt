@@ -16,7 +16,7 @@ const Upload = () => {
 
     files.forEach((file) => {
       if (file.file) {
-        formData.append("files", file.file);
+        formData.append("file", file.file);
       }
     });
 

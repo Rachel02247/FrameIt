@@ -9,7 +9,29 @@
     "Parameters": [
       {
         "Name": "req",
-        "Type": "FrameItAPI.Endpoints.ChangePasswordRequest",
+        "Type": "FrameItAPI.Entities.mapping.Auth\u002BChangePasswordRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "FrameItAPI.Endpoints.AuthEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CMapAuthEndpoints\u003Eb__0_3",
+    "RelativePath": "auth/google-login",
+    "HttpMethod": "POST",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "FrameItAPI.Entities.mapping.Auth\u002BGoogleLoginRequest",
         "IsRequired": true
       }
     ],
@@ -31,7 +53,7 @@
     "Parameters": [
       {
         "Name": "model",
-        "Type": "FrameItAPI.Endpoints.LoginModel",
+        "Type": "FrameItAPI.Entities.mapping.Auth\u002BLoginModel",
         "IsRequired": true
       }
     ],
@@ -53,7 +75,7 @@
     "Parameters": [
       {
         "Name": "model",
-        "Type": "FrameItAPI.Endpoints.RegisterModel",
+        "Type": "FrameItAPI.Entities.mapping.Auth\u002BRegisterModel",
         "IsRequired": true
       }
     ],
@@ -774,7 +796,7 @@
     "Parameters": [
       {
         "Name": "user",
-        "Type": "FrameItAPI.Endpoints.RegisterModel",
+        "Type": "FrameItAPI.Entities.mapping.Auth\u002BRegisterModel",
         "IsRequired": true
       }
     ],

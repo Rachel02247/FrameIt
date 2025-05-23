@@ -7,7 +7,7 @@ export default () => {
 
   return (
     <>
-      <Link to="/home">
+      <Link to="/">
         <img
           style={{
             width: 50,
