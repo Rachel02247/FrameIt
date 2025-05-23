@@ -5,10 +5,7 @@ using FrameItAPI.DataAccess;
 using FrameItAPI.Endpoints;
 using Org.BouncyCastle.Crypto.Generators;
 using Sprache;
-<<<<<<< HEAD
-=======
 using static FrameItAPI.Entities.mapping.Auth;
->>>>>>> clean-dev
 
 namespace FrameItAPI.Services.services
 {

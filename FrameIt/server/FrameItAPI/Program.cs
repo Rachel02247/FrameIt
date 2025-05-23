@@ -14,10 +14,7 @@ using DotNetEnv;
 using Amazon;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Options;
-<<<<<<< HEAD
-=======
 using static FrameItAPI.Entities.mapping.Auth;
->>>>>>> clean-dev
 
 
 
@@ -71,13 +68,10 @@ builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 builder.Services.AddScoped<AuthService>();
 
 
-<<<<<<< HEAD
-=======
 //=========  google login===========
 builder.Services.Configure<GoogleAuthSettings>(builder.Configuration.GetSection("Google"));
 
 
->>>>>>> clean-dev
 // ========== add Swagger =============
 
 builder.Services.AddEndpointsApiExplorer();

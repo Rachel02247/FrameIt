@@ -1,9 +1,6 @@
 ﻿using FrameItAPI.Endpoints;
 using FrameItAPI.Entities;
-<<<<<<< HEAD
-=======
 using static FrameItAPI.Entities.mapping.Auth;
->>>>>>> clean-dev
 
 namespace FrameItAPI.Services.interfaces
 {
