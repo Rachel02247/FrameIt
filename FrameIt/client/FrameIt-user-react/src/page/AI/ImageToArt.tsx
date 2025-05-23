@@ -52,7 +52,15 @@ function ImageToArt() {
   const [currentBatch, setCurrentBatch] = useState(0); // Track the current batch index
   type DisplayedImage = { id: string; src: string; alt: string };
   const [displayedImages, setDisplayedImages] = useState<DisplayedImage[]>([]); // Images to display
-  // const [loadedImageIds, setLoadedImageIds] = useState<Set<string>>(new Set()); // Track loaded image IDs
+
+  const loadedImageIdsRef = useRef<Set<string>>(new Set());
+
+  // אתחול מחדש של תמונות מוצגות וסט האיידים טעונים כש- files משתנים
+  useEffect(() => {
+    setDisplayedImages([]);
+    loadedImageIdsRef.current.clear();
+    setCurrentBatch(0);
+  }, [files]);
 
   useEffect(() => {
     const loadSelectedImageUrl = async () => {
@@ -75,46 +83,44 @@ function ImageToArt() {
   }, [selectedImage, files, dispatch]);
 
 
-const loadedImageIdsRef = useRef<Set<string>>(new Set());
+  useEffect(() => {
+    const loadBatch = async () => {
+      const startIndex = currentBatch * BATCH_SIZE;
+      const endIndex = startIndex + BATCH_SIZE;
+      const batch = files.slice(startIndex, endIndex);
 
-useEffect(() => {
-  const loadBatch = async () => {
-    const startIndex = currentBatch * BATCH_SIZE;
-    const endIndex = startIndex + BATCH_SIZE;
-    const batch = files.slice(startIndex, endIndex);
+      const urls: Record<string, string> = {};
+      const newImages: DisplayedImage[] = [];
 
-    const urls: Record<string, string> = {};
-    const newImages: DisplayedImage[] = [];
+      await Promise.all(
+        batch.map(async (file) => {
+          if (!loadedImageIdsRef.current.has(file.id)) {
+            if (file.downloadUrl) {
+              urls[file.id] = file.downloadUrl;
+            } else if (!urls[file.id]) {
+              const url = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap();
+              urls[file.id] = url;
+            }
 
-    await Promise.all(
-      batch.map(async (file) => {
-        if (!loadedImageIdsRef.current.has(file.id)) {
-          if (file.downloadUrl) {
-            urls[file.id] = file.downloadUrl;
-          } else if (!urls[file.id]) {
-            const url = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap();
-            urls[file.id] = url;
+            newImages.push({
+              id: file.id,
+              src: urls[file.id] || "",
+              alt: file.fileName,
+            });
+
+            loadedImageIdsRef.current.add(file.id);
           }
+        })
+      );
 
-          newImages.push({
-            id: file.id,
-            src: urls[file.id] || "",
-            alt: file.fileName,
-          });
+      setDisplayedImages((prev) => [...prev, ...newImages]);
+    };
 
-          loadedImageIdsRef.current.add(file.id);
-        }
-      })
-    );
+    if (files.length > 0 && currentBatch * BATCH_SIZE < files.length) {
+      loadBatch();
+    }
+  }, [currentBatch, files, dispatch]);
 
-    setDisplayedImages((prev) => [...prev, ...newImages]);
-  };
-
-  if (files.length > 0 && currentBatch * BATCH_SIZE < files.length) {
-    loadBatch();
-  }
-}, [currentBatch, files, dispatch]);
-;
 
   const handleLoadMore = () => {
     if (currentBatch * BATCH_SIZE < files.length) {
@@ -170,28 +176,28 @@ useEffect(() => {
   };
 
   const handleSendEmail = async () => {
-  if (!generatedArt) return;
+    if (!generatedArt) return;
 
-  const tempContainer = document.createElement("div");
-  tempContainer.style.position = "fixed";
-  tempContainer.style.left = "-9999px"; 
-  const imgElement = document.createElement("img");
-  imgElement.src = generatedArt;
-  imgElement.alt = "Generated artwork";
-  imgElement.style.width = "500px"; 
-  imgElement.style.height = "auto";
+    const tempContainer = document.createElement("div");
+    tempContainer.style.position = "fixed";
+    tempContainer.style.left = "-9999px"; 
+    const imgElement = document.createElement("img");
+    imgElement.src = generatedArt;
+    imgElement.alt = "Generated artwork";
+    imgElement.style.width = "500px"; 
+    imgElement.style.height = "auto";
 
-  tempContainer.appendChild(imgElement);
-  document.body.appendChild(tempContainer);
+    tempContainer.appendChild(imgElement);
+    document.body.appendChild(tempContainer);
 
-  try {
-    await sendEmail(tempContainer);
-  } catch (error) {
-    console.error("Error sending email:", error);
-  } finally {
-    document.body.removeChild(tempContainer);
-  }
-};
+    try {
+      await sendEmail(tempContainer);
+    } catch (error) {
+      console.error("Error sending email:", error);
+    } finally {
+      document.body.removeChild(tempContainer);
+    }
+  };
 
 
   return (
