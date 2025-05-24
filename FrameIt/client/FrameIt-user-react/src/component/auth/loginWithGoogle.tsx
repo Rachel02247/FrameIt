@@ -12,7 +12,7 @@ export default  () => {
     <GoogleLogin
       onSuccess={(credentialResponse) => {
         if (credentialResponse.credential) {
-          dispatch(googleLogin(credentialResponse.credential));
+           dispatch(googleLogin(credentialResponse.credential));
         }
       }}
       onError={() => {

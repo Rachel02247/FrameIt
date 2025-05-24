@@ -18,7 +18,7 @@ const initialState: AuthState = {
     Password: "",
     CreatedAt: "",
     UpdatedAt: "",
-    id: sessionStorage.getItem('id') ?? undefined, // Changed null to undefined
+    id: sessionStorage.getItem('id') ?? undefined, 
     RoleName: 'Editor',
   },
   loading: false,
@@ -37,7 +37,7 @@ export const login = createAsyncThunk(
         Password: credentials.password,
       });
       return response.data;
-    } catch (error: unknown) { // Changed `any` to `unknown`
+    } catch (error: unknown) { 
       if (axios.isAxiosError(error) && error.response) {
         return thunkAPI.rejectWithValue(error.response.data.message || "Login failed");
       }
@@ -58,7 +58,7 @@ export const register = createAsyncThunk(
         RoleName: "Editor",
       });
       return response.data;
-    } catch (error: unknown) { // Changed `any` to `unknown`
+    } catch (error: unknown) { 
       if (axios.isAxiosError(error) && error.response) {
         return thunkAPI.rejectWithValue(error.response.data || "Registration failed");
       }
@@ -73,7 +73,7 @@ export const googleLogin = createAsyncThunk(
   "auth/googleLogin",
   async (credential: string, thunkAPI) => {
     try {
-      const response = await axios.post<{ token: string; user: User }>(`${url}google`, {
+      const response = await axios.post<{ token: string; user: User }>(`${url}google-login`, {
         credential
       });
       return response.data;

@@ -109,7 +109,7 @@ const Login = () => {
                  top: 50,
 
                 position: 'relative',
-                bgcolor: theme.palette.background.default, // Use theme background
+                bgcolor: theme.palette.background.default, 
             }}
         >
             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', p: 3 }}>
