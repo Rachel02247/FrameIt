@@ -151,7 +151,6 @@ export async function transformImageToArt(imageUrl: string, style: string) {
   const styleDescription = styleDescriptions[style as keyof typeof styleDescriptions] || styleDescriptions.picasso;
 
   try {
-    // שלב 1: הורדת התמונה ל־Buffer
     const imageResponse = await axios.get(imageUrl, {
       responseType: "arraybuffer",
     });
