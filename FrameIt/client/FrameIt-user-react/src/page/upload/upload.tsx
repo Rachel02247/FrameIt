@@ -9,14 +9,17 @@ import { uploadFiles } from "../../component/global-states/fileSlice";
 const Upload = () => {
   const user = useSelector((state: RootState) => state.user.user);
   const dispatch = useDispatch<AppDispatch>();
-
-  const handleUpload = async (files: MyFile[], folderId: string) => {
+const handleUpload = async (files: MyFile[], folderId: string) => {
   try {
+    
     const formData = new FormData();
 
     files.forEach((file) => {
       if (file.file) {
-        formData.append("file", file.file);
+        formData.append("file", file.file); 
+        console.log("before formData")
+        console.log(formData)
+        console.log(" after formData")
       }
     });
 
@@ -32,16 +35,20 @@ const Upload = () => {
     }));
 
     formData.append("fileMetadata", JSON.stringify(metadataArray));
-
     formData.append("folderId", folderId);
 
-    console.log("Uploading files...");
+    console.log("FormData contents:");
+    for (const pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
+    }
+
     await dispatch(uploadFiles(formData)).unwrap();
     console.log("Files uploaded successfully");
   } catch (error) {
     console.error("Error uploading files:", error);
   }
 };
+
 
 
   return (
