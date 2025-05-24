@@ -25,7 +25,7 @@ namespace FrameItAPI.Services.services
 
         public async Task<GoogleLoginResult> LoginOrRegisterWithGoogleAsync(string credential)
         {
-            var clientId = _config["Google:ClientId"];
+            var clientId = _config["GOOGLE_CLIENT_ID"];
             var settings = new GoogleJsonWebSignature.ValidationSettings
             {
                 Audience = new[] { clientId }

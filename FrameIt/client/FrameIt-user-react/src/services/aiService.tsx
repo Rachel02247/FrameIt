@@ -134,7 +134,7 @@ export async function analyzeImage(imageUrl: string): Promise<ImageAnalysisResul
 
 import axios from "axios";
 
-const REPLICATE_API_TOKEN = import.meta.env.REPLICATE_API_TOKEN;
+const REPLICATE_API_TOKEN = import.meta.env.VITE_REPLICATE_API_TOKEN;
 
 const styleDescriptions: Record<string, string> = {
   picasso: "in the style of Pablo Picasso, with cubist elements, geometric shapes, and bold lines",

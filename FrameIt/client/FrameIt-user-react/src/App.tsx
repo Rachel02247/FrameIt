@@ -14,7 +14,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 function AppContent() {
   const theme = useTheme();
 
-const googleClientId = import.meta.env.GOOGLE_CLIENT_ID;
+const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || process.env;
 
   useEffect(() => {
     document.body.style.backgroundColor = theme.palette.background.default;
