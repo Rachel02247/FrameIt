@@ -1,0 +1,18 @@
+.settings-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  padding: 32px;
+  max-width: 500px;
+  margin: 40px auto;
+}
+
+.add-admin-section, .other-settings-section {
+  margin-bottom: 32px;
+}
+
+.success-message {
+  color: #388e3c;
+  margin-top: 12px;
+  font-weight: 500;
+}

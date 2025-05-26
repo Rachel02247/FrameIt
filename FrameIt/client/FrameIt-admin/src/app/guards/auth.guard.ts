@@ -1,22 +1,16 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, Router, UrlTree } from '@angular/router';
-import { AuthService } from '../servies/auth/auth.service'; 
-import { Observable, of } from 'rxjs';
+import { inject } from '@angular/core';
+import { CanMatchFn } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { map, take } from 'rxjs/operators';
+import { selectIsLoggedIn } from '../components/global-states/auth/auth.selectors';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) {}
 
-  canActivate(): boolean | UrlTree | Observable<boolean | UrlTree> {
-    const isLoggedIn = this.authService.isAuthenticated();
+export const authGuard: CanMatchFn = (route, segments) => {
 
-    if (isLoggedIn) {
-      return true;
-    } else {
-      // נשתמש ב־UrlTree כדי לא לנסות לנתב תוך כדי החסימה
-      return this.router.parseUrl('/login');
-    }
-  }
-}
+  const store = inject(Store);
+
+  return store.select(selectIsLoggedIn).pipe(
+    take(1),
+    map(isLoggedIn => !!isLoggedIn)
+  );
+};

@@ -1,0 +1,26 @@
+<div class="settings-card">
+  <h2>Settings</h2>
+
+  <section class="add-admin-section">
+    <h3>Add New Admin</h3>
+    <form [formGroup]="addAdminForm" (ngSubmit)="addAdmin()">
+      <mat-form-field appearance="outline" style="width:100%;margin-bottom:12px;">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" required>
+        <mat-error *ngIf="addAdminForm.get('name')?.invalid">Name is required</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" style="width:100%;margin-bottom:12px;">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" required>
+        <mat-error *ngIf="addAdminForm.get('email')?.invalid">Valid email is required</mat-error>
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit" [disabled]="addAdminForm.invalid">Add Admin</button>
+    </form>
+    <div *ngIf="adminAddedMessage" class="success-message">{{ adminAddedMessage }}</div>
+  </section>
+
+  <section class="other-settings-section">
+    <h3>Other Settings</h3>
+    <p>More settings coming soon...</p>
+  </section>
+</div>

@@ -5,6 +5,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
 import { AnalyticsService } from '../../servies/analytics/analytics.service';
 import { User } from '../../models/user';
+import { UserEditor } from '../../models/userEditor';
 
 @Component({
   selector: 'app-analytics',
@@ -22,8 +23,8 @@ import { User } from '../../models/user';
 
 })
 export class AnalyticsComponent implements OnInit {
-// נתוני סטטיסטיקה מהירה
-summaryStats = {
+
+  summaryStats = {
   totalUsers: 0,
   totalFiles: 0,
   totalStorage: 0,
@@ -36,10 +37,8 @@ storageUsageData: any[] = [];
 userActivityData: any[] = [];
 collageCreationData: any[] = [];
 
-// פעילות אחרונה
-recentActivities: User[] = [];
+recentActivities: UserEditor[] = [];
 
-// אפשרויות גרפים
 view: [number, number] = [700, 300];
 showXAxis = true;
 showYAxis = true;

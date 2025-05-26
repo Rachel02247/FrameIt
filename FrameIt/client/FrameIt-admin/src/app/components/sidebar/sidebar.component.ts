@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../servies/auth/auth.service';
+import { select, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { logout } from '../global-states/auth/auth.action';
 
 interface MenuItem {
   title: string;
@@ -14,24 +16,25 @@ interface MenuItem {
   selector: 'app-sidebar',
   imports: [CommonModule, RouterLink],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.css',
+  styleUrls: ['./sidebar.component.css'], // שים לב לשינוי ל־styleUrls (ריבוי קבצים)
   standalone: true,
 })
 export class SidebarComponent {
 
-  
     @Input() collapsed = false;
-  
+
     menuItems: MenuItem[] = [
-      { title: 'אנליטיקה', icon: 'bar-chart', route: '/dashboard/analytics', active: false },
-      { title: 'משתמשים', icon: 'users', route: '/dashboard/users', active: false },
-      { title: 'הגדרות', icon: 'settings', route: '/dashboard/settings', active: false },
+      { title: 'Analytics', icon: 'bar-chart', route: '/dashboard/analytics', active: false },
+      { title: 'Users', icon: 'users', route: '/dashboard/users', active: false },
+      { title: 'Settings', icon: 'settings', route: '/dashboard/settings', active: false },
     ];
+  
   
     constructor(
       private router: Router,
-      private authService: AuthService,
-    ) {}
+      private store: Store<{ auth: { isLoggedIn: boolean } }>,
+    ) {
+    }
   
     ngOnInit(): void {
       this.setActiveMenuItem();
@@ -50,8 +53,8 @@ export class SidebarComponent {
     }
   
     logout(): void {
-      this.authService.logout();
-      this.router.navigate(['/login']);
+      this.store.dispatch(logout({ message: 'User logged out' }));
+       this.router.navigate(['/login']);
     }
   
 }

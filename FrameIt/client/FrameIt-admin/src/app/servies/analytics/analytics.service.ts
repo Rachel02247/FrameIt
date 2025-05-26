@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, map, of } from 'rxjs';
 import { User } from '../../models/user';
+import { UserEditor } from '../../models/userEditor';
 
 const API_BASE_URL = 'http://localhost:5282';
 
@@ -131,7 +132,7 @@ export class AnalyticsService  {
     return this.http.get<any[]>(`${API_BASE_URL}/users`).pipe(
       map(users => {
         // Create a list of activities from users
-        const activities: User[] = users.map(user => {
+        const activities: UserEditor[] = users.map(user => {
           const activityType = this.getRandomActivityType(); // Dynamic activity type
           return {
             id: +user.id,

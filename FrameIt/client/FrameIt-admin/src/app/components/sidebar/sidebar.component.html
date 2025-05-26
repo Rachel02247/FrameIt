@@ -1,40 +1,17 @@
-
-<div class="sidebar" [class.collapsed]="collapsed">
-    <div class="logo-container">
-      <div class="logo">
-        <img src="../../../../public/logo.png" alt="Logo">
-        @if (!collapsed) {
-          <span>מערכת ניהול</span>
-        }
-      </div>
-    </div>
-    
-    <div class="menu-container">
-      <ul class="menu-items">
-        @for (item of menuItems; track item.route) {
-          <li 
-            [class.active]="item.active"
-            (click)="navigateTo(item.route)">
-            <i class="feather-icon" [ngClass]="'icon-' + item.icon"></i>
-            @if (!collapsed) {
-              <span>{{ item.title }}</span>
-            }
-          </li>
-        }
-      </ul>
-    </div>
-    
-    <div class="user-container">
-      <div class="user-profile" (click)="logout()">
-        <div class="avatar">
-          <img src="assets/avatar.jpg" alt="User Avatar">
-        </div>
-        @if (!collapsed) {
-          <div class="user-info">
-            <span class="user-name">משתמש מנהל</span>
-            <span class="logout">התנתק</span>
-          </div>
-        }
-      </div>
-    </div>
+<nav class="sidebar-container" [class.collapsed]="collapsed">
+  <div class="sidebar-title">Admin Panel</div>
+  <ul class="sidebar-menu">
+    @for (item of menuItems; track item.route) {
+    <li [class.active]="item.active" (click)="navigateTo(item.route)">
+      <span class="sidebar-icon material-icons">{{ item.icon }}</span>
+      <span class="sidebar-label" *ngIf="!collapsed">{{ item.title }}</span>
+    </li>
+    }
+  </ul>
+  <div class="sidebar-footer">
+    <button class="logout-btn" (click)="logout()">
+      <span class="material-icons">logout</span>
+      <span *ngIf="!collapsed">Logout</span>
+    </button>
   </div>
+</nav>
