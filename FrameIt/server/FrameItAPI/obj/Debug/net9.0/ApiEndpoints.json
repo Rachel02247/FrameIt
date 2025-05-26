@@ -1,5 +1,81 @@
 [
   {
+    "ContainingType": "FrameItAPI.Endpoints.AnalyticsEndpoint\u002B\u003C\u003Ec",
+    "Method": "\u003CMapAnalyticsEndpoints\u003Eb__0_3",
+    "RelativePath": "analytics/collage-creation",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "days",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "FrameItAPI.Endpoints.AnalyticsEndpoint\u002B\u003C\u003Ec",
+    "Method": "\u003CMapAnalyticsEndpoints\u003Eb__0_1",
+    "RelativePath": "analytics/storage-usage",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "FrameItAPI.Endpoints.AnalyticsEndpoint\u002B\u003C\u003Ec",
+    "Method": "\u003CMapAnalyticsEndpoints\u003Eb__0_0",
+    "RelativePath": "analytics/summary",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "FrameItAPI.Endpoints.AnalyticsEndpoint\u002B\u003C\u003Ec",
+    "Method": "\u003CMapAnalyticsEndpoints\u003Eb__0_2",
+    "RelativePath": "analytics/user-activity",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "days",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "FrameItAPI.Endpoints.AuthEndpoints\u002B\u003C\u003Ec",
     "Method": "\u003CMapAuthEndpoints\u003Eb__0_2",
     "RelativePath": "api/change-password",

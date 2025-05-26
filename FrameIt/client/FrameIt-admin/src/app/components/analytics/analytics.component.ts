@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
@@ -31,7 +31,6 @@ export class AnalyticsComponent implements OnInit {
   totalCollages: 0
 };
 
-// נתוני גרפים
 fileUploadData: any[] = [];
 storageUsageData: any[] = [];
 userActivityData: any[] = [];
@@ -48,15 +47,13 @@ showXAxisLabel = true;
 showYAxisLabel = true;
 timeline = true;
 
-// תקופת זמן לניתוח
 timeRangeControl = new FormControl('30');
 
-// סכמת צבעים
 colorScheme = {
   domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA'],
   name: 'cool',
   selectable: true,
-  group: ScaleType.Ordinal // כך זה נכון
+  group: ScaleType.Ordinal 
 };
 isLoading = true;
 
@@ -65,7 +62,6 @@ constructor(private analyticsService: AnalyticsService) {}
 ngOnInit(): void {
   this.loadAnalyticsData();
   
-  // האזנה לשינויים בטווח הזמן
   this.timeRangeControl.valueChanges.subscribe(value => {
     if (value) {
       this.loadAnalyticsData(+value);
@@ -76,65 +72,62 @@ ngOnInit(): void {
 loadAnalyticsData(days: number = 30): void {
   this.isLoading = true;
   
-  // טעינת סטטיסטיקה מהירה
   this.analyticsService.getSummaryStats().subscribe({
     next: (data:any) => {
       this.summaryStats = data;
     },
     error: (error:any) => {
-      console.error('שגיאה בטעינת סטטיסטיקה', error);
+      console.error('Error loading statistics', error);
     }
   });
   
-  // טעינת נתוני העלאות קבצים
-  this.analyticsService.getRecentActivities(days).subscribe({
-    next: (data:any) => {
-      this.fileUploadData = data;
+  this.analyticsService.getFileUploadStats(days).subscribe({
+    next: (data: any) => {
+      this.fileUploadData = Array.isArray(data) ? data : [];
       this.isLoading = false;
     },
-    error: (error:any) => {
-      console.error('שגיאה בטעינת נתוני העלאות', error);
+    error: (error: any) => {
+      this.fileUploadData = [];
       this.isLoading = false;
+      console.error('Error loading file upload meta data', error);
     }
   });
   
-  // טעינת נתוני שימוש באחסון
   this.analyticsService.getStorageUsageStats().subscribe({
     next: (data:any) => {
       this.storageUsageData = data;
     },
     error: (error:any) => {
-      console.error('שגיאה בטעינת נתוני אחסון', error);
+      console.error('Error loading storage', error);
     }
   });
   
-  // טעינת נתוני פעילות משתמשים
   this.analyticsService.getUserActivityStats(days).subscribe({
-    next: (data:any) => {
-      this.userActivityData = data;
-    },
-    error: (error:any) => {
-      console.error('שגיאה בטעינת נתוני פעילות משתמשים', error);
-    }
-  });
-  
-  // טעינת נתוני יצירת קולאז'ים
-  this.analyticsService.getCollageCreationStats(days).subscribe({
-    next: (data:any) => {
-      this.collageCreationData = data;
-    },
-    error: (error:any) => {
-      console.error('שגיאה בטעינת נתוני קולאז\'ים', error);
-    }
-  });
-  
-  // טעינת פעילות אחרונה
-  this.analyticsService.getRecentActivities(days).subscribe({
     next: (data: any) => {
-      this.recentActivities = data.slice(-10); // Show only the last 10 activities
+      this.userActivityData = Array.isArray(data) ? data : [];
     },
     error: (error: any) => {
-      console.error('שגיאה בטעינת פעילות אחרונה', error);
+      this.userActivityData = [];
+      console.error('Error loading users data', error);
+    }
+  });
+  
+  this.analyticsService.getCollageCreationStats(days).subscribe({
+    next: (data: any) => {
+      this.collageCreationData = Array.isArray(data) ? data : [];
+    },
+    error: (error: any) => {
+      this.collageCreationData = [];
+      console.error('Error loading collage create data', error);
+    }
+  });
+  
+  this.analyticsService.getRecentActivities(days).subscribe({
+    next: (data: any) => {
+      this.recentActivities = data.slice(-10);
+    },
+    error: (error: any) => {
+      console.error('Error loading last activities', error);
     }
   });
 }

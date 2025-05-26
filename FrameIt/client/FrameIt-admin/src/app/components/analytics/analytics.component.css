@@ -261,7 +261,7 @@
   align-items: flex-start;
   min-height: 90vh;
   background: #f5f7fa;
-  direction: rtl; /* Optional: for full RTL support */
+  /* direction: rtl; Optional: for full RTL support */
 }
 
 .analytics-card {
@@ -272,4 +272,11 @@
   max-width: 1200px;
   width: 100%;
   margin: 40px 0 40px 40px; /* Add left margin for spacing from left */
+}
+
+.left-align {
+  direction: ltr;
+  text-align: left;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
 }

@@ -27,6 +27,7 @@ public static class FileEndpoints
         {
             try
             {
+                Console.WriteLine($"in post file {httpContext.Request.ReadFormAsync()}");
                 var form = await httpContext.Request.ReadFormAsync();
                 var file = form.Files.GetFile("file");
 

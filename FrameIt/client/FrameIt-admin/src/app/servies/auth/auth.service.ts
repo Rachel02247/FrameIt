@@ -12,6 +12,9 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
+  isLoggedIn(): boolean {
+    return !!sessionStorage.getItem('token');
+  }
 
   login(email: string, password: string) {
     console.log(`Logging in with email: ${email}`);

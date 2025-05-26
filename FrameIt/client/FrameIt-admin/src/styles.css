@@ -1,1 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Import a modern font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+body, html, app-root {
+  /* direction: rtl !important; */
+  text-align: left !important;
+  direction: ltr !important;
+  font-family: 'Inter', Arial, sans-serif;
+}

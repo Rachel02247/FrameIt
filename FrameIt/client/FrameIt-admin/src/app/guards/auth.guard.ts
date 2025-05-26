@@ -6,11 +6,12 @@ import { selectIsLoggedIn } from '../components/global-states/auth/auth.selector
 
 
 export const authGuard: CanMatchFn = (route, segments) => {
-
   const store = inject(Store);
 
   return store.select(selectIsLoggedIn).pipe(
     take(1),
-    map(isLoggedIn => !!isLoggedIn)
+    map(isLoggedIn => {
+      return !!isLoggedIn || !!sessionStorage.getItem('token');
+    })
   );
 };

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { UsersService, User } from '../../servies/users/users.service'; // ייבוא User מהשירות
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
@@ -30,6 +30,8 @@ export class UsersComponent implements OnInit {
 
   addUserForm!: FormGroup;
   editUserForm!: FormGroup;
+
+  @ViewChild('editForm') editForm!: ElementRef;
 
   constructor(
     private usersService: UsersService,
@@ -82,6 +84,7 @@ export class UsersComponent implements OnInit {
       password: '', 
       roleName: 'Editor'
     });
+    this.scrollToEditForm();
   }
 
   clearSelection() {
@@ -124,5 +127,11 @@ export class UsersComponent implements OnInit {
       this.loadUsers();
       this.clearSelection();
     });
+  }
+
+  scrollToEditForm() {
+    setTimeout(() => {
+      this.editForm?.nativeElement?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 0);
   }
 }

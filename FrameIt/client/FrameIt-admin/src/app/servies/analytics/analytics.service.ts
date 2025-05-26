@@ -3,42 +3,24 @@ import { Injectable } from '@angular/core';
 import { Observable, forkJoin, map, of } from 'rxjs';
 import { User } from '../../models/user';
 import { UserEditor } from '../../models/userEditor';
-
-const API_BASE_URL = 'http://localhost:5282';
+import { environment } from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AnalyticsService  {
+  private baseUrl = `${environment.apiUrl}`;
 
   constructor(private http:HttpClient) { }
 
-  // סטטיסטיקה מהירה
   getSummaryStats(): Observable<any> {
-    return forkJoin({
-      users: this.http.get<any[]>(`${API_BASE_URL}/users`) ,
-      files: this.http.get<any[]>(`${API_BASE_URL}/users`)
-
-      // collages: this.http.get<any[]>('/collages')
-    }).pipe(
-      map(({ users, files }) => {
-        const totalStorage = files.reduce((sum, file) => sum + file.size, 0);
-        
-        return {
-          totalUsers: users.length,
-          totalFiles: files.length,
-          totalStorage: totalStorage,
-          totalCollages: 0 // יש להחליף כשיהיה endpoint פעיל
-        };
-      })
-    );
+    return this.http.get(`${this.baseUrl}analytics/summary`);
   }
 
-  // סטטיסטיקת העלאות קבצים
   getFileUploadStats(days: number = 30): Observable<any[]> {
-    return this.http.get<any[]>('/files').pipe(
+    return this.http.get<any[]>(`${this.baseUrl}files`).pipe(
       map(files => {
-        // סינון קבצים לפי תאריך
+
         const cutoffDate = new Date();
         cutoffDate.setDate(cutoffDate.getDate() - days);
         
@@ -47,13 +29,11 @@ export class AnalyticsService  {
           return fileDate >= cutoffDate;
         });
         
-        // קיבוץ לפי תאריך
         const groupedByDate = this.groupFilesByDate(filteredFiles);
         
-        // המרה למבנה הנדרש לגרף
         return [
           {
-            name: 'העלאות קבצים',
+            name: 'file uploads',
             series: Object.entries(groupedByDate).map(([date, count]) => ({
               name: date,
               value: count
@@ -64,82 +44,34 @@ export class AnalyticsService  {
     );
   }
 
-  // סטטיסטיקת שימוש באחסון
-  getStorageUsageStats(): Observable<any[]> {
-    return this.http.get<any[]>('/files').pipe(
-      map(files => {
-        // קיבוץ לפי סוג קובץ
-        const groupedByType: Record<string, number> = {};
-        
-        files.forEach(file => {
-          const fileType = this.getFileCategory(file.fileType);
-          groupedByType[fileType] = (groupedByType[fileType] || 0) + file.size;
-        });
-        
-        // המרה למבנה הנדרש לגרף
-        return Object.entries(groupedByType).map(([type, size]) => ({
-          name: type,
-          value: size
-        }));
-      })
+  getStorageUsageStats(): Observable<any> {
+    return this.http.get(`${this.baseUrl}analytics/storage-usage`);
+  }
+
+  getUserActivityStats(days: number = 30): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}analytics/user-activity?days=${days}`).pipe(
+      map(data => Array.isArray(data) ? data : [])
     );
   }
 
-  // סטטיסטיקת פעילות משתמשים
-  getUserActivityStats(days: number = 30): Observable<any[]> {
-    // כאן צריך לוגיקה שתתבסס על לוגים או נתוני פעילות
-    // לצורך הדוגמה, נחזיר נתונים מדומים
-    
-    const mockData = [
-      {
-        name: 'משתמשים פעילים',
-        series: this.generateDateSeries(days, 10, 50)
-      },
-      {
-        name: 'משתמשים חדשים',
-        series: this.generateDateSeries(days, 1, 10)
-      }
-    ];
-    
-    return of(mockData);
-  }
-
-  // סטטיסטיקת יצירת קולאז'ים
   getCollageCreationStats(days: number = 30): Observable<any[]> {
-    return this.http.get<any[]>('/collages').pipe(
-      map(collages => {
-        // סינון קולאז'ים לפי תאריך
-        const cutoffDate = new Date();
-        cutoffDate.setDate(cutoffDate.getDate() - days);
-        
-        const filteredCollages = collages.filter(collage => {
-          const collageDate = new Date(collage.createdAt);
-          return collageDate >= cutoffDate;
-        });
-        
-        // קיבוץ לפי תאריך
-        const groupedByDate = this.groupCollagesByDate(filteredCollages);
-        
-        // המרה למבנה הנדרש לגרף
-        return Object.entries(groupedByDate).map(([date, count]) => ({
-          name: date,
-          value: count
-        }));
-      })
+    return this.http.get<any[]>(`${this.baseUrl}analytics/collage-creation?days=${days}`).pipe(
+      map(data => Array.isArray(data) ? data : [])
     );
   }
   getRecentActivities(days: number): Observable<any[]> {
-    return this.http.get<any[]>(`${API_BASE_URL}/users`).pipe(
+    return this.http.get<any[]>(`${this.baseUrl}users`).pipe(
       map(users => {
         // Create a list of activities from users
         const activities: UserEditor[] = users.map(user => {
-          const activityType = this.getRandomActivityType(); // Dynamic activity type
+          const activityType = this.getRandomActivityType(); 
+          console.log(`Generating activity for user: ${user.name}, type: ${activityType}`);
           return {
             id: +user.id,
             type: activityType,
             userName: '' + user.name,
             description: this.getActivityDescription(user.name, activityType),
-            timestamp: this.getRandomTimestamp(days) // Random timestamp within the specified days
+            timestamp: this.getRandomTimestamp(days)
           };
         });
   
@@ -157,13 +89,13 @@ export class AnalyticsService  {
   private getActivityDescription(userName: string, activityType: string): string {
     switch (activityType) {
       case 'login':
-        return `${userName} התחבר למערכת`;
+        return `${userName} logged in`;
       case 'upload':
-        return `${userName} העלה קובץ`;
+        return `${userName} uploaded a file`;
       case 'create_collage':
-        return `${userName} יצר קולאז'`;
+        return `${userName} created a collage`;
       default:
-        return `${userName} ביצע פעולה`;
+        return `${userName} performed an action`;
     }
   }
   
@@ -202,14 +134,14 @@ export class AnalyticsService  {
   }
 
   private getFileCategory(mimeType: string): string {
-    if (!mimeType) return 'אחר';
+    if (!mimeType) return 'Other';
     
-    if (mimeType.startsWith('image/')) return 'תמונות';
-    if (mimeType.startsWith('video/')) return 'וידאו';
-    if (mimeType.startsWith('audio/')) return 'אודיו';
+    if (mimeType.startsWith('image/')) return 'Images';
+    if (mimeType.startsWith('video/')) return 'Video';
+    if (mimeType.startsWith('audio/')) return 'Audio';
     if (mimeType.includes('pdf')) return 'PDF';
     
-    return 'אחר';
+    return 'Other';
   }
 
   private generateDateSeries(days: number, min: number, max: number): any[] {

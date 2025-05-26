@@ -9,6 +9,6 @@ namespace FrameItAPI.Entities
         public int Id { get; set; }
         public int? UserId { get; set; }
         public string? Template { get; set; }
-        //public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

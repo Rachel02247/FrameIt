@@ -1,4 +1,4 @@
-import { Component, computed, signal, effect } from '@angular/core';
+import { Component, computed, signal, effect, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,6 +12,7 @@ import { MatIcon } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { selectAuthError } from '../global-states/auth/auth.selectors';
 import { requestLogin, requestRegister } from '../global-states/auth/auth.action';
+import { AuthService } from '../../servies/auth/auth.service';
 
 @Component({
   selector: 'app-auth-form',
@@ -32,7 +33,7 @@ import { requestLogin, requestRegister } from '../global-states/auth/auth.action
   templateUrl: './auth-form.component.html',
   host: { 'class': 'auth-form-root' }
 })
-export class AuthFormComponent {
+export class AuthFormComponent implements OnInit {
   private loginMode = signal(true);
   public isLogInNotSuccess = signal(false);
   isLoading = false;
@@ -42,7 +43,7 @@ export class AuthFormComponent {
 
   loginError = signal<string | null>(null);
 
-  constructor(private fb: FormBuilder, private store: Store, private router: Router) {
+  constructor(private fb: FormBuilder, private store: Store, private router: Router, private authService: AuthService) {
 
     this.authForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -56,6 +57,11 @@ export class AuthFormComponent {
     });
   }
 
+  ngOnInit() {
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate(['/admin']); // או כל דף אחר שרלוונטי
+    }
+  }
 
   isLogin = this.loginMode.asReadonly();
 

@@ -11,7 +11,7 @@
   <div class="auth-container upgraded-auth-container">
     <div class="auth-form-card upgraded-auth-card">
       <div class="auth-form-title upgraded-auth-title">
-        {{ isLogin() ? 'Login' : 'Register' }}
+        Login
       </div>
       <form [formGroup]="authForm" (ngSubmit)="submit()">
         <div class="auth-form-fields">
@@ -48,21 +48,17 @@
         </div>
         <div class="auth-form-actions upgraded-auth-actions">
           <button mat-raised-button color="primary" type="submit" [disabled]="authForm.invalid || isLoading" class="upgraded-auth-btn">
-            {{ isLogin() ? 'Login' : 'Register' }}
+            Login
             <mat-progress-spinner *ngIf="isLoading" diameter="20" mode="indeterminate"></mat-progress-spinner>
           </button>
-          <div class="toggle-link upgraded-auth-toggle" (click)="toggleMode()">
-            {{ isLogin() ? 'Need an account? Register' : 'Already have an account? Login' }}
-          </div>
         </div>
       </form>
+      @if(loginError()) {
+        <div class="error-message upgraded-auth-error">
+          <mat-icon>error</mat-icon>
+          <span>{{ loginError() }}</span>
+        </div>
+      }
     </div>
   </div>
-
-  @if(loginError()) {
-    <div class="error-message upgraded-auth-error">
-      <mat-icon>error</mat-icon>
-      <span>{{ loginError() }}</span>
-    </div>
-  }
 </div>

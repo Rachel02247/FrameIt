@@ -67,6 +67,7 @@ builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<ICollageService, CollageService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRoleService, UserRoleService>();
+builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddLogging();
 
@@ -213,6 +214,7 @@ app.MapFolderEndpoints();
 app.MapTagEndpoints();
 app.MapCollageEndpoints();
 app.MapUserEndpoints();
+app.MapAnalyticsEndpoints();
 AuthEndpoints.MapAuthEndpoints(app);
 
 
