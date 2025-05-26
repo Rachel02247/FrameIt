@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { HeaderComponent } from '../header/header.component';
+import { SettingsService } from '../../servies/settingsService/settings.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,9 +14,13 @@ import { HeaderComponent } from '../header/header.component';
   standalone: true
 })
 export class DashboardComponent {
-  isSidebarCollapsed = false;
 
-  toggleSidebar(): void {
-    this.isSidebarCollapsed = !this.isSidebarCollapsed;
+  isSidebarCollapsed = signal(false);
+
+  constructor(private settingsService: SettingsService) {
+   
+    this.settingsService.sideBarIsCollapsed$
+      .pipe(takeUntilDestroyed())
+      .subscribe(val => this.isSidebarCollapsed.set(val));
   }
 }

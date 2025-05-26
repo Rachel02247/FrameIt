@@ -16,3 +16,11 @@
   margin-top: 12px;
   font-weight: 500;
 }
+
+.full-width {
+  width: 100%;
+}
+
+.mb-12 {
+  margin-bottom: 12px;
+}

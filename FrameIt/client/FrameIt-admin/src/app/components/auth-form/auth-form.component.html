@@ -3,7 +3,7 @@
     <img src="/img/logo.png" alt="FrameIt Logo" class="auth-logo" />
     <div class="auth-title-side">
       <span class="nowrap-title">
-        Manage your <br/>
+        Manage your <br />
         <span class="brand-simple">FrameIt App</span>
       </span>
     </div>
@@ -15,49 +15,40 @@
       </div>
       <form [formGroup]="authForm" (ngSubmit)="submit()">
         <div class="auth-form-fields">
-          <mat-form-field appearance="outline" class="upgraded-auth-field">
-            <mat-label>Email</mat-label>
-            <input matInput formControlName="email" type="email" autocomplete="username" />
-            @if(authForm.get('email')?.hasError('required')) {
-              <mat-error>
-                Email is required
-              </mat-error>
-            }
-            @if(authForm.get('email')?.hasError('email') && !authForm.get('email')?.hasError('required')) {
-              <mat-error>
-                Invalid email address
-              </mat-error>
+          <mat-form-field>
+            <mat-label>Enter your email</mat-label>
+            <input matInput placeholder="pat@example.com" formControlName="email" (blur)="updateErrorMessage()"
+              required />
+            @if (email.invalid) {
+            <mat-error>{{errorMessage()}}</mat-error>
             }
           </mat-form-field>
-          <mat-form-field appearance="outline" class="upgraded-auth-field">
-            <mat-label>Password</mat-label>
-            <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" autocomplete="current-password" />
-            <button
-              mat-icon-button
-              matSuffix
-              type="button"
-              (click)="togglePasswordVisibility()"
-              [attr.aria-label]="hidePassword ? 'Show password' : 'Hide password'"
-              [attr.title]="hidePassword ? 'Show password' : 'Hide password'"
-              class="password-toggle-btn"
-              tabindex="0"
-            >
-              <mat-icon fontSet="material-icons" fontIcon="{{ hidePassword ? 'visibility_off' : 'visibility' }}"></mat-icon>
+          <mat-form-field>
+            <mat-label>Enter your password</mat-label>
+            <input matInput [type]="hidePassword() ? 'password' : 'text'" formControlName="password" />
+            <button mat-icon-button matSuffix (click)="togglePassword($event)" [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hidePassword()">
+              <mat-icon>{{hidePassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
           </mat-form-field>
         </div>
         <div class="auth-form-actions upgraded-auth-actions">
-          <button mat-raised-button color="primary" type="submit" [disabled]="authForm.invalid || isLoading" class="upgraded-auth-btn">
+          <button mat-raised-button color="primary" type="submit" [disabled]="authForm.invalid || isLoading"
+            class="upgraded-auth-btn">
             Login
-            <mat-progress-spinner *ngIf="isLoading" diameter="20" mode="indeterminate"></mat-progress-spinner>
+
+            @if(isLoading()){
+            <mat-progress-spinner diameter="20" mode="indeterminate"></mat-progress-spinner>
+            }
+
           </button>
         </div>
       </form>
       @if(loginError()) {
-        <div class="error-message upgraded-auth-error">
-          <mat-icon>error</mat-icon>
-          <span>{{ loginError() }}</span>
-        </div>
+      <div class="error-message upgraded-auth-error">
+        <mat-icon>error</mat-icon>
+        <span>{{ loginError() }}</span>
+      </div>
       }
     </div>
   </div>

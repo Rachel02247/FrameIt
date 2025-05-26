@@ -44,16 +44,7 @@
             <div class="stat-value">{{ formatStorageSize(summaryStats.totalStorage) }}</div>
           </div>
         </div>
-        
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="feather-icon icon-grid"></i>
-          </div>
-          <div class="stat-content">
-            <h3>Total Collages</h3>
-            <div class="stat-value">{{ summaryStats.totalCollages }}</div>
-          </div>
-        </div>
+        <!-- הוסר: Total Collages -->
       </div>
       
       <!-- Charts -->
@@ -118,64 +109,8 @@
           </div>
         </div>
         
-        <!-- User Activity Chart -->
-        <div class="chart-card">
-          <div class="card-header">
-            <h2>User Activity</h2>
-          </div>
-          
-          <div class="card-content">
-            @if (!isLoading) {
-              <div class="chart-container">
-                <ngx-charts-line-chart
-                  [view]="view"
-                  [scheme]="colorScheme"
-                  [results]="userActivityData"
-                  [gradient]="gradient"
-                  [xAxis]="showXAxis"
-                  [yAxis]="showYAxis"
-                  [legend]="showLegend"
-                  [showXAxisLabel]="showXAxisLabel"
-                  [showYAxisLabel]="showYAxisLabel"
-                  [xAxisLabel]="'Date'"
-                  [yAxisLabel]="'Number of Users'"
-                  [timeline]="timeline"
-                  (window:resize)="onResize($event)"
-                >
-                </ngx-charts-line-chart>
-              </div>
-            }
-          </div>
-        </div>
-        
-        <!-- Collage Creation Chart -->
-        <div class="chart-card">
-          <div class="card-header">
-            <h2>Collage Creations</h2>
-          </div>
-          
-          <div class="card-content">
-            @if (!isLoading) {
-              <div class="chart-container">
-                <ngx-charts-bar-vertical
-                  [view]="view"
-                  [scheme]="colorScheme"
-                  [results]="collageCreationData"
-                  [gradient]="gradient"
-                  [xAxis]="showXAxis"
-                  [yAxis]="showYAxis"
-                  [legend]="false"
-                  [showXAxisLabel]="showXAxisLabel"
-                  [showYAxisLabel]="showYAxisLabel"
-                  [xAxisLabel]="'Date'"
-                  [yAxisLabel]="'Number of Collages'"
-                  (window:resize)="onResize($event)"
-                >
-                </ngx-charts-bar-vertical>
-              </div>
-            }
-          </div>
-        </div>
+        <!-- הוסר: User Activity Chart -->
+        <!-- הוסר: Collage Creation Chart -->
       </div>
       
       <!-- Recent Activity -->
@@ -189,7 +124,7 @@
             @for (activity of recentActivities; track activity.id) {
               <div class="activity-item">
                 <div class="activity-icon" [ngClass]="activity.type">
-                  <i class="feather-icon" [ngClass]="getActivityIcon(activity.type)"></i>
+                  <i class="feather-icon"></i>
                 </div>
                 <div class="activity-details">
                   <div >index {{$index}}</div>

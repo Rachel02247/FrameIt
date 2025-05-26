@@ -1,17 +1,20 @@
 import { Routes } from '@angular/router';
 import { AnalyticsComponent } from './components/analytics/analytics.component';
 import { AuthFormComponent } from './components/auth-form/auth-form.component';
-import { authGuard } from './guards/auth.guard';
+import { authGuard } from './guards/authCanMatch/auth.guard';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { UsersComponent } from './components/users/users.component';
 import { SettingsComponent } from './components/settings/settings.component';
+import { authSpreadGuard } from './guards/auth.canActivate/auth-spread.guard';
 
 export const routes: Routes = [
     { 
       path: 'login', 
       component: AuthFormComponent,
-      // canMatch: [!authGuard]
+      canActivate: [authSpreadGuard],
+     
     },
+
     {
         path: 'dashboard',
         component: DashboardComponent,

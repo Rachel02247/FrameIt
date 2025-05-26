@@ -1,9 +1,10 @@
-<nav class="sidebar-container left-align" [class.collapsed]="collapsed">
 
   <div></div>
-  <!-- <img style="width: 20px;" src="/img/logo.png" alt="logo" /> -->
+  <!-- <img class="sidebar-logo" src="/img/logo.png" alt="logo" /> -->
 
-  <div class="sidebar-title">Admin Panel</div>
+  @if(!isSidebarCollapsed()){
+  <div class="sidebar-title">FrameIt Admin</div>
+  }
 
   <ul class="sidebar-menu">
 
@@ -11,16 +12,20 @@
     <li [class.active]="item.active" (click)="navigateTo(item.route)">
       <mat-icon class="sidebar-icon">{{ item.icon }}</mat-icon>
 
-      @if(!collapsed){
+      @if(!isSidebarCollapsed()){
       <span class="sidebar-label">{{ item.title }}</span>
       }
     </li>
     }
   </ul>
+  
   <div class="sidebar-footer">
+
     <button class="logout-btn" (click)="logout()">
       <mat-icon>logout</mat-icon>
-      <span *ngIf="!collapsed">Logout</span>
-    </button>
+      @if(!isSidebarCollapsed()){
+      <span>Logout</span>
+      }
+
+    </button>  
   </div>
-</nav>

@@ -1,16 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of, tap } from 'rxjs';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../../environments/environment.development';
+import { User } from '../../../models/user';
 
-export interface User {
-  userName: string;
-  password?: string;
-  email: string;
-  roleName: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
 
 @Injectable({
   providedIn: 'root'

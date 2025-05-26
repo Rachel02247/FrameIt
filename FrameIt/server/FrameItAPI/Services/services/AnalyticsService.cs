@@ -44,7 +44,7 @@ namespace FrameItAPI.Services.services
         {
             var since = DateTime.UtcNow.AddDays(-days);
             var collagesCreated = await _context.Collages
-                .Where(c => c.CreatedAt >= since)
+                .Where(c => c.CreatedAt != null && c.CreatedAt >= since)
                 .CountAsync();
 
             return new { collagesCreated, days };

@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { CanMatchFn } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { map, take } from 'rxjs/operators';
-import { selectIsLoggedIn } from '../components/global-states/auth/auth.selectors';
+import { selectIsLoggedIn } from '../../components/global-states/auth/auth.selectors';
 
 
 export const authGuard: CanMatchFn = (route, segments) => {

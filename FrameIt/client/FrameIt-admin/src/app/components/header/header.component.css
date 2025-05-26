@@ -7,10 +7,10 @@
     justify-content: space-between;
     padding: 0 24px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    direction: rtl;
+    /* direction: rtl; */
   }
   
-  .right-section {
+  .left-section {
     display: flex;
     align-items: center;
     
@@ -42,13 +42,13 @@
     }
   }
   
-  .left-section {
+  .right-section {
     display: flex;
     align-items: center;
     
     .search-bar {
       position: relative;
-      margin-left: 16px;
+      margin-right: 16px;
       
       i {
         position: absolute;
@@ -124,7 +124,7 @@
       padding: 0 16px;
     }
     
-    .left-section {
+    .right-section {
       .search-bar {
         display: none;
       }

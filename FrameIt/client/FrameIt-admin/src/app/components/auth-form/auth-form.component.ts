@@ -1,18 +1,20 @@
 import { Component, computed, signal, effect, OnInit } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { Store } from '@ngrx/store';
+import { reduceState, Store } from '@ngrx/store';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatIcon } from '@angular/material/icon';
 import { Router } from '@angular/router';
-import { selectAuthError } from '../global-states/auth/auth.selectors';
-import { requestLogin, requestRegister } from '../global-states/auth/auth.action';
-import { AuthService } from '../../servies/auth/auth.service';
+import { selectAuthError, selectAuthLoading } from '../global-states/auth/auth.selectors';
+import { loginSuccess, requestLogin } from '../global-states/auth/auth.action';
+import { AuthService } from '../../servies/API/auth/auth.service';
+import { merge } from 'rxjs';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-auth-form',
@@ -28,18 +30,17 @@ import { AuthService } from '../../servies/auth/auth.service';
     MatIconModule,
     MatIcon
   ],
-  providers: [FormBuilder], // Add FormBuilder to providers
   styleUrls: ['./auth-form.component.css'],
   templateUrl: './auth-form.component.html',
-  host: { 'class': 'auth-form-root' }
 })
-export class AuthFormComponent implements OnInit {
-  private loginMode = signal(true);
-  public isLogInNotSuccess = signal(false);
-  isLoading = false;
-  hidePassword = true;
+export class AuthFormComponent {
 
-  authForm;
+  isLoginNotSuccess = signal<boolean>(false);
+  hidePassword = signal<boolean>(true);
+  errorMessage = signal<string>('')
+  isLoading = signal<boolean>(false);
+
+  authForm: FormGroup;
 
   loginError = signal<string | null>(null);
 
@@ -55,22 +56,47 @@ export class AuthFormComponent implements OnInit {
         this.loginError.set(error);
       });
     });
+
+    effect(() => {
+      this.store.select(selectAuthLoading).subscribe(loading => {
+        this.isLoading.set(loading);
+      });
+    });
+
+    this.emailValidator(); 
   }
 
-  ngOnInit() {
-    if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/admin']); // או כל דף אחר שרלוונטי
+  // ngOnInit() {
+  //   this.store.select() {
+  //       this.router.navigate(['/dashboard']);
+  //     }
+  //   });
+  // }
+
+
+   togglePassword(event: MouseEvent) {
+    this.hidePassword.set(!this.hidePassword());
+    event.stopPropagation();
+  }
+
+  get email() {
+    return this.authForm.get('email')!;
+  }
+
+    emailValidator() {
+    merge(this.email.statusChanges, this.email.valueChanges)
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.updateErrorMessage());
+  }
+
+  updateErrorMessage() {
+    if (this.email.hasError('required')) {
+      this.errorMessage.set('You must enter a value');
+    } else if (this.email.hasError('email')) {
+      this.errorMessage.set('Not a valid email');
+    } else {
+      this.errorMessage.set('');
     }
-  }
-
-  isLogin = this.loginMode.asReadonly();
-
-  toggleMode() {
-    this.loginMode.set(!this.loginMode());
-  }
-
-  togglePasswordVisibility() {
-    this.hidePassword = !this.hidePassword;
   }
 
   submit() {
@@ -79,20 +105,18 @@ export class AuthFormComponent implements OnInit {
     this.loginError.set(null);
 
     const { email, password } = this.authForm.value;
-    this.isLoading = true;
 
-    if (this.loginMode()) {
-       this.store.dispatch(requestLogin({ email: email!, password: password! }));
+    if (email && password) {
+      this.store.dispatch(requestLogin({ email: email!, password: password! }));
       console.log('Login request dispatched successfully');
-      this.isLogInNotSuccess.set(false);
+      this.isLoginNotSuccess.set(false);
       const token = sessionStorage.getItem('token');
+
       if (token) {
         console.log('Token found:', token);
         this.router.navigate(['/dashboard']);
       }
 
-    } else {
-      this.store.dispatch(requestRegister({ email: email!, password: password! })); // Correct action
     }
     const token = sessionStorage.getItem('token');
     if (token) {
@@ -100,15 +124,8 @@ export class AuthFormComponent implements OnInit {
       this.router.navigate(['/dashboard']);
     }
     else {
-      this.isLogInNotSuccess.set(true);
+      this.isLoginNotSuccess.set(true);
     }
-  
 
-
-
-  // Simulate a delay for demonstration purposes
-  setTimeout(() => {
-    this.isLoading = false; // Stop loading after action completes
-  }, 2000);
   }
 }

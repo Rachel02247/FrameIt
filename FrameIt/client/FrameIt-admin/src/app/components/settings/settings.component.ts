@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { UsersService } from '../../servies/users/users.service';
+import { UsersService } from '../../servies/API/users/users.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
+import { User } from '../../models/user';
 
 @Component({
   selector: 'app-settings',
@@ -21,8 +22,8 @@ import { CommonModule } from '@angular/common';
 })
 export class SettingsComponent {
   addAdminForm: FormGroup;
+
   adminAddedMessage = '';
-  // Add more settings fields here as needed
 
   constructor(
     private fb: FormBuilder,
@@ -30,7 +31,8 @@ export class SettingsComponent {
   ) {
     this.addAdminForm = this.fb.group({
       name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]]
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required]
     });
   }
 
@@ -40,9 +42,10 @@ export class SettingsComponent {
       id: '',
       name: this.addAdminForm.value.name,
       email: this.addAdminForm.value.email,
-      role: 'admin'
+      password: this.addAdminForm.value.password,
+      role: 'Admin'
     };
-    this.usersService.addUser(newAdmin as any).subscribe(() => {
+    this.usersService.addUser({userName: newAdmin.name, email: newAdmin.email, password: newAdmin.password, roleName: 'Admin'} as User ).subscribe(() => {
       this.adminAddedMessage = 'Admin added successfully!';
       this.addAdminForm.reset();
       setTimeout(() => this.adminAddedMessage = '', 3000);

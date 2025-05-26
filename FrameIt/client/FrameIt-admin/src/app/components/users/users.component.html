@@ -4,7 +4,7 @@
   <div class="users-filter">
     <button mat-button [color]="filterRole === 'all' ? 'primary' : ''" [class.selected]="filterRole === 'all'" (click)="onFilterChange('all')">All</button>
     <button mat-button [color]="filterRole === 'Editor' ? 'primary' : ''" [class.selected]="filterRole === 'Editor'" (click)="onFilterChange('Editor')">Users</button>
-    <button mat-button [color]="filterRole === 'admin' ? 'primary' : ''" [class.selected]="filterRole === 'admin'" (click)="onFilterChange('admin')">Admin</button>
+    <button mat-button [color]="filterRole === 'Admin' ? 'primary' : ''" [class.selected]="filterRole === 'Admin'" (click)="onFilterChange('Admin')">Admin</button>
   </div>
 
   <div class="users-list">

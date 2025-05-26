@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { UsersService, User } from '../../servies/users/users.service'; // ייבוא User מהשירות
+import { UsersService } from '../../servies/API/users/users.service'; // ייבוא User מהשירות
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
+import { User } from '../../models/user';
 
 @Component({
   selector: 'app-users',
@@ -24,9 +25,9 @@ import { MatSelectModule } from '@angular/material/select';
 export class UsersComponent implements OnInit {
   users: User[] = [];
   filteredUsers: User[] = [];
-  selectedUser: User = { userName: '', email: '', roleName: '', password: '' };
+  selectedUser: User = { userName: '', email: '', roleName: '' };
   isEditing = false;
-  filterRole: 'all' | 'admin' | 'Editor' = 'all';
+  filterRole: 'all' | 'Admin' | 'Editor' = 'all';
 
   addUserForm!: FormGroup;
   editUserForm!: FormGroup;
@@ -70,7 +71,7 @@ export class UsersComponent implements OnInit {
     }
   }
 
-  onFilterChange(role: 'all' | 'admin' | 'Editor') {
+  onFilterChange(role: 'all' | 'Admin' | 'Editor') {
     this.filterRole = role;
     this.applyFilter();
   }
@@ -88,7 +89,7 @@ export class UsersComponent implements OnInit {
   }
 
   clearSelection() {
-    this.selectedUser = { userName: '', email: '', roleName: '', password: '' };
+    this.selectedUser = { userName: '', email: '', roleName: '' };
     this.isEditing = false;
     this.addUserForm.reset({ roleName: 'Editor' });
     this.editUserForm.reset();
@@ -99,7 +100,6 @@ export class UsersComponent implements OnInit {
     const newUser: User = {
       userName: this.addUserForm.value.userName,
       email: this.addUserForm.value.email,
-      password: this.addUserForm.value.password,
       roleName: this.addUserForm.value.roleName
     };
     this.usersService.addUser(newUser).subscribe(() => {
@@ -113,7 +113,6 @@ export class UsersComponent implements OnInit {
     const updatedUser: User = {
       userName: this.editUserForm.value.userName,
       email: this.editUserForm.value.email,
-      password: this.editUserForm.value.password,
       roleName: this.editUserForm.value.roleName
     };
     this.usersService.updateUser(updatedUser).subscribe(() => {

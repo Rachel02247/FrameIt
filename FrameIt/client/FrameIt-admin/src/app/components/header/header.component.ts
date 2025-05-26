@@ -1,17 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
-
+import { Component, Output, output } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+import { SettingsService } from '../../servies/settingsService/settings.service';
 @Component({
   selector: 'app-header',
-  imports: [CommonModule],
+  imports: [CommonModule, MatIcon],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
   standalone: true,
 })
 export class HeaderComponent {
-  @Output() toggleSidebar = new EventEmitter<void>();
+
+  constructor(private settingsService: SettingsService) {}
 
   onToggleSidebar(): void {
-    this.toggleSidebar.emit();
+    this.settingsService.setSideBarCollapsed(
+      !this.settingsService['IsSideBarCollapsed'].getValue()
+    );
   }
 }

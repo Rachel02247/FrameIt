@@ -37,8 +37,10 @@ builder.Services.AddDbContext<DataContext>(options =>
 //========= add env var ============
 builder.Configuration.AddEnvironmentVariables();
 
+
 // ========= load env var ==========
 Env.Load();
+
 
 // ========= AWS options ===========
 var awsOptions = new AWSOptions
@@ -49,6 +51,7 @@ var awsOptions = new AWSOptions
         Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY")
     )
 };
+
 
 // ======== AWS S3 srvices ==========
 builder.Services.AddDefaultAWSOptions(awsOptions);

@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, map, of } from 'rxjs';
-import { User } from '../../models/user';
-import { UserEditor } from '../../models/userEditor';
-import { environment } from '../../../environments/environment.development';
+import { UserEditor } from '../../../models/userEditor';
+import { environment } from '../../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
@@ -58,18 +57,20 @@ export class AnalyticsService  {
     return this.http.get<any[]>(`${this.baseUrl}analytics/collage-creation?days=${days}`).pipe(
       map(data => Array.isArray(data) ? data : [])
     );
-  }
+  };
+
   getRecentActivities(days: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}users`).pipe(
       map(users => {
-        // Create a list of activities from users
+
         const activities: UserEditor[] = users.map(user => {
           const activityType = this.getRandomActivityType(); 
-          console.log(`Generating activity for user: ${user.name}, type: ${activityType}`);
+          console.log(`Generating activity for user: ${user.userName}, type: ${activityType}`);
+          console.log(user);
           return {
             id: +user.id,
             type: activityType,
-            userName: '' + user.name,
+            userName: '' + user.userName,
             description: this.getActivityDescription(user.name, activityType),
             timestamp: this.getRandomTimestamp(days)
           };

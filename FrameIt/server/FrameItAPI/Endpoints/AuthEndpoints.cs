@@ -17,16 +17,16 @@ namespace FrameItAPI.Endpoints
 
             routes.MapPost("/auth/login", async (LoginModel model, AuthService authService, IUserService userService) =>
             {
-                Console.WriteLine($"username: {model.Email}, Password: {model.Password}");
+                
 
                 var roleName = await userService.AuthenticateAsync(model.Email, model.Password);
-                Console.WriteLine("Roles: " + string.Join(", ", roleName));
+               
 
                 var user = await userService.GetUserByEmail(model.Email);
 
                 if (string.IsNullOrEmpty(roleName))
                 {
-                    Console.WriteLine("not found role");
+                    
                     return Results.Unauthorized();
                 }
 

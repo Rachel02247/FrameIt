@@ -397,3 +397,20 @@ body, html, .auth-main-layout, .auth-title-side, .auth-title, .brand-simple {
     padding: 24px 16px;
   }
 }
+
+.example-container mat-form-field + mat-form-field {
+  margin-left: 8px;
+}
+
+.example-right-align {
+  text-align: right;
+}
+
+input.example-right-align::-webkit-outer-spin-button,
+input.example-right-align::-webkit-inner-spin-button {
+  display: none;
+}
+
+input.example-right-align {
+  -moz-appearance: textfield;
+}

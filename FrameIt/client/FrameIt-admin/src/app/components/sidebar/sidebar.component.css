@@ -204,10 +204,12 @@
   flex-direction: column;
   align-items: stretch;
   min-height: 100vh;
+  position-anchor: fixed;
 }
 
 .sidebar-container.collapsed {
-  width: 70px;
+  margin-top: 10%;
+  width: 60px; /* או כל ערך שתרצה */
   padding: 24px 0 12px 0;
 }
 
@@ -217,6 +219,7 @@
   color: #223;
   margin-bottom: 32px;
   padding-left: 24px;
+  padding-top: 24px;
 }
 
 .sidebar-menu {
@@ -298,9 +301,13 @@
   -webkit-font-smoothing: antialiased;
 }
 
+.sidebar-logo {
+  width: 20px;
+}
+
 @media (max-width: 768px) {
   .sidebar {
-    right: -240px; /* changed from left */
+    right: -240px;
     left: auto;
     transition: right 0.3s cubic-bezier(.4,0,.2,1);
   }
