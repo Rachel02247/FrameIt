@@ -39,7 +39,7 @@ export class UsersComponent implements OnInit {
       userName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
-      roleName: ['Editor', Validators.required] // ברירת מחדל ל-Editor
+      roleName: ['Editor', Validators.required] 
     });
     this.editUserForm = this.fb.group({
       userName: ['', Validators.required],
@@ -79,8 +79,8 @@ export class UsersComponent implements OnInit {
     this.editUserForm.patchValue({
       userName: user.userName,
       email: user.email,
-      password: '', // לא מציגים סיסמה קיימת
-      roleName: user.roleName
+      password: '', 
+      roleName: 'Editor'
     });
   }
 

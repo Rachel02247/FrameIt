@@ -2,9 +2,9 @@
   <h2 class="users-title">User Management</h2>
 
   <div class="users-filter">
-    <button mat-button [color]="filterRole === 'all' ? 'primary' : ''" (click)="onFilterChange('all')">All</button>
-    <button mat-button [color]="filterRole === 'Editor' ? 'primary' : ''" (click)="onFilterChange('Editor')">Users</button>
-    <button mat-button [color]="filterRole === 'admin' ? 'primary' : ''" (click)="onFilterChange('admin')">Admin</button>
+    <button mat-button [color]="filterRole === 'all' ? 'primary' : ''" [class.selected]="filterRole === 'all'" (click)="onFilterChange('all')">All</button>
+    <button mat-button [color]="filterRole === 'Editor' ? 'primary' : ''" [class.selected]="filterRole === 'Editor'" (click)="onFilterChange('Editor')">Users</button>
+    <button mat-button [color]="filterRole === 'admin' ? 'primary' : ''" [class.selected]="filterRole === 'admin'" (click)="onFilterChange('admin')">Admin</button>
   </div>
 
   <div class="users-list">
@@ -57,13 +57,6 @@
           @if (addUserForm.get('password')?.invalid) {
             <mat-error>Password is required</mat-error>
           }
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="user-field">
-          <mat-label>Role</mat-label>
-          <mat-select formControlName="roleName" required>
-            <mat-option value="Editor">User</mat-option>
-            <mat-option value="admin">Admin</mat-option>
-          </mat-select>
         </mat-form-field>
         <button mat-fab color="primary" type="submit" [disabled]="addUserForm.invalid" class="add-btn" matTooltip="Add">
           <span class="material-icons">person_add</span>

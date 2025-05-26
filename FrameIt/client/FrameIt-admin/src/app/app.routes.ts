@@ -7,7 +7,11 @@ import { UsersComponent } from './components/users/users.component';
 import { SettingsComponent } from './components/settings/settings.component';
 
 export const routes: Routes = [
-    { path: 'login', component: AuthFormComponent },
+    { 
+      path: 'login', 
+      component: AuthFormComponent,
+      // canMatch: [!authGuard]
+    },
     {
         path: 'dashboard',
         component: DashboardComponent,
@@ -18,7 +22,11 @@ export const routes: Routes = [
           { path: 'users', component: UsersComponent },
           { path: 'settings', component: SettingsComponent },
         ],
-      },    { path: '', redirectTo: '/login', pathMatch: 'full' },
+      },
+    {
+      path: '',
+      redirectTo: sessionStorage.getItem('token') ? '/dashboard' : '/login',
+      pathMatch: 'full'
+    },
     { path: '**', redirectTo: '/login' },
-    
 ];

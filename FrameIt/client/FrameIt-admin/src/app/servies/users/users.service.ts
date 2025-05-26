@@ -8,6 +8,8 @@ export interface User {
   password?: string;
   email: string;
   roleName: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 @Injectable({
@@ -19,10 +21,7 @@ export class UsersService {
 
 constructor(private http: HttpClient) { }
 
-  private users: User[] = [
-    { userName: 'Alice Smith', email: 'alice@example.com', roleName: 'admin' },
-    { userName: 'Bob Johnson', email: 'bob@example.com', roleName: 'Editor' }
-  ];
+
 
   getUsers(): Observable<User[]> {
     return this.http.get<User[]>(this.apiUrl);
@@ -37,13 +36,17 @@ constructor(private http: HttpClient) { }
   }
 
   updateUser(user: User): Observable<void> {
-    const idx = this.users.findIndex(u => u.email === user.email);
-    if (idx > -1) this.users[idx] = { ...user };
-    return of();
+    return this.http.put<void>(`${this.apiUrl}/${user.email}`, user).pipe(
+      tap(() => { 
+      })
+    );
   }
 
   deleteUser(email: string): Observable<void> {
-    this.users = this.users.filter(u => u.email !== email);
-    return of();
+    return this.http.delete<void>(`${this.apiUrl}/${email}`).pipe(
+      tap(() => {
+        
+      })
+    );
   }
 }

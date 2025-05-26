@@ -92,3 +92,10 @@ button[mat-icon-button]:hover {
   margin-top: 8px;
   margin-left: 8px;
 }
+
+.users-filter button.selected {
+  background: #e3f0ff;
+  color: #1976d2;
+  font-weight: bold;
+  border-bottom: 2px solid #1976d2;
+}

@@ -1,5 +1,6 @@
 ﻿using FrameItAPI.Endpoints;
 using FrameItAPI.Entities;
+using FrameItAPI.Entities.mapping;
 using FrameItAPI.Services.interfaces;
 using FrameItAPI.Services.services;
 using Microsoft.AspNetCore.Builder;
@@ -13,8 +14,10 @@ public static class UserEndpoints
         routes.MapGet("/users", async (IUserService userService) =>
         {
             var users = await userService.GetAllUsers();
-            return Results.Ok(users);
+            var userDtos = users.Select(UserMapper.ToDto).ToList();
+            return Results.Ok(userDtos);
         });
+
         //.RequireAuthorization("all");
 
         routes.MapGet("/users/{id}", async (IUserService userService, int id) =>
