@@ -6,6 +6,7 @@
         {
             return new UserDto
             {
+                Id = user.Id,
                 UserName = user.Name,
                 Email = user.Email,
                 RoleName = user.Role,

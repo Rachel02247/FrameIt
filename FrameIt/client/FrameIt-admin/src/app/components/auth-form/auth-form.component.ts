@@ -10,7 +10,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatIcon } from '@angular/material/icon';
 import { Router } from '@angular/router';
-import { selectAuthError, selectAuthLoading } from '../global-states/auth/auth.selectors';
+import { selectAuthError, selectAuthLoading, selectUser } from '../global-states/auth/auth.selectors';
 import { loginSuccess, requestLogin } from '../global-states/auth/auth.action';
 import { AuthService } from '../../servies/API/auth/auth.service';
 import { merge } from 'rxjs';
@@ -63,6 +63,14 @@ export class AuthFormComponent {
       });
     });
 
+    effect(() => {
+      this.store.select(selectUser).subscribe(user => {
+        if (user) {
+          this.router.navigate(['/dashboard']);
+        }
+      });
+    });
+
     this.emailValidator(); 
   }
 
@@ -108,15 +116,7 @@ export class AuthFormComponent {
 
     if (email && password) {
       this.store.dispatch(requestLogin({ email: email!, password: password! }));
-      console.log('Login request dispatched successfully');
       this.isLoginNotSuccess.set(false);
-      const token = sessionStorage.getItem('token');
-
-      if (token) {
-        console.log('Token found:', token);
-        this.router.navigate(['/dashboard']);
-      }
-
     }
     const token = sessionStorage.getItem('token');
     if (token) {

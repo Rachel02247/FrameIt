@@ -21,7 +21,7 @@
           </div>
           <div class="stat-content">
             <h3>Total Users</h3>
-            <div class="stat-value">{{ summaryStats.totalUsers }}</div>
+            <div class="stat-value">{{ summaryStats.users }}</div>
           </div>
         </div>
         
@@ -31,7 +31,7 @@
           </div>
           <div class="stat-content">
             <h3>Total Files</h3>
-            <div class="stat-value">{{ summaryStats.totalFiles }}</div>
+            <div class="stat-value">{{ summaryStats.files }}</div>
           </div>
         </div>
         
@@ -41,10 +41,9 @@
           </div>
           <div class="stat-content">
             <h3>Storage Used</h3>
-            <div class="stat-value">{{ formatStorageSize(summaryStats.totalStorage) }}</div>
+            <div class="stat-value">{{summaryStats.usedStorage}} MB</div>
           </div>
         </div>
-        <!-- הוסר: Total Collages -->
       </div>
       
       <!-- Charts -->
@@ -84,35 +83,7 @@
           </div>
         </div>
         
-        <!-- Storage Usage Chart -->
-        <div class="chart-card">
-          <div class="card-header">
-            <h2>Storage Usage</h2>
-          </div>
-          
-          <div class="card-content">
-            @if (!isLoading) {
-              <div class="chart-container">
-                <ngx-charts-pie-chart
-                  [view]="view"
-                  [scheme]="colorScheme"
-                  [results]="storageUsageData"
-                  [gradient]="gradient"
-                  [legend]="showLegend"
-                  [labels]="true"
-                  [doughnut]="true"
-                  (window:resize)="onResize($event)"
-                >
-                </ngx-charts-pie-chart>
-              </div>
-            }
-          </div>
-        </div>
-        
-        <!-- הוסר: User Activity Chart -->
-        <!-- הוסר: Collage Creation Chart -->
-      </div>
-      
+           
       <!-- Recent Activity -->
       <div class="recent-activity-card">
         <div class="card-header">
@@ -127,7 +98,7 @@
                   <i class="feather-icon"></i>
                 </div>
                 <div class="activity-details">
-                  <div >index {{$index}}</div>
+                  <div >user {{$index}}</div>
                   <div class="activity-user">{{ activity.userName }}</div>
                   <div class="activity-description">{{ activity.description }}</div>
                   <div class="activity-time">{{ activity.timestamp | date:'dd/MM/yyyy HH:mm' }}</div>

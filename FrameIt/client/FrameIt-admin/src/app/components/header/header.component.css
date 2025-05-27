@@ -130,3 +130,38 @@
       }
     }
   }
+  
+  .search-highlight mark {
+    background: #ffe082;
+    color: #000;
+    padding: 0 2px;
+    border-radius: 2px;
+  }
+  
+  .search-results-menu {
+    position: absolute;
+    top: 44px;
+    left: 0;
+    width: 100%;
+    max-height: 300px;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    z-index: 9999;
+    padding: 8px 0;
+  }
+  
+  .search-results-menu .search-result-item {
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 15px;
+    color: #334155;
+    transition: background 0.18s;
+  }
+  
+  .search-results-menu .search-result-item:hover {
+    background: #f1f5f9;
+    color: #1976d2;
+  }

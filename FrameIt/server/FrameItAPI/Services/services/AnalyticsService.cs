@@ -17,9 +17,12 @@ namespace FrameItAPI.Services.services
         {
             var users = await _context.Users.CountAsync();
             var files = await _context.Files.CountAsync();
-            var collages = await _context.Collages.CountAsync();
+            var usedStorageBytes = await _context.Files.Where(f => !f.IsDeleted).SumAsync(f => (long?)f.Size) ?? 0L;
+            var usedStorage = Math.Round(usedStorageBytes / (1024.0 * 1024.0), 2);
 
-            return new { users, files, collages };
+
+
+            return new { users, files, usedStorage };
         }
 
         public async Task<object> GetStorageUsageStatsAsync()

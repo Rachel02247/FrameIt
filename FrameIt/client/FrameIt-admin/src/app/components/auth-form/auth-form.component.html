@@ -33,14 +33,11 @@
           </mat-form-field>
         </div>
         <div class="auth-form-actions upgraded-auth-actions">
-          <button mat-raised-button color="primary" type="submit" [disabled]="authForm.invalid || isLoading"
-            class="upgraded-auth-btn">
+          <button mat-raised-button color="primary" type="submit" class="upgraded-auth-btn">
             Login
-
             @if(isLoading()){
             <mat-progress-spinner diameter="20" mode="indeterminate"></mat-progress-spinner>
             }
-
           </button>
         </div>
       </form>

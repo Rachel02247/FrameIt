@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, signal } from '@angular/core';
 import { UsersService } from '../../servies/API/users/users.service'; // ייבוא User מהשירות
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
@@ -25,7 +25,7 @@ import { User } from '../../models/user';
 export class UsersComponent implements OnInit {
   users: User[] = [];
   filteredUsers: User[] = [];
-  selectedUser: User = { userName: '', email: '', roleName: '' };
+  selectedUser: User = { id: 0, userName: '', email: '', roleName: '' };
   isEditing = false;
   filterRole: 'all' | 'Admin' | 'Editor' = 'all';
 
@@ -33,6 +33,11 @@ export class UsersComponent implements OnInit {
   editUserForm!: FormGroup;
 
   @ViewChild('editForm') editForm!: ElementRef;
+
+  successMessage = signal<string>('');
+  errorMessage = signal<string>('');
+  popupMessage = signal<string>('');
+  popupType = signal<'success' | 'error'>('success');
 
   constructor(
     private usersService: UsersService,
@@ -89,7 +94,7 @@ export class UsersComponent implements OnInit {
   }
 
   clearSelection() {
-    this.selectedUser = { userName: '', email: '', roleName: '' };
+    this.selectedUser = { id: 0, userName: '', email: '', roleName: '' };
     this.isEditing = false;
     this.addUserForm.reset({ roleName: 'Editor' });
     this.editUserForm.reset();
@@ -98,33 +103,72 @@ export class UsersComponent implements OnInit {
   addUser() {
     if (this.addUserForm.invalid) return;
     const newUser: User = {
+      id: 0,
       userName: this.addUserForm.value.userName,
       email: this.addUserForm.value.email,
-      roleName: this.addUserForm.value.roleName
+      roleName: this.addUserForm.value.roleName,
+      password: this.addUserForm.value.password
     };
-    this.usersService.addUser(newUser).subscribe(() => {
-      this.loadUsers();
-      this.clearSelection();
+    this.usersService.addUser(newUser).subscribe({
+      next: () => {
+        this.successMessage.set('User added successfully!');
+        this.errorMessage.set('');
+        this.popupMessage.set('User added successfully!');
+        this.popupType.set('success');
+        setTimeout(() => this.popupMessage.set(''), 3000);
+        this.loadUsers();
+        this.clearSelection();
+        setTimeout(() => this.successMessage.set(''), 3000);
+      },
+      error: () => {
+        this.errorMessage.set('Failed to add user!');
+        this.successMessage.set('');
+        this.popupMessage.set('Failed to add user!');
+        this.popupType.set('error');
+        setTimeout(() => this.popupMessage.set(''), 3000);
+        setTimeout(() => this.errorMessage.set(''), 3000);
+      }
     });
   }
 
   updateUser() {
     if (this.editUserForm.invalid) return;
     const updatedUser: User = {
+      id: this.selectedUser.id,
       userName: this.editUserForm.value.userName,
       email: this.editUserForm.value.email,
       roleName: this.editUserForm.value.roleName
     };
-    this.usersService.updateUser(updatedUser).subscribe(() => {
-      this.loadUsers();
-      this.clearSelection();
+    this.usersService.updateUser(updatedUser).subscribe({
+      next: () => {
+        this.popupMessage.set('User updated successfully!');
+        this.popupType.set('success');
+        setTimeout(() => this.popupMessage.set(''), 3000);
+        this.loadUsers();
+        this.clearSelection();
+      },
+      error: () => {
+        this.popupMessage.set('Failed to update user!');
+        this.popupType.set('error');
+        setTimeout(() => this.popupMessage.set(''), 3000);
+      }
     });
   }
 
   deleteUser(user: User) {
-    this.usersService.deleteUser(user.email).subscribe(() => {
-      this.loadUsers();
-      this.clearSelection();
+    this.usersService.deleteUser(user.id).subscribe({
+      next: () => {
+        this.popupMessage.set('User deleted successfully!');
+        this.popupType.set('success');
+        setTimeout(() => this.popupMessage.set(''), 3000);
+        this.loadUsers();
+        this.clearSelection();
+      },
+      error: () => {
+        this.popupMessage.set('Failed to delete user!');
+        this.popupType.set('error');
+        setTimeout(() => this.popupMessage.set(''), 3000);
+      }
     });
   }
 

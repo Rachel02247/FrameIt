@@ -29,14 +29,14 @@ constructor(private http: HttpClient) { }
   }
 
   updateUser(user: User): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/${user.email}`, user).pipe(
+    return this.http.put<void>(`${this.apiUrl}/${user.id}`, user).pipe(
       tap(() => { 
       })
     );
   }
 
-  deleteUser(email: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${email}`).pipe(
+  deleteUser(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
       tap(() => {
         
       })

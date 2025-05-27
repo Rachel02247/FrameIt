@@ -13,25 +13,25 @@ namespace FrameItAPI.Endpoints
             {
                 var summary = await analyticsService.GetSummaryStatsAsync();
                 return Results.Ok(summary);
-            });
+            });//.RequireAuthorization("AdminOnly");
 
             app.MapGet("/analytics/storage-usage", async (IAnalyticsService analyticsService) =>
             {
                 var usage = await analyticsService.GetStorageUsageStatsAsync();
                 return Results.Ok(usage);
-            });
+            }).RequireAuthorization("AdminOnly");
 
             app.MapGet("/analytics/user-activity", async (IAnalyticsService analyticsService, int days) =>
             {
                 var activity = await analyticsService.GetUserActivityStatsAsync(days);
                 return Results.Ok(activity);
-            });
+            }).RequireAuthorization("AdminOnly");
 
             app.MapGet("/analytics/collage-creation", async (IAnalyticsService analyticsService, int days) =>
             {
                 var stats = await analyticsService.GetCollageCreationStatsAsync(days);
                 return Results.Ok(stats);
-            });
+            }).RequireAuthorization("AdminOnly");
         }
     }
 }

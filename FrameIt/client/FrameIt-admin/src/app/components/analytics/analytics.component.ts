@@ -5,6 +5,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
 import { AnalyticsService } from '../../servies/API/analytics/analytics.service';
 import { UserEditor } from '../../models/userEditor';
+import { SummaryStats } from '../../models/summaryStates';
 
 @Component({
   selector: 'app-analytics',
@@ -23,17 +24,13 @@ import { UserEditor } from '../../models/userEditor';
 })
 export class AnalyticsComponent implements OnInit {
 
-  summaryStats = {
-    totalUsers: 0,
-    totalFiles: 0,
-    totalStorage: 0
-    // totalCollages: 0 // הוסר
+  summaryStats: SummaryStats = {
+    users: 0,
+    files: 0,
+    usedStorage: 0
   };
 
   fileUploadData: any[] = [];
-  storageUsageData: any[] = [];
-  // userActivityData: any[] = []; // הוסר
-  // collageCreationData: any[] = []; // הוסר
 
   recentActivities: UserEditor[] = [];
 
@@ -58,6 +55,7 @@ export class AnalyticsComponent implements OnInit {
 
   constructor(private analyticsService: AnalyticsService) {}
 
+
   ngOnInit(): void {
     this.loadAnalyticsData();
     this.timeRangeControl.valueChanges.subscribe(value => {
@@ -67,17 +65,19 @@ export class AnalyticsComponent implements OnInit {
     });
   }
 
+
   loadAnalyticsData(days: number = 30): void {
     this.isLoading = true;
     
     this.analyticsService.getSummaryStats().subscribe({
-      next: (data:any) => {
+      next: (data: SummaryStats) => {
         this.summaryStats = data;
       },
       error: (error:any) => {
         console.error('Error loading statistics', error);
       }
     });
+
     
     this.analyticsService.getFileUploadStats(days).subscribe({
       next: (data: any) => {
@@ -91,22 +91,8 @@ export class AnalyticsComponent implements OnInit {
       }
     });
     
-    this.analyticsService.getStorageUsageStats().subscribe({
-      next: (data:any) => {
-        this.storageUsageData = data;
-      },
-      error: (error:any) => {
-        console.error('Error loading storage', error);
-      }
-    });
-
-    // הוסר: userActivityData, collageCreationData
-    // this.analyticsService.getUserActivityStats(days).subscribe({ ... });
-    // this.analyticsService.getCollageCreationStats(days).subscribe({ ... });
-    
     this.analyticsService.getRecentActivities(days).subscribe({
       next: (data: any) => {
-        debugger
         this.recentActivities = data.slice(-10);
       },
       error: (error: any) => {
@@ -115,19 +101,8 @@ export class AnalyticsComponent implements OnInit {
     });
   }
 
-  formatStorageSize(bytes: number): string {
-    if (bytes === 0) return '0 Bytes';
-    
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  }
-
   onResize(event: any): void {
     this.view = [event.target.innerWidth / 1.35, 300];
   }
 
-  // הוסר: getActivityIcon
 }

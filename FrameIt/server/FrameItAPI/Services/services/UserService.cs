@@ -61,12 +61,38 @@ namespace FrameItAPI.Services.services
         }
 
 
-        public async Task<User> UpdateUser(User User)
+        public async Task<User> UpdateUser(User user)
         {
-            _context.Users.Update(User);
+            var existingUser = await _context.Users.FindAsync(user.Id);
+
+            if (existingUser == null)
+            {
+                return null;
+            }
+
+            if (!string.IsNullOrEmpty(user.Name) && existingUser.Name != user.Name)
+                existingUser.Name = user.Name;
+
+            if (!string.IsNullOrEmpty(user.Email) && existingUser.Email != user.Email)
+                existingUser.Email = user.Email;
+
+            if (!string.IsNullOrEmpty(user.Password) && existingUser.Password != user.Password)
+                existingUser.Password = user.Password;
+
+            if (!string.IsNullOrEmpty(user.PasswordHash) && existingUser.PasswordHash != user.PasswordHash)
+                existingUser.PasswordHash = user.PasswordHash;
+
+            if (!string.IsNullOrEmpty(user.Role) && existingUser.Role != user.Role)
+                existingUser.Role = user.Role;
+
+            // Update the UpdatedAt timestamp
+            existingUser.UpdatedAt = DateTime.UtcNow;
+
             await _context.SaveChangesAsync();
-            return User;
+
+            return existingUser;
         }
+
 
         public async Task<bool> DeleteUser(int id)
         {

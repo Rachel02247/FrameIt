@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable, forkJoin, map, of } from 'rxjs';
 import { UserEditor } from '../../../models/userEditor';
 import { environment } from '../../../../environments/environment.development';
+import { SummaryStats } from '../../../models/summaryStates';
+import { StorageUsed } from '../../../models/storageUsed';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +14,8 @@ export class AnalyticsService  {
 
   constructor(private http:HttpClient) { }
 
-  getSummaryStats(): Observable<any> {
-    return this.http.get(`${this.baseUrl}analytics/summary`);
+  getSummaryStats(): Observable<SummaryStats> {
+    return this.http.get<SummaryStats>(`${this.baseUrl}analytics/summary`);
   }
 
   getFileUploadStats(days: number = 30): Observable<any[]> {
@@ -43,8 +45,8 @@ export class AnalyticsService  {
     );
   }
 
-  getStorageUsageStats(): Observable<any> {
-    return this.http.get(`${this.baseUrl}analytics/storage-usage`);
+  getStorageUsageStats(): Observable<StorageUsed> {
+    return this.http.get<StorageUsed>(`${this.baseUrl}analytics/storage-usage`);
   }
 
   getUserActivityStats(days: number = 30): Observable<any[]> {
