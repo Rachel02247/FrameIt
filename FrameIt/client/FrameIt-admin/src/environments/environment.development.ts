@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'https://frameit_server.onrender.com/'
+    apiUrl: 'https://frameit-server.onrender.com/'
 };
