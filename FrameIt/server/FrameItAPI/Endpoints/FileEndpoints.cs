@@ -38,28 +38,29 @@ public static class FileEndpoints
                 if (file == null)
                     return Results.BadRequest("No file uploaded.");
 
-                // ברירת מחדל
                 int? folderId = null;
                 int ownerId = 0;
 
-                // ננסה לשלוף מהשדות הרגילים
                 if (int.TryParse(form["FolderId"], out var parsedFolderId))
                     folderId = parsedFolderId;
                 if (int.TryParse(form["OwnerId"], out var parsedOwnerId))
                     ownerId = parsedOwnerId;
 
-                // אם לא קיבלנו, ננסה מהמטאדאטה
                 if ((ownerId == 0 || folderId == null) && form.TryGetValue("fileMetadata", out var metadataJson))
                 {
                     try
                     {
-                        var metadata = JsonSerializer.Deserialize<FileMetadataDto>(metadataJson!);
-                        if (metadata != null)
+                        var metadataList = JsonSerializer.Deserialize<List<FileMetadataDto>>(metadataJson!);
+                        if (metadataList != null && metadataList.Count > 0)
                         {
-                            if (ownerId == 0)
-                                ownerId = metadata.OwnerId;
-                            if (folderId == null)
-                                folderId = metadata.FolderId;
+                            var metadata = metadataList.FirstOrDefault(m => m.FileName == file.FileName);
+                            if (metadata != null)
+                            {
+                                if (ownerId == 0)
+                                    ownerId = metadata.OwnerId;
+                                if (folderId == null)
+                                    folderId = metadata.FolderId;
+                            }
                         }
                     }
                     catch (Exception ex)
@@ -109,7 +110,8 @@ public static class FileEndpoints
         });
 
 
-    routes.MapPut("/files/{id}", async (IFileService fileService, int id, FrameItAPI.Entities.File file) =>
+
+        routes.MapPut("/files/{id}", async (IFileService fileService, int id, FrameItAPI.Entities.File file) =>
         {
             file.Id = id;
             var updatedFile = await fileService.UpdateFile(file);
