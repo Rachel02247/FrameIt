@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 
 import type React from "react"
@@ -63,6 +64,25 @@ const Collections: React.FC = () => {
   useEffect(() => {
     if (selectedTagId !== 0) dispatch(fetchCollectionFiles(selectedTagId))
   }, [selectedTagId, dispatch])
+
+  const [filesWithUrls, setFilesWithUrls] = useState<typeof files>([])
+
+  useEffect(() => {
+    const fetchUrls = async () => {
+      const updatedFiles = await Promise.all(
+        files.map(async (file) => {
+          const safeFile = { ...file, downloadUrl: file.downloadUrl ?? undefined }
+          const url = safeFile.downloadUrl || (await getFileUrl(safeFile))
+          return { ...file, downloadUrl: url }
+        })
+      )
+      setFilesWithUrls(updatedFiles)
+    }
+
+    if (files.length > 0) fetchUrls()
+  }, [files])
+
+
 
   const handleTagSelect = (tagId: number) => dispatch(setSelectedTag(tagId))
   const handleOpenPreview = (fileId: string) => {
@@ -213,7 +233,7 @@ const Collections: React.FC = () => {
             >
               New Collection
             </Button>
-     
+
             <Tooltip title="Options">
               <IconButton
                 onClick={handleMenuOpen}
@@ -278,7 +298,7 @@ const Collections: React.FC = () => {
           onClose={() => setOpenCreateCollection(false)}
           fetchData={() => userId && dispatch(fetchUserCollections(userId))}
         />
-       
+
 
         {loading ? (
           <LoadingIndicator />
@@ -413,19 +433,18 @@ const Collections: React.FC = () => {
               </Box>
 
               <ImageList variant="standard" cols={getColumnCount()} gap={16}>
-                {files.map(async (file) => (
+                {filesWithUrls.map((file) => (
                   <ImageListItem key={file.id}>
                     <FileItem
-                      file={{
-                        ...file,
-                        downloadUrl: file.downloadUrl || (await getFileUrl({ ...file, downloadUrl: file.downloadUrl ?? undefined })),
-                      }}
+                      file={file}
                       onDelete={handleRefreshFiles}
                       onOpenPreview={handleOpenPreview}
                     />
                   </ImageListItem>
                 ))}
               </ImageList>
+
+
             </Box>
           </Fade>
         )}

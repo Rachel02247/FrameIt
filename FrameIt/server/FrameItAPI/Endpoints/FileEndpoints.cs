@@ -12,6 +12,7 @@ public static class FileEndpoints
     {
         routes.MapGet("/files", async (IFileService fileService) =>
         {
+
             var files = await fileService.GetAllFiles();
             return Results.Ok(files);
         });//.RequireAuthorization();
