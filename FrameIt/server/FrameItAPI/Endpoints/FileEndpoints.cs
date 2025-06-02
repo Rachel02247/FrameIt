@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.AspNetCore.Mvc;
 using FrameItAPI.Entities.mapping;
+using FrameItAPI.Entities.DTOs;
+using System.Text.Json;
 
 public static class FileEndpoints
 {
@@ -24,6 +26,7 @@ public static class FileEndpoints
         }).RequireAuthorization();
 
 
+
         routes.MapPost("/files", async (HttpContext httpContext, IFileService fileService) =>
         {
             try
@@ -31,34 +34,63 @@ public static class FileEndpoints
                 var form = await httpContext.Request.ReadFormAsync();
                 Console.WriteLine($"in post file: {string.Join(", ", form.Select(kv => $"{kv.Key}={kv.Value}"))}");
 
-
                 var file = form.Files.GetFile("file");
-
-                Console.WriteLine("file" + file);
-
                 if (file == null)
                     return Results.BadRequest("No file uploaded.");
+
+                // ברירת מחדל
+                int? folderId = null;
+                int ownerId = 0;
+
+                // ננסה לשלוף מהשדות הרגילים
+                if (int.TryParse(form["FolderId"], out var parsedFolderId))
+                    folderId = parsedFolderId;
+                if (int.TryParse(form["OwnerId"], out var parsedOwnerId))
+                    ownerId = parsedOwnerId;
+
+                // אם לא קיבלנו, ננסה מהמטאדאטה
+                if ((ownerId == 0 || folderId == null) && form.TryGetValue("fileMetadata", out var metadataJson))
+                {
+                    try
+                    {
+                        var metadata = JsonSerializer.Deserialize<FileMetadataDto>(metadataJson!);
+                        if (metadata != null)
+                        {
+                            if (ownerId == 0)
+                                ownerId = metadata.OwnerId;
+                            if (folderId == null)
+                                folderId = metadata.FolderId;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return Results.BadRequest("Invalid fileMetadata JSON: " + ex.Message);
+                    }
+                }
+
+                if (ownerId == 0)
+                    return Results.BadRequest("Missing OwnerId.");
+                if (folderId == null)
+                    return Results.BadRequest("Missing FolderId.");
 
                 var fileType = file.ContentType.ToLower();
 
                 var newFile = new FrameItAPI.Entities.File
                 {
                     FileName = file.FileName,
-                    FolderId = int.TryParse(form["FolderId"], out var folderId) ? folderId : (int?)null,
+                    FolderId = folderId,
                     IsDeleted = false,
                     S3Key = file.FileName,
-                    OwnerId = int.Parse(form["OwnerId"]),
+                    OwnerId = ownerId,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 };
-                Console.WriteLine($" in mapost file name: {newFile.FileName}");
-                using var stream = file.OpenReadStream();
 
+                using var stream = file.OpenReadStream();
                 FrameItAPI.Entities.File createdFile;
 
                 if (fileType.StartsWith("image/"))
                 {
-                    Console.WriteLine($" in mapost before CreateImageFileWithResize file name: {newFile.FileName}");
                     createdFile = await fileService.CreateImageFileWithResize(newFile, stream);
                 }
                 else
@@ -77,10 +109,7 @@ public static class FileEndpoints
         });
 
 
-
-
-
-        routes.MapPut("/files/{id}", async (IFileService fileService, int id, FrameItAPI.Entities.File file) =>
+    routes.MapPut("/files/{id}", async (IFileService fileService, int id, FrameItAPI.Entities.File file) =>
         {
             file.Id = id;
             var updatedFile = await fileService.UpdateFile(file);
