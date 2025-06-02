@@ -59,7 +59,8 @@ const PhotoGrid: React.FC = () => {
             .slice(0, 6); 
 
           const urls = sortedFiles.map((file) => file.downloadUrl || "");
-          if (isMounted) setUserFilesImages(urls);
+          // Prevent duplicates
+          if (isMounted) setUserFilesImages(Array.from(new Set(urls)));
         } else {
           setUserFilesImages([]);
         }
@@ -82,8 +83,11 @@ const PhotoGrid: React.FC = () => {
     }
   }, [user]);
 
-  // Decide which images to show
-  const imagesToShow = user && userFilesImages.length > 0 ? userFilesImages : images;
+  const isConnected = !!(user?.id && user?.id !== "0") || !!token;
+  const imagesToShow =
+    isConnected && userFilesImages.length > 0
+      ? userFilesImages
+      : images;
 
   return (
     <Box
@@ -123,6 +127,8 @@ const PhotoGrid: React.FC = () => {
                 <img
                   src={url}
                   alt={`Photo ${index + 1}`}
+                  loading="lazy"
+                  onError={e => { e.currentTarget.src = "/fallback-image.png"; }}
                   style={{
                     width: "100%",
                     height: "100%",

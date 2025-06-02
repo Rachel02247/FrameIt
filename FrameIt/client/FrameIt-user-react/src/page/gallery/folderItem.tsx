@@ -44,6 +44,7 @@ const FolderItem: React.FC<FolderItemProps> = ({ folder, onClick, onDelete }) =>
     <Paper
       onClick={onClick}
       elevation={2}
+      tabIndex={0}
       sx={{
         cursor: "pointer",
         borderRadius: 2,
@@ -80,7 +81,7 @@ const FolderItem: React.FC<FolderItemProps> = ({ folder, onClick, onDelete }) =>
           mb: 1,
           zIndex: 3,
         }}
-
+        aria-label={folder.name}
       />
 
       <Typography
@@ -110,13 +111,13 @@ const FolderItem: React.FC<FolderItemProps> = ({ folder, onClick, onDelete }) =>
         }}
       >
         <Tooltip title={t.download}>
-          <IconButton onClick={handleDownload} size="small" sx={{ color: "primary.main" , zIndex: 4}}>
+          <IconButton onClick={handleDownload} size="small" sx={{ color: "primary.main" , zIndex: 4}} aria-label={t.download}>
             <DownloadIcon fontSize="small" />
           </IconButton>
         </Tooltip>
 
         <Tooltip title={t.share}>
-          <IconButton size="small" sx={{ color: "primary.main", zIndex: 4 }}>
+          <IconButton size="small" sx={{ color: "primary.main", zIndex: 4 }} aria-label={t.share}>
             <ShareIcon fontSize="small" />
           </IconButton>
         </Tooltip>
@@ -133,6 +134,7 @@ const FolderItem: React.FC<FolderItemProps> = ({ folder, onClick, onDelete }) =>
                 color: "error.dark",
               },
             }}
+            aria-label={t.delete}
           >
             <DeleteIcon fontSize="small" />
           </IconButton>

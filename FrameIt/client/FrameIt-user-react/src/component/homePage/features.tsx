@@ -88,7 +88,7 @@ export default () => {
                 transition={{ delay: index * 0.2, duration: 0.8 }}
               >
                 <Paper elevation={3} sx={{ padding: 4, textAlign: "center", borderRadius: "8px" }}>
-                  {feature.icon}
+                  {feature.icon && React.cloneElement(feature.icon, { "aria-label": feature.title })}
                   <Typography variant="h5" color="secondary" sx={{ marginTop: 2, marginBottom: 2 }}>
                     {feature.title}
                   </Typography>

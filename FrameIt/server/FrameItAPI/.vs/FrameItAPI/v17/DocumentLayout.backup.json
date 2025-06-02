@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{2C50D4A0-E71C-4EB5-807E-3822AA2BBA15}|FrameItAPI.csproj|c:\\users\\user\\documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\frameit\\server\\frameitapi\\endpoints\\fileendpoints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2C50D4A0-E71C-4EB5-807E-3822AA2BBA15}|FrameItAPI.csproj|solutionrelative:endpoints\\fileendpoints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2C50D4A0-E71C-4EB5-807E-3822AA2BBA15}|FrameItAPI.csproj|c:\\users\\user\\documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\frameit\\server\\frameitapi\\services\\services\\fileservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2C50D4A0-E71C-4EB5-807E-3822AA2BBA15}|FrameItAPI.csproj|solutionrelative:services\\services\\fileservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{2C50D4A0-E71C-4EB5-807E-3822AA2BBA15}|FrameItAPI.csproj|c:\\users\\user\\documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\frameit\\server\\frameitapi\\endpoints\\analyticsendpoint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2C50D4A0-E71C-4EB5-807E-3822AA2BBA15}|FrameItAPI.csproj|solutionrelative:endpoints\\analyticsendpoint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -25,10 +33,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{2C50D4A0-E71C-4EB5-807E-3822AA2BBA15}|FrameItAPI.csproj|c:\\users\\user\\documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\frameit\\server\\frameitapi\\services\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2C50D4A0-E71C-4EB5-807E-3822AA2BBA15}|FrameItAPI.csproj|solutionrelative:services\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2C50D4A0-E71C-4EB5-807E-3822AA2BBA15}|FrameItAPI.csproj|c:\\users\\user\\documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\frameit\\server\\frameitapi\\services\\services\\fileservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2C50D4A0-E71C-4EB5-807E-3822AA2BBA15}|FrameItAPI.csproj|solutionrelative:services\\services\\fileservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{2C50D4A0-E71C-4EB5-807E-3822AA2BBA15}|FrameItAPI.csproj|c:\\users\\user\\documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\frameit\\server\\frameitapi\\services\\services\\analyticsservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -67,10 +71,6 @@
       "RelativeMoniker": "D:0:0:{2C50D4A0-E71C-4EB5-807E-3822AA2BBA15}|FrameItAPI.csproj|solutionrelative:startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2C50D4A0-E71C-4EB5-807E-3822AA2BBA15}|FrameItAPI.csproj|c:\\users\\user\\documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\frameit\\server\\frameitapi\\endpoints\\fileendpoints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2C50D4A0-E71C-4EB5-807E-3822AA2BBA15}|FrameItAPI.csproj|solutionrelative:endpoints\\fileendpoints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{2C50D4A0-E71C-4EB5-807E-3822AA2BBA15}|FrameItAPI.csproj|c:\\users\\user\\documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\frameit\\server\\frameitapi\\endpoints\\folderendpoints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2C50D4A0-E71C-4EB5-807E-3822AA2BBA15}|FrameItAPI.csproj|solutionrelative:endpoints\\folderendpoints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -94,37 +94,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 183,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AuthService.cs",
-              "DocumentMoniker": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Services\\services\\AuthService.cs",
-              "RelativeDocumentMoniker": "Services\\services\\AuthService.cs",
-              "ToolTip": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Services\\services\\AuthService.cs",
-              "RelativeToolTip": "Services\\services\\AuthService.cs",
-              "ViewState": "AgIAAAUAAAAAAAAAAAAxwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-27T08:24:58.108Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 9,
-              "Title": "UserDTO.cs",
-              "DocumentMoniker": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Entities\\DTOs\\UserDTO.cs",
-              "RelativeDocumentMoniker": "Entities\\DTOs\\UserDTO.cs",
-              "ToolTip": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Entities\\DTOs\\UserDTO.cs",
-              "RelativeToolTip": "Entities\\DTOs\\UserDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAQAAAAhAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-26T07:24:25.921Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
               "Title": "UserMapper.cs",
               "DocumentMoniker": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Entities\\DTOs\\UserMapper.cs",
               "RelativeDocumentMoniker": "Entities\\DTOs\\UserMapper.cs",
@@ -132,25 +106,24 @@
               "RelativeToolTip": "Entities\\DTOs\\UserMapper.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAuwAgAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-26T07:25:26.589Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-26T07:25:26.589Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "AnalyticsEndpoint.cs",
               "DocumentMoniker": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Endpoints\\AnalyticsEndpoint.cs",
               "RelativeDocumentMoniker": "Endpoints\\AnalyticsEndpoint.cs",
               "ToolTip": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Endpoints\\AnalyticsEndpoint.cs",
               "RelativeToolTip": "Endpoints\\AnalyticsEndpoint.cs",
-              "ViewState": "AgIAAAUAAAAAAAAAAAAowA8AAAAPAAAAAAAAAA==",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAQwA8AAAAPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-27T06:54:10.59Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "UserService.cs",
               "DocumentMoniker": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Services\\services\\UserService.cs",
               "RelativeDocumentMoniker": "Services\\services\\UserService.cs",
@@ -158,12 +131,11 @@
               "RelativeToolTip": "Services\\services\\UserService.cs",
               "ViewState": "AgIAABcAAAAAAAAAAAAzwB4AAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-23T00:02:43.978Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-23T00:02:43.978Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "UserEndpoints.cs",
               "DocumentMoniker": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Endpoints\\UserEndpoints.cs",
               "RelativeDocumentMoniker": "Endpoints\\UserEndpoints.cs",
@@ -171,12 +143,11 @@
               "RelativeToolTip": "Endpoints\\UserEndpoints.cs",
               "ViewState": "AgIAACAAAAAAAAAAAAAkwCgAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-23T00:02:43.967Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-23T00:02:43.967Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "AuthEndpoints.cs",
               "DocumentMoniker": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Endpoints\\AuthEndpoints.cs",
               "RelativeDocumentMoniker": "Endpoints\\AuthEndpoints.cs",
@@ -184,12 +155,61 @@
               "RelativeToolTip": "Endpoints\\AuthEndpoints.cs",
               "ViewState": "AgIAAFUAAAAAAAAAAAAAABMAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-23T00:02:43.98Z",
+              "WhenOpened": "2025-05-23T00:02:43.98Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FileService.cs",
+              "DocumentMoniker": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Services\\services\\FileService.cs",
+              "RelativeDocumentMoniker": "Services\\services\\FileService.cs",
+              "ToolTip": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Services\\services\\FileService.cs",
+              "RelativeToolTip": "Services\\services\\FileService.cs",
+              "ViewState": "AgIAAKcAAAAAAAAAAAAAwK0AAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-23T00:02:43.802Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
+              "Title": "FileEndpoints.cs",
+              "DocumentMoniker": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Endpoints\\FileEndpoints.cs",
+              "RelativeDocumentMoniker": "Endpoints\\FileEndpoints.cs",
+              "ToolTip": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Endpoints\\FileEndpoints.cs",
+              "RelativeToolTip": "Endpoints\\FileEndpoints.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAABwAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-23T00:02:43.962Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "UserDTO.cs",
+              "DocumentMoniker": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Entities\\DTOs\\UserDTO.cs",
+              "RelativeDocumentMoniker": "Entities\\DTOs\\UserDTO.cs",
+              "ToolTip": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Entities\\DTOs\\UserDTO.cs",
+              "RelativeToolTip": "Entities\\DTOs\\UserDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAQAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-26T07:24:25.921Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Services\\services\\AuthService.cs",
+              "RelativeDocumentMoniker": "Services\\services\\AuthService.cs",
+              "ToolTip": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Services\\services\\AuthService.cs",
+              "RelativeToolTip": "Services\\services\\AuthService.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAxwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-27T08:24:58.108Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -197,25 +217,11 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAAL0AAAAAAAAAAAAAANAAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-23T00:02:43.983Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-23T00:02:43.983Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "FileService.cs",
-              "DocumentMoniker": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Services\\services\\FileService.cs",
-              "RelativeDocumentMoniker": "Services\\services\\FileService.cs",
-              "ToolTip": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Services\\services\\FileService.cs",
-              "RelativeToolTip": "Services\\services\\FileService.cs",
-              "ViewState": "AgIAAKYAAAAAAAAAAAAzwK0AAAAMAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-23T00:02:43.802Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "AnalyticsService.cs",
               "DocumentMoniker": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Services\\services\\AnalyticsService.cs",
               "RelativeDocumentMoniker": "Services\\services\\AnalyticsService.cs",
@@ -223,12 +229,11 @@
               "RelativeToolTip": "Services\\services\\AnalyticsService.cs",
               "ViewState": "AgIAABYAAAAAAAAAAAAkwCEAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-26T17:01:22.538Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-26T17:01:22.538Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "IFileService.cs",
               "DocumentMoniker": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Services\\interfaces\\IFileService.cs",
               "RelativeDocumentMoniker": "Services\\interfaces\\IFileService.cs",
@@ -240,7 +245,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "File.cs",
               "DocumentMoniker": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Entities\\File.cs",
               "RelativeDocumentMoniker": "Entities\\File.cs",
@@ -252,7 +257,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "Collage.cs",
               "DocumentMoniker": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Entities\\Collage.cs",
               "RelativeDocumentMoniker": "Entities\\Collage.cs",
@@ -264,7 +269,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "UserRole.cs",
               "DocumentMoniker": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Entities\\UserRole.cs",
               "RelativeDocumentMoniker": "Entities\\UserRole.cs",
@@ -276,7 +281,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 15,
               "Title": "FileUploadRequest.cs",
               "DocumentMoniker": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Entities\\DTOs\\FileUploadRequest.cs",
               "RelativeDocumentMoniker": "Entities\\DTOs\\FileUploadRequest.cs",
@@ -288,7 +293,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 16,
               "Title": "StartUp.cs",
               "DocumentMoniker": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\StartUp.cs",
               "RelativeDocumentMoniker": "StartUp.cs",
@@ -297,18 +302,6 @@
               "ViewState": "AgIAAA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-26T21:22:11.232Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "FileEndpoints.cs",
-              "DocumentMoniker": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Endpoints\\FileEndpoints.cs",
-              "RelativeDocumentMoniker": "Endpoints\\FileEndpoints.cs",
-              "ToolTip": "C:\\Users\\USER\\Documents\\\u05E8\u05D7\u05DC\u05D9\\\u05EA\u05DB\u05E0\u05D5\u05EA \u05D5\\practikum\\FrameIt\\server\\FrameItAPI\\Endpoints\\FileEndpoints.cs",
-              "RelativeToolTip": "Endpoints\\FileEndpoints.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAAAA8AAAAMAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-23T00:02:43.962Z"
             },
             {
               "$type": "Document",

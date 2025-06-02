@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import {
   Box,
   IconButton,
@@ -125,18 +125,18 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
     onOpenPreview(file.id)
   }
 
-  const handleDownload = (e: React.MouseEvent) => {
+  const handleDownload = useCallback((e: React.MouseEvent) => {
     e.stopPropagation()
     downloadFile(file.id, file.fileName)
     downloadByUrl(urlTrick, file.fileName);
     handleCloseMenu()
-  }
+  }, [file.id, file.fileName, urlTrick])
 
-  const handleDeleteFile = (e: React.MouseEvent) => {
+  const handleDeleteFile = useCallback((e: React.MouseEvent) => {
     e.stopPropagation()
     onDelete()
     handleCloseMenu()
-  }
+  }, [onDelete])
 
   return (
     <Paper
@@ -177,21 +177,24 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onOpenPreview }) =>
           controls
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
           onError={() => setImageError(true)}
+          title={file.fileName}
         >
           <source src={presignedUrl} type={`video/${file.fileType}`} />
-          your browser does'nt support on video display        </video>
+          Your browser doesn't support video display.
+        </video>
       ) : (
         <Box
           component="img"
           src={presignedUrl}
           alt={file.fileName}
+          title={file.fileName}
           loading="lazy"
+          onError={(e) => { e.currentTarget.src = '/fallback-image.png'; }}
           sx={{
             width: "100%",
             height: "100%",
             objectFit: "cover",
           }}
-          onError={() => setImageError(true)}
         />
       )}
 

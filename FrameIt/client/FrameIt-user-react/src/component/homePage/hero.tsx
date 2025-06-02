@@ -68,6 +68,7 @@ const Hero = () => {
           <img
             src="/img/logo.png"
             alt="FrameIt Logo"
+            loading="lazy"
             style={{
               width: 200,
               height: 200,
@@ -143,6 +144,7 @@ const Hero = () => {
               color="primary"
               size="large"
               sx={{ borderRadius: 3, px: 4 }}
+              aria-label={t.buttons.gallery}
             >
               {t.buttons.gallery}
             </Button>
@@ -155,6 +157,7 @@ const Hero = () => {
               component={Link}
               to="/register"
               sx={{ borderRadius: 3, px: 4 }}
+              aria-label={t.buttons.getStarted}
             >
               {t.buttons.getStarted}
             </Button>

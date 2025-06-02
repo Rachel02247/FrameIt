@@ -276,10 +276,12 @@ const Gallery = () => {
                       <ImageList variant="standard" cols={getColumnCount()} gap={16} sx={{ mb: 4 }}>
                         {filteredFolders.map((folder) => (
                           <ImageListItem key={folder.id} component="div">
+                            {/* Ensure FolderItem renders images with loading="lazy" and fallback */}
                             <FolderItem
                               folder={folder}
                               onClick={() => setCurrentFolder(folder.id)}
                               onDelete={() => handleDelete(folder.id, "folder")}
+                              // If FolderItem renders <img>, add loading="lazy" and onError fallback there
                             />
                           </ImageListItem>
                         ))}
@@ -299,10 +301,12 @@ const Gallery = () => {
                       <ImageList variant="standard" cols={getColumnCount()} gap={16}>
                         {filteredFiles.map((file) => (
                           <ImageListItem key={file.id} component="div">
+                            {/* Ensure FileItem renders images with loading="lazy" and fallback */}
                             <FileItem
                               file={file}
                               onDelete={() => handleDelete(file.id, 'file')}
                               onOpenPreview={handleOpenPreview}
+                              // If FileItem renders <img>, add loading="lazy" and onError fallback there
                             />
                           </ImageListItem>
                         ))}

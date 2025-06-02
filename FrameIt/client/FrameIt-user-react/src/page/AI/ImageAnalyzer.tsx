@@ -55,6 +55,8 @@ const ImageAnalyzer: React.FC<ImageAnalyzerWrapperProps> = ({ onAnalyzeComplete 
             alt="To analyze"
             ref={imageRef}
             onLoad={analyze}
+            loading="lazy"
+            onError={e => { e.currentTarget.src = "/fallback-image.png"; }}
             className="rounded-xl shadow-lg mb-4 w-full object-cover max-h-64"
           />
           <div className="bg-white rounded-xl p-4 shadow-inner">

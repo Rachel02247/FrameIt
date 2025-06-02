@@ -28,9 +28,13 @@ public static class FileEndpoints
         {
             try
             {
-                Console.WriteLine($"in post file {httpContext.Request.ReadFormAsync()}");
                 var form = await httpContext.Request.ReadFormAsync();
+                Console.WriteLine($"in post file: {string.Join(", ", form.Select(kv => $"{kv.Key}={kv.Value}"))}");
+
+
                 var file = form.Files.GetFile("file");
+
+                Console.WriteLine("file" + file);
 
                 if (file == null)
                     return Results.BadRequest("No file uploaded.");

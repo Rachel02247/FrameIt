@@ -299,7 +299,8 @@ function ImageToArt() {
                   },
                 }}
               >
-                <img src={generatedArt || "/placeholder.svg"} alt="Generated artwork" />
+                <img src={generatedArt || "/placeholder.svg"} alt="Generated artwork" loading="lazy"
+                  onError={e => { e.currentTarget.src = "/fallback-image.png"; }} />
               </Box>
               <Box sx={{ display: "flex", gap: 2 }}>
                 <Button variant="contained" onClick={handleDownload} startIcon={<Download />}>

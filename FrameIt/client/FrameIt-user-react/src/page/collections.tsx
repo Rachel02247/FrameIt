@@ -358,7 +358,7 @@ const Collections: React.FC = () => {
                             left: 0,
                             width: "100%",
                             height: "4px",
-                            backgroundColor: "primary.main",
+                            backgroundColor: (theme) => theme.palette.primary.main,
                             opacity: 0.7,
                           },
                         }}
