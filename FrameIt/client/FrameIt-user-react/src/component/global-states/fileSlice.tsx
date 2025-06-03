@@ -47,6 +47,7 @@ export const uploadFiles = createAsyncThunk(
           "Content-Type": "multipart/form-data",
         },
       });
+      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error("Error uploading files:", error);
