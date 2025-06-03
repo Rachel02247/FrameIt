@@ -10,14 +10,10 @@ const Upload = () => {
   const user = useSelector((state: RootState) => state.user.user);
   const dispatch = useDispatch<AppDispatch>();
 
-  const userId = sessionStorage.getItem("id");
 
   const handleUpload = async (files: MyFile[], folderId: string) => {
     try {
-      console.log(userId)
 
-      console.log("user?.id")
-      console.log(user?.id)
       for (const file of files) {
         if (file.file) {
           const formData = new FormData();
@@ -31,12 +27,13 @@ const Upload = () => {
             s3Key: file.s3Key,
             isDeleted: file.isDeleted,
             folderId: file.folderId,
-            ownerId: parseInt(user?.id ?? userId ?? "0")
+            ownerId: parseInt(user?.id ?? "0")
           };
 
           console.log("ownerid", metadata.ownerId)
           formData.append("fileMetadata", JSON.stringify(metadata));
           formData.append("folderId", folderId);
+          formData.append("ownerId", metadata.ownerId.toString());
 
           console.log("Uploading file:", file.fileName);
           for (const pair of formData.entries()) {
