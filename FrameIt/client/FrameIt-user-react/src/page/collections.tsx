@@ -2,7 +2,7 @@
 "use client"
 
 import type React from "react"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import {
   Grid,
   Paper,
@@ -65,24 +65,28 @@ const Collections: React.FC = () => {
     if (selectedTagId !== 0) dispatch(fetchCollectionFiles(selectedTagId))
   }, [selectedTagId, dispatch])
 
-  const [filesWithUrls, setFilesWithUrls] = useState<typeof files>([])
-
-  useEffect(() => {
-    const fetchUrls = async () => {
-      const updatedFiles = await Promise.all(
-        files.map(async (file) => {
-          const safeFile = { ...file, downloadUrl: file.downloadUrl ?? undefined }
-          const url = safeFile.downloadUrl || (await getFileUrl(safeFile))
-          return { ...file, downloadUrl: url }
-        })
-      )
-      setFilesWithUrls(updatedFiles)
+  // פונקציה שמחזירה את ה-url (לא משנה סטייט)
+  const getFileUrl = async (file: { s3Key: string; downloadUrl?: string }) => {
+    if (file.downloadUrl) {
+      return file.downloadUrl
     }
+    try {
+      const url = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap()
+      return url
+    } catch (error) {
+      console.error("Failed to fetch image URL:", error)
+      return null
+    }
+  }
 
-    if (files.length > 0) fetchUrls()
+  // שימוש ב-useMemo כדי ליצור מערך filesWithUrls
+  const filesWithUrls = useMemo(() => {
+    return files.map((file) => ({
+      ...file,
+      // אם יש downloadUrl השתמש בו, אחרת undefined (הקומפוננטה FileItem תטפל בזה)
+      downloadUrl: file.downloadUrl,
+    }))
   }, [files])
-
-
 
   const handleTagSelect = (tagId: number) => dispatch(setSelectedTag(tagId))
   const handleOpenPreview = (fileId: string) => {
@@ -106,20 +110,6 @@ const Collections: React.FC = () => {
     if (isMobile) return 2
     if (isMedium) return 3
     return 4
-  }
-
-  const getFileUrl = async (file: { s3Key: string; downloadUrl?: string }) => {
-    if (file.downloadUrl) {
-      return file.downloadUrl
-    }
-
-    try {
-      const url = await dispatch(getFileDownloadUrl(file.s3Key)).unwrap()
-      return url
-    } catch (error) {
-      console.error("Failed to fetch image URL:", error)
-      return null
-    }
   }
 
   const selectedCollection = collections.find((collection) => collection.id === selectedTagId)
