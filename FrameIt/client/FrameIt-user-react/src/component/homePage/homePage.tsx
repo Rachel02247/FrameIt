@@ -10,6 +10,7 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import PopupNotice from '../../hooks/popup/popupNotice';
 import CustomersSay from './customersSay';
+import Upload from '../../page/upload/upload';
 
 const HomePage = () => {
     const { language } = useLanguage();
@@ -48,7 +49,7 @@ const HomePage = () => {
                     {t.myPhotos}
                 </Button>
             </motion.div>
-
+<Upload/>
             <PopupNotice />
 
             <ViewGallery />

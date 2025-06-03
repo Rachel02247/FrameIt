@@ -28,6 +28,7 @@ namespace FrameItAPI.Services.services
 
         public async Task<FrameItAPI.Entities.File> CreateFile(FrameItAPI.Entities.File file, Stream fileStream)
         {
+            Console.WriteLine("in create file " + file + " " + fileStream);
            
             if (string.IsNullOrEmpty(_bucketName))
             {

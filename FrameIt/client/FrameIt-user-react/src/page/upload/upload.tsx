@@ -9,47 +9,41 @@ import { uploadFiles } from "../../component/global-states/fileSlice";
 const Upload = () => {
   const user = useSelector((state: RootState) => state.user.user);
   const dispatch = useDispatch<AppDispatch>();
-const handleUpload = async (files: MyFile[], folderId: string) => {
-  try {
-    
-    const formData = new FormData();
 
-    files.forEach((file) => {
-      if (file.file) {
-        formData.append("file", file.file); 
-        console.log("before formData")
-        console.log(formData)
-        console.log(" after formData")
+  const handleUpload = async (files: MyFile[], folderId: string) => {
+    try {
+      for (const file of files) {
+        if (file.file) {
+          const formData = new FormData();
+          formData.append("file", file.file);
+
+          const metadata = {
+            id: file.id,
+            fileName: file.fileName,
+            fileType: file.fileType,
+            size: file.size,
+            s3Key: file.s3Key,
+            isDeleted: file.isDeleted,
+            folderId: file.folderId,
+            ownerId: user?.id ?? "0"
+          };
+
+          formData.append("fileMetadata", JSON.stringify(metadata));
+          formData.append("folderId", folderId);
+
+          console.log("Uploading file:", file.fileName);
+          for (const pair of formData.entries()) {
+            console.log(pair[0], pair[1]);
+          }
+
+          await dispatch(uploadFiles(formData)).unwrap();
+          console.log(`File ${file.fileName} uploaded successfully`);
+        }
       }
-    });
-
-    const metadataArray = files.map((file) => ({
-      id: file.id,
-      fileName: file.fileName,
-      fileType: file.fileType,
-      size: file.size,
-      s3Key: file.s3Key,
-      isDeleted: file.isDeleted,
-      folderId: file.folderId,
-      ownerId: file.ownerId,
-    }));
-
-    formData.append("fileMetadata", JSON.stringify(metadataArray));
-    formData.append("folderId", folderId);
-
-    console.log("FormData contents:");
-    for (const pair of formData.entries()) {
-      console.log(pair[0], pair[1]);
+    } catch (error) {
+      console.error("Error uploading files:", error);
     }
-
-    await dispatch(uploadFiles(formData)).unwrap();
-    console.log("Files uploaded successfully");
-  } catch (error) {
-    console.error("Error uploading files:", error);
-  }
-};
-
-
+  };
 
   return (
     <Container>

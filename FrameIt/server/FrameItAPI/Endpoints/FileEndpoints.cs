@@ -40,42 +40,39 @@ public static class FileEndpoints
 
                 int? folderId = null;
                 int ownerId = 0;
+                string? fileMetadataJson = form.TryGetValue("fileMetadata", out var metaVal) ? metaVal.ToString() : null;
 
-                if (int.TryParse(form["FolderId"], out var parsedFolderId))
+                if (int.TryParse(form["folderId"], out var parsedFolderId))
                     folderId = parsedFolderId;
-                if (int.TryParse(form["OwnerId"], out var parsedOwnerId))
+                if (int.TryParse(form["ownerId"], out var parsedOwnerId))
                     ownerId = parsedOwnerId;
 
-                if ((ownerId == 0 || folderId == null) && form.TryGetValue("fileMetadata", out var metadataJson))
+                if ((ownerId == 0 || folderId == null) && !string.IsNullOrEmpty(fileMetadataJson))
                 {
                     try
                     {
-                        var metadataList = JsonSerializer.Deserialize<List<FileMetadataDto>>(metadataJson!);
-                        if (metadataList != null && metadataList.Count > 0)
+                        var metadata = JsonSerializer.Deserialize<FileMetadataDto>(fileMetadataJson);
+                        if (metadata != null)
                         {
-                            var metadata = metadataList.FirstOrDefault(m => m.FileName == file.FileName);
-                            if (metadata != null)
-                            {
-                                if (ownerId == 0)
-                                    ownerId = metadata.OwnerId;
-                                if (folderId == null)
-                                    folderId = metadata.FolderId;
-                            }
+                            if (ownerId == 0)
+                                ownerId = metadata.OwnerId;
+                            if (folderId == null)
+                                folderId = metadata.FolderId;
                         }
                     }
                     catch (Exception ex)
                     {
+                        Console.WriteLine("Metadata parse error: " + ex);
                         return Results.BadRequest("Invalid fileMetadata JSON: " + ex.Message);
                     }
                 }
 
-                if (ownerId == 0)
-                    return Results.BadRequest("Missing OwnerId.");
+                //if (ownerId == 0)
+                //    return Results.BadRequest("Missing OwnerId.");
                 if (folderId == null)
                     return Results.BadRequest("Missing FolderId.");
 
                 var fileType = file.ContentType.ToLower();
-
                 var newFile = new FrameItAPI.Entities.File
                 {
                     FileName = file.FileName,
@@ -84,7 +81,9 @@ public static class FileEndpoints
                     S3Key = file.FileName,
                     OwnerId = ownerId,
                     CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow
+                    UpdatedAt = DateTime.UtcNow,
+                    FileType = file.ContentType,
+                    Size = file.Length
                 };
 
                 using var stream = file.OpenReadStream();
@@ -96,8 +95,6 @@ public static class FileEndpoints
                 }
                 else
                 {
-                    newFile.FileType = file.ContentType;
-                    newFile.Size = file.Length;
                     createdFile = await fileService.CreateFile(newFile, stream);
                 }
 
