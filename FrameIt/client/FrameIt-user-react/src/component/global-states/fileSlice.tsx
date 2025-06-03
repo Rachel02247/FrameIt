@@ -111,8 +111,8 @@ const fileSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(uploadFiles.fulfilled, (state, action: PayloadAction<MyFile[]>) => {
-        state.files.push(...action.payload);
+      .addCase(uploadFiles.fulfilled, (state, action: PayloadAction<MyFile>) => {
+        state.files.push(action.payload);
         state.loading = false;
       })
       .addCase(uploadFiles.rejected, (state, action) => {
