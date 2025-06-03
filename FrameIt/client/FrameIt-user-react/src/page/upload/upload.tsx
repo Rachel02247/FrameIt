@@ -14,6 +14,7 @@ const Upload = () => {
 
   const handleUpload = async (files: MyFile[], folderId: string) => {
     try {
+      console.log(userId)
       for (const file of files) {
         if (file.file) {
           const formData = new FormData();
@@ -30,6 +31,7 @@ const Upload = () => {
             ownerId: user?.id ?? userId ?? "0"
           };
 
+          console.log("ownerid", userId)
           formData.append("fileMetadata", JSON.stringify(metadata));
           formData.append("folderId", folderId);
 
