@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import emailjs from "@emailjs/browser";
 import { toJpeg } from "html-to-image";
 import { toast } from "react-toastify";
@@ -17,9 +18,8 @@ export const sendEmail = async (element: HTMLElement) => {
     let quality = 0.95;
     let dataUrl = await toJpeg(element, { quality });
 
-    const maxSize = 50 * 1024; // 50KB
+    const maxSize = 25 * 1024; // 50KB
 
-    // הורדת איכות עד שעוברים את התנאי או מגיעים לסף איכות מינימלי
     while ((dataUrl.length * 3) / 4 > maxSize && quality > 0.1) {
       console.log(`Image size: ${Math.round((dataUrl.length * 3) / 4)} bytes, quality: ${quality.toFixed(2)}`);
       quality -= 0.05;
@@ -33,7 +33,7 @@ export const sendEmail = async (element: HTMLElement) => {
       import.meta.env.VITE_EMAILJS_SERVICE_ID,
       import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
       {
-        to_email: userEmail ?? 'r0527102247@gmail.com',
+        to_email: 'r0527102247@gmail.com',
         message: "Here is your collage!",
         user_name: userName,
         collage_base64: dataUrl,
