@@ -15,6 +15,8 @@ const Upload = () => {
   const handleUpload = async (files: MyFile[], folderId: string) => {
     try {
       console.log(userId)
+
+      console.log("user?.id")
       console.log(user?.id)
       for (const file of files) {
         if (file.file) {
@@ -29,7 +31,7 @@ const Upload = () => {
             s3Key: file.s3Key,
             isDeleted: file.isDeleted,
             folderId: file.folderId,
-            ownerId: user?.id ?? userId ?? "0"
+            ownerId: parseInt(user?.id ?? userId ?? "0")
           };
 
           console.log("ownerid", metadata.ownerId)
